@@ -64,8 +64,8 @@
 **Goal:** Users can read and edit markdown-backed planning sections for each idea.
 
 - [x] Server: FileStorageService (abstracted file read/write)
-- [ ] Server: Planning section routes (GET/PUT per section)
-- [ ] Server: Path traversal prevention
+- [x] Server: Planning section routes (GET/PUT per section)
+- [x] Server: Path traversal prevention
 - [ ] Client: PlanningAccordion component (5 collapsible sections)
 - [ ] Client: PlanningSection component (markdown viewer/editor)
 - [ ] Client: ImportMarkdownModal (drag-and-drop .md upload)
