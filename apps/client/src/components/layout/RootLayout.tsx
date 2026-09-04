@@ -45,16 +45,28 @@ export default function RootLayout() {
             {t("app.nav.home")}
           </Link>
           {isAuthenticated ? (
-            <Link
-              to={ROUTES.IDEAS}
-              style={{
-                color: isIdeas ? "var(--color-fg)" : "var(--color-muted)",
-                fontWeight: isIdeas ? 600 : 400,
-                textDecoration: "none",
-              }}
-            >
-              {t("app.nav.ideas")}
-            </Link>
+            <>
+              <Link
+                to={ROUTES.IDEAS}
+                style={{
+                  color: isIdeas ? "var(--color-fg)" : "var(--color-muted)",
+                  fontWeight: isIdeas ? 600 : 400,
+                  textDecoration: "none",
+                }}
+              >
+                {t("app.nav.ideas")}
+              </Link>
+              <Link
+                to={ROUTES.TAGS}
+                style={{
+                  color: location.pathname === ROUTES.TAGS ? "var(--color-fg)" : "var(--color-muted)",
+                  fontWeight: location.pathname === ROUTES.TAGS ? 600 : 400,
+                  textDecoration: "none",
+                }}
+              >
+                {t("app.nav.tags")}
+              </Link>
+            </>
           ) : null}
           <LanguageSwitcher />
         </nav>

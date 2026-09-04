@@ -4,6 +4,7 @@ export const en = {
     nav: {
       home: "Home",
       ideas: "Ideas",
+      tags: "Tags",
     },
   },
   home: {
@@ -118,6 +119,30 @@ export const en = {
       loadError: "Something went wrong loading this idea.",
       loadErrorDescription: "Please try again or return to the ideas list.",
     },
+  },
+  tags: {
+    title: "Tags",
+    subtitle: "Organize your ideas with colored tags.",
+    newTag: "New tag",
+    count: "tag(s)",
+    name: "Name",
+    namePlaceholder: "e.g. Frontend",
+    nameRequired: "Name is required.",
+    color: "Color",
+    create: "Create tag",
+    save: "Save",
+    cancel: "Cancel",
+    edit: "Edit",
+    delete: "Delete",
+    deleteConfirm: "Delete?",
+    created: "Tag created",
+    updated: "Tag updated",
+    deleted: "Tag deleted",
+    errorConflict: "A tag with this name already exists.",
+    saveError: "Something went wrong saving the tag.",
+    deleteError: "Something went wrong deleting the tag.",
+    emptyTitle: "No tags yet",
+    emptyDescription: "Create your first tag to start organizing ideas.",
   },
 } as const;
 
