@@ -1,0 +1,8 @@
+{
+  "name": "@repo/config",
+  "private": true,
+  "type": "module",
+  "files": [
+    "tsconfig.base.json"
+  ]
+}

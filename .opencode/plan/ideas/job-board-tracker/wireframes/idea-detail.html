@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idea Incubator — Blog CMS Platform</title>
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()">theme</button>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">💡</div>
+        Idea Incubator
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Navigation</div>
+        <a href="dashboard.html" class="sidebar-item">
+          <span class="icon">◉</span> Dashboard
+        </a>
+        <a href="ideas-list.html" class="sidebar-item active">
+          <span class="icon">◎</span> Ideas
+          <span class="badge">24</span>
+        </a>
+        <a href="roadmap.html" class="sidebar-item">
+          <span class="icon">◫</span> Roadmap
+        </a>
+        <a href="#" class="sidebar-item">
+          <span class="icon">◧</span> Tags
+          <span class="badge">6</span>
+        </a>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Collaboration</div>
+        <a href="collaboration.html" class="sidebar-item">
+          <span class="icon">⧉</span> Shared with me
+          <span class="badge">3</span>
+        </a>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-bottom">
+        <a href="#" class="sidebar-item">
+          <span class="icon">⚙</span> Settings
+        </a>
+        <a href="auth.html" class="sidebar-item">
+          <span class="icon">⏻</span> Log out
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" style="max-width: 900px;">
+      <!-- Back + Actions -->
+      <div class="flex items-center justify-between mb-16">
+        <a href="ideas-list.html" class="btn btn-ghost btn-sm">← Back to Ideas</a>
+        <div class="flex gap-8">
+          <button class="btn btn-secondary btn-sm" onclick="openShareModal()">⧉ Share</button>
+          <button class="btn btn-ghost btn-sm">⋯</button>
+          <button class="btn btn-danger btn-sm">Delete</button>
+        </div>
+      </div>
+
+      <!-- Title + Meta -->
+      <h1 class="detail-title">Blog CMS Platform</h1>
+      <p class="text-muted mt-8 mb-24">A simple CMS for developer blogs with markdown support, syntax highlighting, and SEO-friendly rendering.</p>
+
+      <div class="detail-meta">
+        <div class="detail-meta-item">
+          <div class="detail-meta-label">Status</div>
+          <span class="badge badge-planning">Planning</span>
+        </div>
+        <div class="detail-meta-item">
+          <div class="detail-meta-label">Priority</div>
+          <div class="priority mt-8">
+            <div class="priority-dot filled high"></div>
+            <div class="priority-dot filled high"></div>
+            <div class="priority-dot filled high"></div>
+            <div class="priority-dot filled high"></div>
+            <div class="priority-dot"></div>
+          </div>
+        </div>
+        <div class="detail-meta-item">
+          <div class="detail-meta-label">Tags</div>
+          <div class="flex gap-8 mt-8">
+            <span class="tag sass">SaaS</span>
+            <span class="tag react">React</span>
+          </div>
+        </div>
+        <div class="detail-meta-item">
+          <div class="detail-meta-label">Created</div>
+          <span class="text-sm mt-8">Sep 1, 2026</span>
+        </div>
+        <div class="detail-meta-item">
+          <div class="detail-meta-label">Last Updated</div>
+          <span class="text-sm mt-8">2 hours ago</span>
+        </div>
+      </div>
+
+      <!-- Planning Sections (Markdown-backed) -->
+      <div class="sections-container">
+        <div class="flex items-center justify-between mb-16">
+          <h2 class="font-semibold">Planning</h2>
+          <div class="flex gap-8">
+            <button class="btn btn-ghost btn-sm" onclick="openImportModal()">📄 Import .md</button>
+            <button class="btn btn-ghost btn-sm">+ New Section</button>
+          </div>
+        </div>
+
+        <div class="text-xs text-muted mb-16" style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+          <span style="font-family: var(--font-mono); background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px;">📁 opencode/plan/ideas/blog-cms-platform/</span>
+          Each section is a <code style="font-family: var(--font-mono); background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px;">.md</code> file
+        </div>
+
+        <div class="section-block">
+          <div class="section-header" onclick="toggleSection(this)">
+            <div class="flex items-center gap-8" style="flex: 1;">
+              <span class="section-title">Overview</span>
+              <span class="section-file-badge">overview.md</span>
+            </div>
+            <div class="flex items-center gap-8">
+              <button class="btn btn-ghost btn-sm" style="padding: 2px 8px; font-size: 0.7rem;" onclick="event.stopPropagation();">Open</button>
+              <span class="section-chevron">▾</span>
+            </div>
+          </div>
+          <div class="section-content">
+            <p>A lightweight CMS designed specifically for developer blogs. Focus on markdown-first content creation with developer-friendly features like code syntax highlighting, MDX support, and Git-based content management.</p>
+            <ul style="margin-top: 12px;">
+              <li>Markdown/MDX content creation</li>
+              <li>Built-in syntax highlighting for 100+ languages</li>
+              <li>SEO metadata auto-generation</li>
+              <li>Dark/light theme support</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-header" onclick="toggleSection(this)">
+            <div class="flex items-center gap-8" style="flex: 1;">
+              <span class="section-title">Tech Stack</span>
+              <span class="section-file-badge">tech-stack.md</span>
+            </div>
+            <div class="flex items-center gap-8">
+              <button class="btn btn-ghost btn-sm" style="padding: 2px 8px; font-size: 0.7rem;" onclick="event.stopPropagation();">Open</button>
+              <span class="section-chevron">▾</span>
+            </div>
+          </div>
+          <div class="section-content">
+            <ul>
+              <li><code>React</code> + <code>Vite</code> — client SPA</li>
+              <li><code>Express</code> + <code>Prisma</code> — API server</li>
+              <li><code>PostgreSQL</code> — database</li>
+              <li><code>react-markdown</code> + <code>rehype-highlight</code> — rendering</li>
+              <li>Deploy: Vercel (client) + Railway (server)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-header" onclick="toggleSection(this)">
+            <div class="flex items-center gap-8" style="flex: 1;">
+              <span class="section-title">Features</span>
+              <span class="section-file-badge">features.md</span>
+            </div>
+            <div class="flex items-center gap-8">
+              <button class="btn btn-ghost btn-sm" style="padding: 2px 8px; font-size: 0.7rem;" onclick="event.stopPropagation();">Open</button>
+              <span class="section-chevron">▾</span>
+            </div>
+          </div>
+          <div class="section-content">
+            <ul>
+              <li>User auth (register/login)</li>
+              <li>Create, edit, delete posts</li>
+              <li>Markdown editor with live preview</li>
+              <li>Tag system for categorization</li>
+              <li>Public blog view + RSS feed</li>
+              <li>Admin dashboard with post stats</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-header" onclick="toggleSection(this)">
+            <div class="flex items-center gap-8" style="flex: 1;">
+              <span class="section-title">Timeline</span>
+              <span class="section-file-badge">timeline.md</span>
+            </div>
+            <div class="flex items-center gap-8">
+              <button class="btn btn-ghost btn-sm" style="padding: 2px 8px; font-size: 0.7rem;" onclick="event.stopPropagation();">Open</button>
+              <span class="section-chevron">▸</span>
+            </div>
+          </div>
+          <div class="section-content" style="display: none;">
+            <p>Collapsed — click to expand</p>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-header" onclick="toggleSection(this)">
+            <div class="flex items-center gap-8" style="flex: 1;">
+              <span class="section-title">Risks</span>
+              <span class="section-file-badge">risks.md</span>
+            </div>
+            <div class="flex items-center gap-8">
+              <button class="btn btn-ghost btn-sm" style="padding: 2px 8px; font-size: 0.7rem;" onclick="event.stopPropagation();">Open</button>
+              <span class="section-chevron">▸</span>
+            </div>
+          </div>
+          <div class="section-content" style="display: none;">
+            <p>Collapsed — click to expand</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tasks -->
+      <div class="tasks-container">
+        <div class="flex items-center justify-between mb-16">
+          <h2 class="font-semibold">Tasks (4/10 complete)</h2>
+          <button class="btn btn-ghost btn-sm">+ Add Task</button>
+        </div>
+
+        <div class="progress-bar mb-16"><div class="progress-bar-fill" style="width: 40%;"></div></div>
+
+        <div class="task-milestone">Milestone: Planning</div>
+        <div class="task-item">
+          <div class="task-checkbox checked">✓</div>
+          <span class="task-text completed">Write project overview</span>
+        </div>
+        <div class="task-item">
+          <div class="task-checkbox checked">✓</div>
+          <span class="task-text completed">Define API endpoints</span>
+        </div>
+        <div class="task-item">
+          <div class="task-checkbox checked">✓</div>
+          <span class="task-text completed">Set up database schema</span>
+        </div>
+        <div class="task-item">
+          <div class="task-checkbox checked">✓</div>
+          <span class="task-text completed">Design wireframes</span>
+        </div>
+        <div class="task-item">
+          <div class="task-checkbox"></div>
+          <span class="task-text">Choose deployment strategy</span>
+        </div>
+
+        <div class="task-milestone">Milestone: Development</div>
+        <div class="task-item">
+          <div class="task-checkbox"></div>
+          <span class="task-text">Set up monorepo</span>
+        </div>
+        <div class="task-item">
+          <div class="task-checkbox"></div>
+          <span class="task-text">Build auth system</span>
+        </div>
+        <div class="task-item">
+          <div class="task-checkbox"></div>
+          <span class="task-text">Build post CRUD</span>
+        </div>
+        <div class="task-item">
+          <div class="task-checkbox"></div>
+          <span class="task-text">Markdown editor integration</span>
+        </div>
+        <div class="task-item">
+          <div class="task-checkbox"></div>
+          <span class="task-text">Public blog view</span>
+        </div>
+
+        <div class="task-add">+ Add task</div>
+      </div>
+
+      <!-- Comments -->
+      <div class="comments-container">
+        <div class="comments-header">Comments (3)</div>
+
+        <div class="comment-item">
+          <div class="comment-avatar">JS</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-author">JaSperry</span>
+              <span class="comment-time">2 hours ago</span>
+            </div>
+            <div class="comment-text">Great idea! I think we should start with the auth system since it's foundational to the rest of the app.</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="comment-avatar">FR</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-author">friend@email.com</span>
+              <span class="comment-time">1 hour ago</span>
+            </div>
+            <div class="comment-text">Agreed. Also consider adding rate limiting to the API from the start — it's easier to build in early than retrofit later.</div>
+          </div>
+        </div>
+
+        <div class="comment-item">
+          <div class="comment-avatar">JS</div>
+          <div class="comment-body">
+            <div class="comment-meta">
+              <span class="comment-author">JaSperry</span>
+              <span class="comment-time">45 min ago</span>
+            </div>
+            <div class="comment-text">Good call. I'll add a rate limiting section to the planning docs.</div>
+          </div>
+        </div>
+
+        <div class="comment-input">
+          <div class="comment-avatar">JS</div>
+          <input type="text" class="form-input" placeholder="Write a comment...">
+          <button class="btn btn-primary btn-sm">Send</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Import .md Modal -->
+  <div class="modal-overlay" id="import-modal" style="display: none;" onclick="closeImportModal(event)">
+    <div class="modal" style="max-width: 520px;" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title">Import Markdown File</h3>
+        <button class="btn btn-ghost btn-icon" onclick="document.getElementById('import-modal').style.display='none'">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="text-sm text-muted mb-16">Import a <code>.md</code> file as a planning section. The first heading (<code># Title</code>) becomes the section name.</p>
+
+        <div class="import-dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
+          <div class="import-dropzone-icon">📄</div>
+          <div class="import-dropzone-text">Drop a .md file here or click to browse</div>
+          <div class="import-dropzone-hint">Supports .md files up to 500KB</div>
+          <input type="file" id="file-input" accept=".md" style="display: none;" multiple onchange="handleFiles(this.files)">
+        </div>
+
+        <div class="import-file-list" id="file-list"></div>
+
+        <div class="mt-16">
+          <div class="form-label">Or create from template</div>
+          <div class="flex gap-8 mt-8" style="flex-wrap: wrap;">
+            <button class="btn btn-secondary btn-sm" onclick="createFromTemplate('overview')">Overview</button>
+            <button class="btn btn-secondary btn-sm" onclick="createFromTemplate('tech-stack')">Tech Stack</button>
+            <button class="btn btn-secondary btn-sm" onclick="createFromTemplate('features')">Features</button>
+            <button class="btn btn-secondary btn-sm" onclick="createFromTemplate('timeline')">Timeline</button>
+            <button class="btn btn-secondary btn-sm" onclick="createFromTemplate('risks')">Risks</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="document.getElementById('import-modal').style.display='none'">Cancel</button>
+        <button class="btn btn-primary" onclick="importFiles()">Import</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Share Modal -->
+  <div class="modal-overlay" id="share-modal" style="display: none;" onclick="closeShareModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title">Share "Blog CMS Platform"</h3>
+        <button class="btn btn-ghost btn-icon" onclick="document.getElementById('share-modal').style.display='none'">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Share with people</label>
+          <div class="flex gap-8">
+            <input type="email" class="form-input" placeholder="Enter email address" style="flex: 1;">
+            <button class="btn btn-primary btn-sm">Invite</button>
+          </div>
+        </div>
+        <div class="form-label mt-16">People with access</div>
+        <div class="share-list mt-8">
+          <div class="share-item">
+            <div class="share-item-avatar">JS</div>
+            <div class="share-item-info">
+              <div class="share-item-name">JaSperry (you)</div>
+              <div class="share-item-email">jasperry@email.com</div>
+            </div>
+            <div class="share-item-role">Owner</div>
+          </div>
+          <div class="share-item">
+            <div class="share-item-avatar">FR</div>
+            <div class="share-item-info">
+              <div class="share-item-name">friend@email.com</div>
+              <div class="share-item-email">friend@email.com</div>
+            </div>
+            <select class="form-input" style="width: auto; padding: 4px 8px; font-size: 0.75rem;">
+              <option>Edit</option>
+              <option>View</option>
+              <option>Remove</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="document.getElementById('share-modal').style.display='none'">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+    }
+    function toggleSection(header) {
+      const content = header.nextElementSibling;
+      const chevron = header.querySelector('.section-chevron');
+      if (content.style.display === 'none') {
+        content.style.display = 'block';
+        chevron.textContent = '▾';
+      } else {
+        content.style.display = 'none';
+        chevron.textContent = '▸';
+      }
+    }
+    function openShareModal() {
+      document.getElementById('share-modal').style.display = 'flex';
+    }
+    function closeShareModal(e) {
+      if (e.target === e.currentTarget) {
+        e.target.style.display = 'none';
+      }
+    }
+    function openImportModal() {
+      document.getElementById('import-modal').style.display = 'flex';
+    }
+    function closeImportModal(e) {
+      if (e.target === e.currentTarget) {
+        e.target.style.display = 'none';
+      }
+    }
+    function handleFiles(files) {
+      const list = document.getElementById('file-list');
+      for (const file of files) {
+        if (!file.name.endsWith('.md')) continue;
+        const item = document.createElement('div');
+        item.className = 'import-file-item';
+        item.innerHTML = `
+          <span class="import-file-icon">📝</span>
+          <span class="import-file-name">${file.name}</span>
+          <span class="import-file-size">${(file.size / 1024).toFixed(1)}KB</span>
+          <span class="import-file-remove" onclick="this.parentElement.remove()">✕</span>
+        `;
+        list.appendChild(item);
+      }
+    }
+    function createFromTemplate(type) {
+      const templates = {
+        'overview': '# Overview\n\nDescribe your project...',
+        'tech-stack': '# Tech Stack\n\n- **Frontend:** \n- **Backend:** \n- **Database:** \n- **Deploy:** ',
+        'features': '# Features\n\n- [ ] Feature 1\n- [ ] Feature 2',
+        'timeline': '# Timeline\n\n## Phase 1\n## Phase 2',
+        'risks': '# Risks\n\n| Risk | Impact | Mitigation |\n|------|--------|------------|'
+      };
+      alert(`Template "${type}" selected — would create ${type}.md`);
+    }
+    function importFiles() {
+      alert('Files would be imported as planning sections');
+      document.getElementById('import-modal').style.display = 'none';
+    }
+    // Drag and drop
+    const dropzone = document.getElementById('dropzone');
+    dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+    dropzone.addEventListener('dragleave', () => { dropzone.classList.remove('dragover'); });
+    dropzone.addEventListener('drop', (e) => { e.preventDefault(); dropzone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+  </script>
+</body>
+</html>

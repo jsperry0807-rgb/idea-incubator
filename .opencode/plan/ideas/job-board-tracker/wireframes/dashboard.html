@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idea Incubator — Dashboard</title>
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()">theme</button>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">💡</div>
+        Idea Incubator
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Navigation</div>
+        <a href="dashboard.html" class="sidebar-item active">
+          <span class="icon">◉</span> Dashboard
+        </a>
+        <a href="ideas-list.html" class="sidebar-item">
+          <span class="icon">◎</span> Ideas
+          <span class="badge">24</span>
+        </a>
+        <a href="roadmap.html" class="sidebar-item">
+          <span class="icon">◫</span> Roadmap
+        </a>
+        <a href="#" class="sidebar-item">
+          <span class="icon">◧</span> Tags
+          <span class="badge">6</span>
+        </a>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Collaboration</div>
+        <a href="collaboration.html" class="sidebar-item">
+          <span class="icon">⧉</span> Shared with me
+          <span class="badge">3</span>
+        </a>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-bottom">
+        <a href="#" class="sidebar-item">
+          <span class="icon">⚙</span> Settings
+        </a>
+        <a href="auth.html" class="sidebar-item">
+          <span class="icon">⏻</span> Log out
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Good evening, JaSperry</h1>
+          <p class="text-sm text-muted mt-8">You have 6 ideas in planning and 2 ready to build.</p>
+        </div>
+        <a href="create-idea.html" class="btn btn-primary">+ New Idea</a>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card accent">
+          <div class="stat-label">Total Ideas</div>
+          <div class="stat-value">24</div>
+          <div class="stat-change text-muted">+3 this week</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-label">In Planning</div>
+          <div class="stat-value">6</div>
+          <div class="stat-change text-muted">2 need attention</div>
+        </div>
+        <div class="stat-card warning">
+          <div class="stat-label">Planned</div>
+          <div class="stat-value">8</div>
+          <div class="stat-change text-muted">Ready to build</div>
+        </div>
+        <div class="stat-card success">
+          <div class="stat-label">Done</div>
+          <div class="stat-value">3</div>
+          <div class="stat-change" style="color: var(--success);">33% completion</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <!-- Recent Activity -->
+        <div class="card">
+          <div class="flex items-center justify-between mb-16">
+            <h2 class="font-semibold">Recent Activity</h2>
+            <a href="#" class="text-sm text-muted">View all</a>
+          </div>
+          <div class="activity-feed">
+            <div class="activity-item">
+              <div class="activity-dot"></div>
+              <div>
+                <div class="activity-text">Updated <strong>Blog CMS Platform</strong> — added Tech Stack section</div>
+                <div class="activity-time">2 hours ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot green"></div>
+              <div>
+                <div class="activity-text">Completed task <strong>"Write project overview"</strong> in API Rate Limiter</div>
+                <div class="activity-time">5 hours ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot orange"></div>
+              <div>
+                <div class="activity-text">Moved <strong>Chat App</strong> from Idea → Planning</div>
+                <div class="activity-time">Yesterday</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot"></div>
+              <div>
+                <div class="activity-text">Created new idea <strong>Habit Tracker</strong></div>
+                <div class="activity-time">2 days ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot green"></div>
+              <div>
+                <div class="activity-text">Shared <strong>Finance Tracker</strong> with friend@email.com</div>
+                <div class="activity-time">3 days ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ideas Needing Attention -->
+        <div class="card">
+          <div class="flex items-center justify-between mb-16">
+            <h2 class="font-semibold">Needs Attention</h2>
+          </div>
+          <div class="flex flex-col gap-12">
+            <a href="idea-detail.html" class="idea-card" style="margin: 0;">
+              <div class="idea-card-header">
+                <div class="idea-card-title">Chat App</div>
+                <span class="badge badge-planning">Planning</span>
+              </div>
+              <div class="idea-card-desc">Real-time chat with WebSocket, typing indicators, message history</div>
+              <div class="idea-card-meta">
+                <div class="priority">
+                  <div class="priority-dot filled medium"></div>
+                  <div class="priority-dot filled medium"></div>
+                  <div class="priority-dot filled medium"></div>
+                  <div class="priority-dot"></div>
+                  <div class="priority-dot"></div>
+                </div>
+                <span class="tag social">Social</span>
+                <span class="text-xs text-faint" style="margin-left: auto;">2/8 tasks</span>
+              </div>
+              <div class="progress-bar"><div class="progress-bar-fill" style="width: 25%;"></div></div>
+            </a>
+            <a href="idea-detail.html" class="idea-card" style="margin: 0;">
+              <div class="idea-card-header">
+                <div class="idea-card-title">URL Shortener + Analytics</div>
+                <span class="badge badge-planning">Planning</span>
+              </div>
+              <div class="idea-card-desc">Shorten links, track clicks, referrer analytics, geographic data</div>
+              <div class="idea-card-meta">
+                <div class="priority">
+                  <div class="priority-dot filled"></div>
+                  <div class="priority-dot filled"></div>
+                  <div class="priority-dot"></div>
+                  <div class="priority-dot"></div>
+                  <div class="priority-dot"></div>
+                </div>
+                <span class="tag devtool">DevTool</span>
+                <span class="text-xs text-faint" style="margin-left: auto;">1/6 tasks</span>
+              </div>
+              <div class="progress-bar"><div class="progress-bar-fill" style="width: 17%;"></div></div>
+            </a>
+            <div class="empty-state" style="padding: 30px 20px;">
+              <div class="empty-state-desc" style="margin: 0;">All other ideas are on track</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Access Ideas -->
+      <div class="mt-24">
+        <div class="flex items-center justify-between mb-16">
+          <h2 class="font-semibold">In Progress</h2>
+          <a href="ideas-list.html" class="text-sm text-muted">View all ideas</a>
+        </div>
+        <div class="ideas-grid">
+          <a href="idea-detail.html" class="idea-card">
+            <div class="idea-card-header">
+              <div class="idea-card-title">URL Shortener</div>
+              <span class="badge badge-in-progress">In Progress</span>
+            </div>
+            <div class="idea-card-desc">Shorten links, track clicks, show referrer and geo data on a dashboard.</div>
+            <div class="idea-card-meta">
+              <span class="tag devtool">DevTool</span>
+              <span class="text-xs text-faint" style="margin-left: auto;">5/8 tasks</span>
+            </div>
+            <div class="progress-bar"><div class="progress-bar-fill" style="width: 62%;"></div></div>
+          </a>
+          <a href="idea-detail.html" class="idea-card">
+            <div class="idea-card-header">
+              <div class="idea-card-title">Habit Tracker</div>
+              <span class="badge badge-in-progress">In Progress</span>
+            </div>
+            <div class="idea-card-desc">Daily habit logging with streaks, reminders, and stats.</div>
+            <div class="idea-card-meta">
+              <span class="tag sass">SaaS</span>
+              <span class="text-xs text-faint" style="margin-left: auto;">3/5 tasks</span>
+            </div>
+            <div class="progress-bar"><div class="progress-bar-fill" style="width: 60%;"></div></div>
+          </a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- FAB -->
+  <a href="create-idea.html" class="fab">+</a>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+    }
+  </script>
+</body>
+</html>

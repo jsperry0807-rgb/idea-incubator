@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idea Incubator — Roadmap</title>
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()">theme</button>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">💡</div>
+        Idea Incubator
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Navigation</div>
+        <a href="dashboard.html" class="sidebar-item">
+          <span class="icon">◉</span> Dashboard
+        </a>
+        <a href="ideas-list.html" class="sidebar-item">
+          <span class="icon">◎</span> Ideas
+          <span class="badge">24</span>
+        </a>
+        <a href="roadmap.html" class="sidebar-item active">
+          <span class="icon">◫</span> Roadmap
+        </a>
+        <a href="#" class="sidebar-item">
+          <span class="icon">◧</span> Tags
+          <span class="badge">6</span>
+        </a>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Collaboration</div>
+        <a href="collaboration.html" class="sidebar-item">
+          <span class="icon">⧉</span> Shared with me
+          <span class="badge">3</span>
+        </a>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-bottom">
+        <a href="#" class="sidebar-item">
+          <span class="icon">⚙</span> Settings
+        </a>
+        <a href="auth.html" class="sidebar-item">
+          <span class="icon">⏻</span> Log out
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">Roadmap</h1>
+        <div class="flex gap-8">
+          <a href="create-idea.html" class="btn btn-primary btn-sm">+ New Idea</a>
+        </div>
+      </div>
+
+      <p class="text-sm text-muted mb-24">Drag ideas between columns to change their status. Click to view details.</p>
+
+      <!-- Kanban Board -->
+      <div class="kanban-board">
+        <!-- Idea Column -->
+        <div class="kanban-column">
+          <div class="kanban-column-header">
+            <span class="kanban-column-title">💡 Idea</span>
+            <span class="kanban-column-count">4</span>
+          </div>
+          <div class="kanban-cards">
+            <div class="kanban-card">
+              <div class="kanban-card-title">Habit Tracker</div>
+              <div class="kanban-card-meta">
+                <div class="priority">
+                  <div class="priority-dot filled medium"></div>
+                  <div class="priority-dot filled medium"></div>
+                  <div class="priority-dot"></div>
+                  <div class="priority-dot"></div>
+                  <div class="priority-dot"></div>
+                </div>
+                <span class="tag sass">SaaS</span>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">Recipe Manager</div>
+              <div class="kanban-card-meta">
+                <div class="priority">
+                  <div class="priority-dot filled"></div>
+                  <div class="priority-dot"></div>
+                  <div class="priority-dot"></div>
+                  <div class="priority-dot"></div>
+                  <div class="priority-dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">Inventory Tool</div>
+              <div class="kanban-card-meta">
+                <span class="tag devtool">DevTool</span>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">Bookmark App</div>
+              <div class="kanban-card-meta">
+                <span class="tag social">Social</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Planning Column -->
+        <div class="kanban-column">
+          <div class="kanban-column-header">
+            <span class="kanban-column-title">📝 Planning</span>
+            <span class="kanban-column-count">6</span>
+          </div>
+          <div class="kanban-cards">
+            <div class="kanban-card">
+              <div class="kanban-card-title">Blog CMS Platform</div>
+              <div class="kanban-card-meta">
+                <div class="priority">
+                  <div class="priority-dot filled high"></div>
+                  <div class="priority-dot filled high"></div>
+                  <div class="priority-dot filled high"></div>
+                  <div class="priority-dot filled high"></div>
+                  <div class="priority-dot"></div>
+                </div>
+                <span class="tag sass">SaaS</span>
+              </div>
+              <div class="mt-8">
+                <div class="progress-bar"><div class="progress-bar-fill" style="width: 40%;"></div></div>
+                <div class="progress-text">4/10 tasks · 3/5 sections</div>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">Chat App</div>
+              <div class="kanban-card-meta">
+                <div class="priority">
+                  <div class="priority-dot filled medium"></div>
+                  <div class="priority-dot filled medium"></div>
+                  <div class="priority-dot filled medium"></div>
+                  <div class="priority-dot"></div>
+                  <div class="priority-dot"></div>
+                </div>
+                <span class="tag social">Social</span>
+              </div>
+              <div class="mt-8">
+                <div class="progress-bar"><div class="progress-bar-fill" style="width: 25%;"></div></div>
+                <div class="progress-text">2/8 tasks · 1/3 sections</div>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">API Rate Limiter</div>
+              <div class="kanban-card-meta">
+                <span class="tag devtool">DevTool</span>
+              </div>
+              <div class="mt-8">
+                <div class="progress-bar"><div class="progress-bar-fill" style="width: 33%;"></div></div>
+                <div class="progress-text">2/6 tasks · 2/4 sections</div>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">Study Timer</div>
+              <div class="kanban-card-meta">
+                <span class="tag react">React</span>
+              </div>
+              <div class="mt-8">
+                <div class="progress-bar"><div class="progress-bar-fill" style="width: 20%;"></div></div>
+                <div class="progress-text">1/5 tasks</div>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">Community Board</div>
+              <div class="kanban-card-meta">
+                <span class="tag social">Social</span>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">Job Board</div>
+              <div class="kanban-card-meta">
+                <span class="tag sass">SaaS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Planned Column -->
+        <div class="kanban-column">
+          <div class="kanban-column-header">
+            <span class="kanban-column-title">📋 Planned</span>
+            <span class="kanban-column-count">8</span>
+          </div>
+          <div class="kanban-cards">
+            <div class="kanban-card">
+              <div class="kanban-card-title">URL Shortener</div>
+              <div class="kanban-card-meta">
+                <span class="tag devtool">DevTool</span>
+              </div>
+              <div class="mt-8">
+                <div class="progress-bar"><div class="progress-bar-fill" style="width: 100%;"></div></div>
+                <div class="progress-text">8/8 tasks · All sections done</div>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">Markdown Notes</div>
+              <div class="kanban-card-meta">
+                <span class="tag react">React</span>
+              </div>
+              <div class="mt-8">
+                <div class="progress-bar"><div class="progress-bar-fill success" style="width: 100%;"></div></div>
+                <div class="progress-text">6/6 tasks · Ready to build</div>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">Expense Splitter</div>
+              <div class="kanban-card-meta">
+                <span class="tag sass">SaaS</span>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">Portfolio Generator</div>
+              <div class="kanban-card-meta">
+                <span class="tag devtool">DevTool</span>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">Email Builder</div>
+              <div class="kanban-card-meta">
+                <span class="tag sass">SaaS</span>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">API Docs Generator</div>
+              <div class="kanban-card-meta">
+                <span class="tag devtool">DevTool</span>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">Status Page</div>
+              <div class="kanban-card-meta">
+                <span class="tag devtool">DevTool</span>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">Color Palette Tool</div>
+              <div class="kanban-card-meta">
+                <span class="tag react">React</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- In Progress Column -->
+        <div class="kanban-column">
+          <div class="kanban-column-header">
+            <span class="kanban-column-title">🔨 In Progress</span>
+            <span class="kanban-column-count">3</span>
+          </div>
+          <div class="kanban-cards">
+            <div class="kanban-card">
+              <div class="kanban-card-title">URL Shortener</div>
+              <div class="kanban-card-meta">
+                <span class="tag devtool">DevTool</span>
+              </div>
+              <div class="mt-8">
+                <div class="progress-bar"><div class="progress-bar-fill" style="width: 62%;"></div></div>
+                <div class="progress-text">5/8 tasks</div>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">Habit Tracker</div>
+              <div class="kanban-card-meta">
+                <span class="tag sass">SaaS</span>
+              </div>
+              <div class="mt-8">
+                <div class="progress-bar"><div class="progress-bar-fill" style="width: 60%;"></div></div>
+                <div class="progress-text">3/5 tasks</div>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">Markdown Notes</div>
+              <div class="kanban-card-meta">
+                <span class="tag react">React</span>
+              </div>
+              <div class="mt-8">
+                <div class="progress-bar"><div class="progress-bar-fill" style="width: 45%;"></div></div>
+                <div class="progress-text">4/9 tasks</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Done Column -->
+        <div class="kanban-column">
+          <div class="kanban-column-header">
+            <span class="kanban-column-title">✅ Done</span>
+            <span class="kanban-column-count">3</span>
+          </div>
+          <div class="kanban-cards">
+            <div class="kanban-card">
+              <div class="kanban-card-title">Finance Tracker</div>
+              <div class="kanban-card-meta">
+                <span class="tag sass">SaaS</span>
+              </div>
+              <div class="mt-8">
+                <div class="progress-bar"><div class="progress-bar-fill success" style="width: 100%;"></div></div>
+                <div class="progress-text">12/12 tasks · Completed</div>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">Pomodoro Timer</div>
+              <div class="kanban-card-meta">
+                <span class="tag react">React</span>
+              </div>
+              <div class="mt-8">
+                <div class="progress-bar"><div class="progress-bar-fill success" style="width: 100%;"></div></div>
+                <div class="progress-text">8/8 tasks · Completed</div>
+              </div>
+            </div>
+            <div class="kanban-card">
+              <div class="kanban-card-title">Regex Tester</div>
+              <div class="kanban-card-meta">
+                <span class="tag devtool">DevTool</span>
+              </div>
+              <div class="mt-8">
+                <div class="progress-bar"><div class="progress-bar-fill success" style="width: 100%;"></div></div>
+                <div class="progress-text">5/5 tasks · Completed</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+    }
+  </script>
+</body>
+</html>

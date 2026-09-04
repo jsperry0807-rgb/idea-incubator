@@ -1,0 +1,65 @@
+import { Link, Outlet, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { ROUTES } from "@config/routes";
+import { LanguageSwitcher } from "@components/layout/LanguageSwitcher";
+
+export default function RootLayout() {
+  const { t } = useTranslation();
+  const location = useLocation();
+  const isHome = location.pathname === ROUTES.HOME;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <header
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "1rem 2rem",
+          borderBottom: "1px solid var(--color-border)",
+        }}
+      >
+        <Link
+          to={ROUTES.HOME}
+          style={{
+            fontWeight: 700,
+            fontSize: "1.125rem",
+            color: "var(--color-fg)",
+            textDecoration: "none",
+          }}
+        >
+          {t("app.name")}
+        </Link>
+        <nav style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
+          <Link
+            to={ROUTES.HOME}
+            style={{
+              color: isHome ? "var(--color-fg)" : "var(--color-muted)",
+              fontWeight: isHome ? 600 : 400,
+              textDecoration: "none",
+            }}
+          >
+            {t("app.nav.home")}
+          </Link>
+          <LanguageSwitcher />
+        </nav>
+      </header>
+
+      <main style={{ flex: 1, width: "100%", maxWidth: "var(--max-width)", marginInline: "auto", padding: "2rem" }}>
+        <Outlet />
+      </main>
+
+      <footer
+        style={{
+          padding: "1rem 2rem",
+          borderTop: "1px solid var(--color-border)",
+          textAlign: "center",
+          color: "var(--color-muted)",
+          fontSize: "0.875rem",
+        }}
+      >
+        &copy; {new Date().getFullYear()} {t("app.name")}
+      </footer>
+    </div>
+  );
+}

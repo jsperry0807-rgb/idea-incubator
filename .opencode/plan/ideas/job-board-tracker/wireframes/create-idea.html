@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idea Incubator — Create Idea</title>
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()">theme</button>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">💡</div>
+        Idea Incubator
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Navigation</div>
+        <a href="dashboard.html" class="sidebar-item">
+          <span class="icon">◉</span> Dashboard
+        </a>
+        <a href="ideas-list.html" class="sidebar-item active">
+          <span class="icon">◎</span> Ideas
+          <span class="badge">24</span>
+        </a>
+        <a href="roadmap.html" class="sidebar-item">
+          <span class="icon">◫</span> Roadmap
+        </a>
+        <a href="#" class="sidebar-item">
+          <span class="icon">◧</span> Tags
+          <span class="badge">6</span>
+        </a>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Collaboration</div>
+        <a href="collaboration.html" class="sidebar-item">
+          <span class="icon">⧉</span> Shared with me
+          <span class="badge">3</span>
+        </a>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-bottom">
+        <a href="#" class="sidebar-item">
+          <span class="icon">⚙</span> Settings
+        </a>
+        <a href="auth.html" class="sidebar-item">
+          <span class="icon">⏻</span> Log out
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" style="max-width: 700px;">
+      <div class="flex items-center justify-between mb-24">
+        <a href="ideas-list.html" class="btn btn-ghost btn-sm">← Back to Ideas</a>
+      </div>
+
+      <h1 class="page-title mb-24">New Idea</h1>
+
+      <div class="card">
+        <form>
+          <div class="form-group">
+            <label class="form-label">Title *</label>
+            <input type="text" class="form-input" placeholder="What's your idea?" autofocus oninput="updateFolderName(this.value)">
+            <div class="form-hint">Creates the folder <code class="font-mono">📁 {slugified-title}/</code></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea class="form-input" rows="3" placeholder="Brief description — what does it do, who is it for?"></textarea>
+            <div class="form-hint">Optional — you can flesh this out later in the planning sections.</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <div class="flex gap-8" style="flex-wrap: wrap;">
+              <label style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; font-size: 0.85rem;">
+                <input type="radio" name="status" value="idea" checked> 💡 Idea
+              </label>
+              <label style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; font-size: 0.85rem;">
+                <input type="radio" name="status" value="planning"> 📝 Planning
+              </label>
+              <label style="display: flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; font-size: 0.85rem;">
+                <input type="radio" name="status" value="planned"> 📋 Planned
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Priority</label>
+            <div class="flex gap-8">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="setPriority(this)" data-priority="none">None</button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="setPriority(this)" data-priority="low">Low</button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="setPriority(this)" data-priority="medium">Medium</button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="setPriority(this)" data-priority="high">High</button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="setPriority(this)" data-priority="critical">Critical</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tags</label>
+            <div class="flex gap-8 items-center" style="flex-wrap: wrap;">
+              <span class="tag react" style="cursor: pointer;">React ×</span>
+              <span class="tag sass" style="cursor: pointer;">SaaS ×</span>
+              <button type="button" class="btn btn-ghost btn-sm">+ New Tag</button>
+            </div>
+          </div>
+
+          <!-- Folder Structure Preview -->
+          <div class="form-group">
+            <label class="form-label">Planning Folder</label>
+            <div class="card" style="background: var(--bg-secondary); padding: 16px;">
+              <div class="font-mono text-xs" style="line-height: 2;">
+                <div style="color: var(--fg);">📁 <strong style="font-weight: 600;" id="folder-name">my-new-idea/</strong></div>
+                <div style="color: var(--fg-muted); padding-left: 16px;">📄 overview.md</div>
+                <div style="color: var(--fg-muted); padding-left: 16px;">📄 tech-stack.md</div>
+                <div style="color: var(--fg-muted); padding-left: 16px;">📄 features.md</div>
+                <div style="color: var(--fg-muted); padding-left: 16px;">📄 timeline.md</div>
+                <div style="color: var(--fg-faint); padding-left: 16px;">📄 risks.md <span style="font-size: 0.65rem;">(created on demand)</span></div>
+              </div>
+            </div>
+            <div class="form-hint mt-8">Each planning section is a separate <code>.md</code> file. Add them in your editor or import them here.</div>
+          </div>
+
+          <!-- Quick Create Hint -->
+          <div class="card" style="background: var(--accent-subtle); border-color: var(--accent); margin: 24px 0;">
+            <div class="flex gap-12 items-center">
+              <span style="font-size: 1.2rem;">⚡</span>
+              <div>
+                <div class="font-semibold text-sm" style="color: var(--accent);">Quick Create</div>
+                <div class="text-xs text-muted">Just have a title? Hit <kbd style="background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.7rem;">Enter</kbd> to save as an "Idea" and flesh it out later.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-between mt-24">
+            <a href="ideas-list.html" class="btn btn-secondary">Cancel</a>
+            <button type="button" class="btn btn-primary">Create Idea</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Keyboard Shortcut Hint -->
+      <div class="text-xs text-faint mt-16" style="text-align: center;">
+        <kbd style="background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono);">Esc</kbd> to close
+        &nbsp;·&nbsp;
+        <kbd style="background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono);">⌘</kbd> + <kbd style="background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono);">Enter</kbd> to save
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+    }
+    function setPriority(btn) {
+      btn.parentElement.querySelectorAll('.btn').forEach(b => {
+        b.classList.remove('btn-primary');
+        b.classList.add('btn-secondary');
+      });
+      btn.classList.remove('btn-secondary');
+      btn.classList.add('btn-primary');
+    }
+    function updateFolderName(title) {
+      const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'my-new-idea';
+      document.getElementById('folder-name').textContent = slug + '/';
+    }
+  </script>
+</body>
+</html>

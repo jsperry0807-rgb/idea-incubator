@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idea Incubator — My Ideas</title>
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()">theme</button>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">💡</div>
+        Idea Incubator
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Navigation</div>
+        <a href="dashboard.html" class="sidebar-item">
+          <span class="icon">◉</span> Dashboard
+        </a>
+        <a href="ideas-list.html" class="sidebar-item active">
+          <span class="icon">◎</span> Ideas
+          <span class="badge">24</span>
+        </a>
+        <a href="roadmap.html" class="sidebar-item">
+          <span class="icon">◫</span> Roadmap
+        </a>
+        <a href="#" class="sidebar-item">
+          <span class="icon">◧</span> Tags
+          <span class="badge">6</span>
+        </a>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Collaboration</div>
+        <a href="collaboration.html" class="sidebar-item">
+          <span class="icon">⧉</span> Shared with me
+          <span class="badge">3</span>
+        </a>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-bottom">
+        <a href="#" class="sidebar-item">
+          <span class="icon">⚙</span> Settings
+        </a>
+        <a href="auth.html" class="sidebar-item">
+          <span class="icon">⏻</span> Log out
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">My Ideas</h1>
+        <div class="flex gap-8">
+          <button class="btn btn-secondary btn-sm" onclick="toggleView('grid')">▦ Grid</button>
+          <button class="btn btn-ghost btn-sm" onclick="toggleView('list')">☰ List</button>
+          <a href="create-idea.html" class="btn btn-primary">+ New Idea</a>
+        </div>
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="flex items-center gap-16 mb-16" style="flex-wrap: wrap;">
+        <div class="search-bar">
+          <span class="search-icon">⌕</span>
+          <input type="text" placeholder="Search ideas... ( / )">
+        </div>
+        <div class="filter-tabs">
+          <button class="filter-tab active">All (24)</button>
+          <button class="filter-tab">Idea (4)</button>
+          <button class="filter-tab">Planning (6)</button>
+          <button class="filter-tab">Planned (8)</button>
+          <button class="filter-tab">In Progress (3)</button>
+          <button class="filter-tab">Done (2)</button>
+          <button class="filter-tab">Archived (1)</button>
+        </div>
+      </div>
+
+      <!-- Tag Filters -->
+      <div class="flex gap-8 mb-24 items-center">
+        <span class="text-xs text-muted">Tags:</span>
+        <span class="tag react" style="cursor:pointer;">React ×</span>
+        <span class="tag sass" style="cursor:pointer;">SaaS ×</span>
+        <span class="tag devtool" style="cursor:pointer;">DevTool ×</span>
+        <button class="btn btn-ghost btn-sm">+ Add tag filter</button>
+        <div style="margin-left: auto;">
+          <select class="form-input" style="width: auto; padding: 4px 8px; font-size: 0.8rem;">
+            <option>Sort: Recent</option>
+            <option>Sort: A-Z</option>
+            <option>Sort: Priority</option>
+            <option>Sort: Status</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Ideas Grid -->
+      <div class="ideas-grid" id="ideas-grid">
+        <a href="idea-detail.html" class="idea-card">
+          <div class="idea-card-header">
+            <div class="idea-card-title">Blog CMS Platform</div>
+            <span class="badge badge-planning">Planning</span>
+          </div>
+          <div class="idea-card-desc">A simple CMS for dev blogs. Markdown support, syntax highlighting, SEO-friendly.</div>
+          <div class="idea-card-meta">
+            <div class="priority">
+              <div class="priority-dot filled high"></div>
+              <div class="priority-dot filled high"></div>
+              <div class="priority-dot filled high"></div>
+              <div class="priority-dot filled high"></div>
+              <div class="priority-dot"></div>
+            </div>
+            <span class="tag sass">SaaS</span>
+            <span class="tag react">React</span>
+            <span class="text-xs text-faint" style="margin-left: auto;">4/10 tasks</span>
+          </div>
+          <div class="progress-bar"><div class="progress-bar-fill" style="width: 40%;"></div></div>
+        </a>
+
+        <a href="idea-detail.html" class="idea-card">
+          <div class="idea-card-header">
+            <div class="idea-card-title">API Rate Limiter Dashboard</div>
+            <span class="badge badge-planning">Planning</span>
+          </div>
+          <div class="idea-card-desc">Monitor and configure rate limits per API key. Real-time usage charts.</div>
+          <div class="idea-card-meta">
+            <div class="priority">
+              <div class="priority-dot filled"></div>
+              <div class="priority-dot filled"></div>
+              <div class="priority-dot"></div>
+              <div class="priority-dot"></div>
+              <div class="priority-dot"></div>
+            </div>
+            <span class="tag devtool">DevTool</span>
+            <span class="text-xs text-faint" style="margin-left: auto;">2/6 tasks</span>
+          </div>
+          <div class="progress-bar"><div class="progress-bar-fill" style="width: 33%;"></div></div>
+        </a>
+
+        <a href="idea-detail.html" class="idea-card">
+          <div class="idea-card-header">
+            <div class="idea-card-title">Chat App</div>
+            <span class="badge badge-planning">Planning</span>
+          </div>
+          <div class="idea-card-desc">Real-time chat with WebSocket, typing indicators, message history, rooms.</div>
+          <div class="idea-card-meta">
+            <div class="priority">
+              <div class="priority-dot filled medium"></div>
+              <div class="priority-dot filled medium"></div>
+              <div class="priority-dot filled medium"></div>
+              <div class="priority-dot"></div>
+              <div class="priority-dot"></div>
+            </div>
+            <span class="tag social">Social</span>
+            <span class="text-xs text-faint" style="margin-left: auto;">2/8 tasks</span>
+          </div>
+          <div class="progress-bar"><div class="progress-bar-fill" style="width: 25%;"></div></div>
+        </a>
+
+        <a href="idea-detail.html" class="idea-card">
+          <div class="idea-card-header">
+            <div class="idea-card-title">Finance Tracker</div>
+            <span class="badge badge-done">Done</span>
+          </div>
+          <div class="idea-card-desc">Track expenses, income, categories. Monthly reports with charts.</div>
+          <div class="idea-card-meta">
+            <div class="priority">
+              <div class="priority-dot filled"></div>
+              <div class="priority-dot filled"></div>
+              <div class="priority-dot filled"></div>
+              <div class="priority-dot"></div>
+              <div class="priority-dot"></div>
+            </div>
+            <span class="tag sass">SaaS</span>
+            <span class="text-xs text-faint" style="margin-left: auto;">12/12 tasks</span>
+          </div>
+          <div class="progress-bar"><div class="progress-bar-fill success" style="width: 100%;"></div></div>
+        </a>
+
+        <a href="idea-detail.html" class="idea-card">
+          <div class="idea-card-header">
+            <div class="idea-card-title">URL Shortener</div>
+            <span class="badge badge-in-progress">In Progress</span>
+          </div>
+          <div class="idea-card-desc">Shorten links, track clicks, show referrer and geographic analytics.</div>
+          <div class="idea-card-meta">
+            <div class="priority">
+              <div class="priority-dot filled"></div>
+              <div class="priority-dot filled"></div>
+              <div class="priority-dot"></div>
+              <div class="priority-dot"></div>
+              <div class="priority-dot"></div>
+            </div>
+            <span class="tag devtool">DevTool</span>
+            <span class="text-xs text-faint" style="margin-left: auto;">5/8 tasks</span>
+          </div>
+          <div class="progress-bar"><div class="progress-bar-fill" style="width: 62%;"></div></div>
+        </a>
+
+        <a href="idea-detail.html" class="idea-card">
+          <div class="idea-card-header">
+            <div class="idea-card-title">Habit Tracker</div>
+            <span class="badge badge-idea">Idea</span>
+          </div>
+          <div class="idea-card-desc">Daily habit logging with streaks, reminders, stats. Pomodoro integration.</div>
+          <div class="idea-card-meta">
+            <div class="priority">
+              <div class="priority-dot filled medium"></div>
+              <div class="priority-dot filled medium"></div>
+              <div class="priority-dot"></div>
+              <div class="priority-dot"></div>
+              <div class="priority-dot"></div>
+            </div>
+            <span class="tag sass">SaaS</span>
+          </div>
+        </a>
+
+        <a href="idea-detail.html" class="idea-card">
+          <div class="idea-card-header">
+            <div class="idea-card-title">Recipe Manager</div>
+            <span class="badge badge-idea">Idea</span>
+          </div>
+          <div class="idea-card-desc">Add recipes with ingredients, steps, tags. Meal planning calendar.</div>
+          <div class="idea-card-meta">
+            <div class="priority">
+              <div class="priority-dot filled"></div>
+              <div class="priority-dot"></div>
+              <div class="priority-dot"></div>
+              <div class="priority-dot"></div>
+              <div class="priority-dot"></div>
+            </div>
+          </div>
+        </a>
+
+        <a href="idea-detail.html" class="idea-card">
+          <div class="idea-card-header">
+            <div class="idea-card-title">Markdown Notes App</div>
+            <span class="badge badge-archived">Archived</span>
+          </div>
+          <div class="idea-card-desc">Simple note-taking with markdown, tags, search. Export to PDF.</div>
+          <div class="idea-card-meta">
+            <span class="tag react">React</span>
+          </div>
+        </a>
+      </div>
+    </main>
+  </div>
+
+  <!-- FAB -->
+  <a href="create-idea.html" class="fab">+</a>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+    }
+    function toggleView(view) {
+      // Placeholder — in real app this would toggle grid/list
+      console.log('Toggle view:', view);
+    }
+  </script>
+</body>
+</html>

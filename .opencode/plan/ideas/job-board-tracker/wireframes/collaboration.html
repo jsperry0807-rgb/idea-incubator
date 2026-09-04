@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idea Incubator — Collaboration</title>
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()">theme</button>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">💡</div>
+        Idea Incubator
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Navigation</div>
+        <a href="dashboard.html" class="sidebar-item">
+          <span class="icon">◉</span> Dashboard
+        </a>
+        <a href="ideas-list.html" class="sidebar-item">
+          <span class="icon">◎</span> Ideas
+          <span class="badge">24</span>
+        </a>
+        <a href="roadmap.html" class="sidebar-item">
+          <span class="icon">◫</span> Roadmap
+        </a>
+        <a href="#" class="sidebar-item">
+          <span class="icon">◧</span> Tags
+          <span class="badge">6</span>
+        </a>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Collaboration</div>
+        <a href="collaboration.html" class="sidebar-item active">
+          <span class="icon">⧉</span> Shared with me
+          <span class="badge">3</span>
+        </a>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-bottom">
+        <a href="#" class="sidebar-item">
+          <span class="icon">⚙</span> Settings
+        </a>
+        <a href="auth.html" class="sidebar-item">
+          <span class="icon">⏻</span> Log out
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Page 1: Shared With Me -->
+      <div id="page-shared">
+        <div class="page-header">
+          <h1 class="page-title">Shared with me</h1>
+        </div>
+
+        <p class="text-sm text-muted mb-24">Ideas that other people have shared with you.</p>
+
+        <div class="ideas-grid">
+          <div class="idea-card">
+            <div class="idea-card-header">
+              <div class="idea-card-title">E-Commerce Platform</div>
+              <span class="badge badge-planning">Planning</span>
+            </div>
+            <div class="idea-card-desc">Full-stack marketplace with product listings, cart, checkout, and admin panel.</div>
+            <div class="idea-card-meta">
+              <div class="comment-avatar" style="width: 20px; height: 20px; font-size: 0.55rem;">MK</div>
+              <span class="text-xs text-muted">Shared by mk@gmail.com</span>
+              <span class="text-xs text-faint" style="margin-left: auto;">Edit access</span>
+            </div>
+          </div>
+
+          <div class="idea-card">
+            <div class="idea-card-header">
+              <div class="idea-card-title">Design System</div>
+              <span class="badge badge-planned">Planned</span>
+            </div>
+            <div class="idea-card-desc">Shared component library with Storybook, tokens, and documentation.</div>
+            <div class="idea-card-meta">
+              <div class="comment-avatar" style="width: 20px; height: 20px; font-size: 0.55rem;">AL</div>
+              <span class="text-xs text-muted">Shared by alex@dev.io</span>
+              <span class="text-xs text-faint" style="margin-left: auto;">View only</span>
+            </div>
+          </div>
+
+          <div class="idea-card">
+            <div class="idea-card-header">
+              <div class="idea-card-title">CI/CD Pipeline Tool</div>
+              <span class="badge badge-idea">Idea</span>
+            </div>
+            <div class="idea-card-desc">Visual pipeline builder for GitHub Actions workflows.</div>
+            <div class="idea-card-meta">
+              <div class="comment-avatar" style="width: 20px; height: 20px; font-size: 0.55rem;">MK</div>
+              <span class="text-xs text-muted">Shared by mk@gmail.com</span>
+              <span class="text-xs text-faint" style="margin-left: auto;">Edit access</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-24">
+          <button class="btn btn-primary" onclick="showPage('page-idea-detail')">View Idea Detail with Sharing →</button>
+        </div>
+      </div>
+
+      <!-- Page 2: Idea Detail with Share Modal -->
+      <div id="page-idea-detail" style="display: none;">
+        <div class="flex items-center justify-between mb-16">
+          <button class="btn btn-ghost btn-sm" onclick="showPage('page-shared')">← Back</button>
+          <div class="flex gap-8">
+            <button class="btn btn-secondary btn-sm" onclick="openShareModal()">⧉ Share</button>
+            <button class="btn btn-ghost btn-sm">⋯</button>
+          </div>
+        </div>
+
+        <h1 class="detail-title">Blog CMS Platform</h1>
+        <p class="text-sm text-muted mt-8 mb-24">A simple CMS for dev blogs with markdown support and SEO.</p>
+
+        <div class="detail-meta mb-24">
+          <div class="detail-meta-item">
+            <div class="detail-meta-label">Status</div>
+            <span class="badge badge-planning">Planning</span>
+          </div>
+          <div class="detail-meta-item">
+            <div class="detail-meta-label">Shared with</div>
+            <div class="flex gap-8 mt-8 items-center">
+              <div class="comment-avatar" style="width: 24px; height: 24px; font-size: 0.6rem;">FR</div>
+              <div class="comment-avatar" style="width: 24px; height: 24px; font-size: 0.6rem;">MK</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="comments-container" style="margin-top: 0;">
+          <div class="comments-header">Comments (3)</div>
+
+          <div class="comment-item">
+            <div class="comment-avatar">JS</div>
+            <div class="comment-body">
+              <div class="comment-meta">
+                <span class="comment-author">JaSperry</span>
+                <span class="comment-time">2 hours ago</span>
+                <button class="btn btn-ghost btn-sm" style="margin-left: auto; padding: 2px 6px;">Edit</button>
+              </div>
+              <div class="comment-text">Great idea! I think we should start with the auth system since it's foundational to the rest of the app.</div>
+              <div class="mt-8">
+                <button class="btn btn-ghost btn-sm" style="padding: 2px 8px; font-size: 0.75rem;">↩ Reply</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="comment-item">
+            <div class="comment-avatar">FR</div>
+            <div class="comment-body">
+              <div class="comment-meta">
+                <span class="comment-author">friend@email.com</span>
+                <span class="comment-time">1 hour ago</span>
+                <button class="btn btn-ghost btn-sm" style="margin-left: auto; padding: 2px 6px;">Edit</button>
+              </div>
+              <div class="comment-text">Agreed. Also consider adding rate limiting to the API from the start — it's easier to build in early than retrofit later.</div>
+              <div class="mt-8">
+                <button class="btn btn-ghost btn-sm" style="padding: 2px 8px; font-size: 0.75rem;">↩ Reply</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="comment-item">
+            <div class="comment-avatar">MK</div>
+            <div class="comment-body">
+              <div class="comment-meta">
+                <span class="comment-author">mk@gmail.com</span>
+                <span class="comment-time">30 min ago</span>
+              </div>
+              <div class="comment-text">I can help with the database schema. I've built a few CMS platforms before and have some patterns that work well.</div>
+              <div class="mt-8">
+                <button class="btn btn-ghost btn-sm" style="padding: 2px 8px; font-size: 0.75rem;">↩ Reply</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="comment-input">
+            <div class="comment-avatar">JS</div>
+            <input type="text" class="form-input" placeholder="Write a comment...">
+            <button class="btn btn-primary btn-sm">Send</button>
+          </div>
+        </div>
+
+        <div class="mt-24">
+          <button class="btn btn-primary" onclick="openShareModal()">Open Share Modal →</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Share Modal -->
+  <div class="modal-overlay" id="share-modal" style="display: none;" onclick="closeShareModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title">Share "Blog CMS Platform"</h3>
+        <button class="btn btn-ghost btn-icon" onclick="document.getElementById('share-modal').style.display='none'">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Share with people</label>
+          <div class="flex gap-8">
+            <input type="email" class="form-input" placeholder="Enter email address" style="flex: 1;">
+            <button class="btn btn-primary btn-sm">Invite</button>
+          </div>
+          <div class="form-hint mt-8">They'll receive an email notification with a link to this idea.</div>
+        </div>
+
+        <div class="form-label mt-16 mb-8">People with access</div>
+        <div class="share-list">
+          <div class="share-item">
+            <div class="share-item-avatar">JS</div>
+            <div class="share-item-info">
+              <div class="share-item-name">JaSperry (you)</div>
+              <div class="share-item-email">jasperry@email.com</div>
+            </div>
+            <div class="share-item-role">Owner</div>
+          </div>
+          <div class="share-item">
+            <div class="share-item-avatar">FR</div>
+            <div class="share-item-info">
+              <div class="share-item-name">friend@email.com</div>
+              <div class="share-item-email">friend@email.com</div>
+            </div>
+            <select class="form-input" style="width: auto; padding: 4px 8px; font-size: 0.75rem;">
+              <option selected>Edit</option>
+              <option>View</option>
+              <option style="color: var(--danger);">Remove</option>
+            </select>
+          </div>
+          <div class="share-item">
+            <div class="share-item-avatar">MK</div>
+            <div class="share-item-info">
+              <div class="share-item-name">mk@gmail.com</div>
+              <div class="share-item-email">mk@gmail.com</div>
+            </div>
+            <select class="form-input" style="width: auto; padding: 4px 8px; font-size: 0.75rem;">
+              <option>Edit</option>
+              <option selected>View</option>
+              <option style="color: var(--danger);">Remove</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="document.getElementById('share-modal').style.display='none'">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notifications Panel (inline) -->
+  <div style="position: fixed; top: 16px; right: 80px; z-index: 50;">
+    <button class="btn btn-secondary btn-sm" onclick="toggleNotifications()" style="position: relative;">
+      🔔
+      <span style="position: absolute; top: -4px; right: -4px; width: 16px; height: 16px; background: var(--danger); color: white; border-radius: 50%; font-size: 0.6rem; display: flex; align-items: center; justify-content: center;">2</span>
+    </button>
+  </div>
+
+  <div id="notifications-panel" style="display: none; position: fixed; top: 50px; right: 80px; z-index: 200; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); width: 320px; max-height: 400px; overflow-y: auto;">
+    <div style="padding: 16px; border-bottom: 1px solid var(--border);">
+      <div class="font-semibold text-sm">Notifications</div>
+    </div>
+    <div style="padding: 8px;">
+      <div class="activity-item" style="padding: 8px;">
+        <div class="activity-dot"></div>
+        <div>
+          <div class="activity-text text-sm"><strong>mk@gmail.com</strong> shared <strong>E-Commerce Platform</strong> with you</div>
+          <div class="activity-time">5 min ago</div>
+        </div>
+      </div>
+      <div class="activity-item" style="padding: 8px;">
+        <div class="activity-dot"></div>
+        <div>
+          <div class="activity-text text-sm"><strong>friend@email.com</strong> commented on <strong>Blog CMS</strong></div>
+          <div class="activity-time">1 hour ago</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+    }
+    function showPage(id) {
+      document.querySelectorAll('[id^="page-"]').forEach(p => p.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+    }
+    function openShareModal() {
+      document.getElementById('share-modal').style.display = 'flex';
+    }
+    function closeShareModal(e) {
+      if (e.target === e.currentTarget) {
+        e.target.style.display = 'none';
+      }
+    }
+    function toggleNotifications() {
+      const panel = document.getElementById('notifications-panel');
+      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    }
+  </script>
+</body>
+</html>

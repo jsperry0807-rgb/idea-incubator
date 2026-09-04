@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Character encoding & viewport -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Primary SEO -->
+    <title>Your App Name | Brand Name</title>
+    <meta name="title" content="Your App Name | Brand Name" />
+    <meta
+      name="description"
+      content="A concise, compelling 150-160 character description of your app for search engines."
+    />
+    <meta name="author" content="Your Name or Company" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.example.com/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.example.com/" />
+    <meta property="og:title" content="Your App Name | Brand Name" />
+    <meta
+      property="og:description"
+      content="A concise, compelling description for social sharing."
+    />
+    <meta property="og:image" content="https://www.example.com/og-image.jpg" />
+    <meta property="og:site_name" content="Brand Name" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://www.example.com/" />
+    <meta name="twitter:title" content="Your App Name | Brand Name" />
+    <meta
+      name="twitter:description"
+      content="A concise, compelling description for social sharing."
+    />
+    <meta name="twitter:image" content="https://www.example.com/og-image.jpg" />
+
+    <!-- Theme color for browser UI -->
+    <meta name="theme-color" content="#111111" />
+    <meta name="color-scheme" content="light dark" />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Preconnects (adjust/remove as needed, e.g. for API, fonts, analytics) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+
+    <!-- Minimal critical CSS: prevents FOUC / layout shift before your bundle loads -->
+    <style>
+      :root {
+        color-scheme: light dark;
+        --color-bg: #ffffff;
+        --color-fg: #111111;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --color-bg: #0b0b0c;
+          --color-fg: #f2f2f2;
+        }
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html {
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif;
+        background-color: var(--color-bg);
+        color: var(--color-fg);
+        -webkit-font-smoothing: antialiased;
+      }
+      #root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- No-JS fallback: React apps render nothing without JS -->
+    <noscript>
+      <div style="padding: 2rem; font-family: sans-serif; text-align: center">
+        <h1>JavaScript Required</h1>
+        <p>You need to enable JavaScript to run this app.</p>
+      </div>
+    </noscript>
+
+    <!-- React mount point -->
+    <div id="root"></div>
+
+    <!--
+    Vite entry point. If using Create React App or another bundler,
+    replace this with your build tool's expected entry (e.g. /src/index.js
+    with type="text/javascript", or leave to CRA's own generated index.html).
+  -->
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
