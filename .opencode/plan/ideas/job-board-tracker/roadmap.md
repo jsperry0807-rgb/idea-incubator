@@ -44,7 +44,7 @@
 
 **Goal:** Users can create, view, edit, delete ideas with tags and search.
 
-- [ ] Server: Ideas CRUD routes (list with filters, get, create, update, delete)
+- [x] Server: Ideas CRUD routes (list with filters, get, create, update, delete)
 - [ ] Server: Tags CRUD routes
 - [ ] Server: Auto-create planning folder on idea creation
 - [ ] Client: Ideas list page (grid/list toggle, search, status tabs, tag filter, sort)

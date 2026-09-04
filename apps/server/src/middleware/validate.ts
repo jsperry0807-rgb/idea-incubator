@@ -9,6 +9,19 @@ type SourceSchema = { [K in Source]?: ZodType };
 
 const SOURCES: Source[] = ["body", "query", "params"];
 
+function setSafe(target: Record<string, unknown>, key: string, value: unknown) {
+  try {
+    target[key] = value;
+  } catch {
+    Object.defineProperty(target, key, {
+      value,
+      configurable: true,
+      writable: true,
+      enumerable: true,
+    });
+  }
+}
+
 export function validate(sourceConfig: ZodType | SourceSchema) {
   const config: SourceSchema = SOURCES.some((s) => s in (sourceConfig as object))
     ? (sourceConfig as SourceSchema)
@@ -31,7 +44,7 @@ export function validate(sourceConfig: ZodType | SourceSchema) {
         );
         return;
       }
-      req[source] = result.data as never;
+      setSafe(req as unknown as Record<string, unknown>, source, result.data);
     }
 
     next();
