@@ -5,6 +5,7 @@ export const es: LocaleMessages = {
     name: "Aplicación",
     nav: {
       home: "Inicio",
+      ideas: "Ideas",
     },
   },
   home: {
@@ -47,5 +48,44 @@ export const es: LocaleMessages = {
   },
   dashboard: {
     title: "Panel de control",
+  },
+  ideas: {
+    title: "Ideas",
+    subtitle: "Captura, planifica y sigue tus ideas.",
+    searchPlaceholder: "Buscar ideas…",
+    loadError: "Algo salió mal al cargar tus ideas.",
+    viewGrid: "Vista de cuadrícula",
+    viewList: "Vista de lista",
+    filter: {
+      all: "Todos",
+      priority: "Prioridad",
+      tag: "Etiqueta",
+      sort: "Ordenar",
+    },
+    status: {
+      ALL: "Todas",
+      IDEA: "Idea",
+      PLANNING: "Planificación",
+      PLANNED: "Planificada",
+      IN_PROGRESS: "En curso",
+      DONE: "Hecha",
+      ARCHIVED: "Archivada",
+    },
+    priority: {
+      NONE: "Ninguna",
+      LOW: "Baja",
+      MEDIUM: "Media",
+      HIGH: "Alta",
+      CRITICAL: "Crítica",
+    },
+    sort: {
+      recent: "Más recientes",
+      oldest: "Más antiguas",
+      "alpha-asc": "Título A–Z",
+      "alpha-desc": "Título Z–A",
+      updated: "Actualizadas recientemente",
+    },
+    emptyTitle: "No se encontraron ideas",
+    emptyDescription: "Ajusta los filtros o crea tu primera idea.",
   },
 };

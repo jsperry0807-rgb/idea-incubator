@@ -10,6 +10,7 @@ const HomePage = lazy(() => import("@pages/HomePage"));
 const LoginPage = lazy(() => import("@pages/LoginPage"));
 const RegisterPage = lazy(() => import("@pages/RegisterPage"));
 const DashboardPage = lazy(() => import("@features/dashboard/pages/DashboardPage"));
+const IdeasPage = lazy(() => import("@features/ideas/pages/IdeasPage"));
 const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
 
 export default function App() {
@@ -28,6 +29,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.IDEAS}
+            element={
+              <ProtectedRoute>
+                <IdeasPage />
               </ProtectedRoute>
             }
           />

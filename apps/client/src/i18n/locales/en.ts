@@ -3,6 +3,7 @@ export const en = {
     name: "App",
     nav: {
       home: "Home",
+      ideas: "Ideas",
     },
   },
   home: {
@@ -45,6 +46,45 @@ export const en = {
   },
   dashboard: {
     title: "Dashboard",
+  },
+  ideas: {
+    title: "Ideas",
+    subtitle: "Capture, plan, and track your ideas.",
+    searchPlaceholder: "Search ideas…",
+    loadError: "Something went wrong loading your ideas.",
+    viewGrid: "Grid view",
+    viewList: "List view",
+    filter: {
+      all: "All",
+      priority: "Priority",
+      tag: "Tag",
+      sort: "Sort",
+    },
+    status: {
+      ALL: "All",
+      IDEA: "Idea",
+      PLANNING: "Planning",
+      PLANNED: "Planned",
+      IN_PROGRESS: "In Progress",
+      DONE: "Done",
+      ARCHIVED: "Archived",
+    },
+    priority: {
+      NONE: "None",
+      LOW: "Low",
+      MEDIUM: "Medium",
+      HIGH: "High",
+      CRITICAL: "Critical",
+    },
+    sort: {
+      recent: "Most recent",
+      oldest: "Oldest",
+      "alpha-asc": "Title A–Z",
+      "alpha-desc": "Title Z–A",
+      updated: "Recently updated",
+    },
+    emptyTitle: "No ideas found",
+    emptyDescription: "Adjust your filters or create your first idea.",
   },
 } as const;
 
