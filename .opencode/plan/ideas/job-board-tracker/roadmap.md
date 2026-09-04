@@ -46,7 +46,7 @@
 
 - [x] Server: Ideas CRUD routes (list with filters, get, create, update, delete)
 - [x] Server: Tags CRUD routes
-- [ ] Server: Auto-create planning folder on idea creation
+- [x] Server: Auto-create planning folder on idea creation
 - [ ] Client: Ideas list page (grid/list toggle, search, status tabs, tag filter, sort)
 - [ ] Client: Create idea form (title, description, status, priority, tags, planning folder preview)
 - [ ] Client: Idea detail page shell (meta, status, priority, tags)

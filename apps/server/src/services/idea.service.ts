@@ -2,6 +2,7 @@ import type { Prisma } from "../generated/prisma/client";
 import prisma from "../lib/prisma";
 import { NotFoundError } from "../lib/errors";
 import { ensureUniqueSlug, slugify } from "../lib/slug";
+import { storage } from "./storage.service";
 import type {
   CreateIdeaInput,
   IdeaPriority,
@@ -119,6 +120,13 @@ export async function createIdea(userId: string, input: CreateIdeaInput) {
     include: IDEA_INCLUDE,
   });
 
+  try {
+    await storage.createIdeaFolder(userId, idea.id);
+  } catch (err) {
+    await prisma.idea.delete({ where: { id: idea.id } }).catch(() => {});
+    throw err;
+  }
+
   return toIdeaDto(idea);
 }
 
@@ -178,6 +186,7 @@ export async function deleteIdea(userId: string, id: string) {
   }
 
   await prisma.idea.delete({ where: { id } });
+  await storage.deleteIdeaFolder(userId, id).catch(() => {});
 }
 
 async function generateUniqueSlug(
