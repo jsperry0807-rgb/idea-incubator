@@ -1,26 +1,19 @@
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatarUrl: string | null;
-  createdAt: string;
-}
+import type { LoginInput as SharedLoginInput, RegisterInput as SharedRegisterInput } from "@repo/shared";
+
+export type { User } from "@repo/shared";
+export type LoginInput = SharedLoginInput;
+export type RegisterInput = SharedRegisterInput;
 
 export interface AuthResponse {
-  user: User;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    avatarUrl: string | null;
+    createdAt: string;
+  };
   accessToken: string;
   expiresIn: number;
-}
-
-export interface LoginInput {
-  email: string;
-  password: string;
-}
-
-export interface RegisterInput {
-  name: string;
-  email: string;
-  password: string;
 }
 
 export interface RefreshResponse {
