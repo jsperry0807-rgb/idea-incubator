@@ -33,8 +33,8 @@
 - [x] Client: AuthContext provider
 - [x] Client: Zustand UI store
 - [x] Client: UI primitives (Button, Input, Textarea, Modal, Card, Badge, Spinner, Toast, EmptyState)
-- [ ] Client: Route config (/login, /register, /dashboard)
-- [ ] Shared: API types, validation schemas, enums
+- [x] Client: Route config (/login, /register, /dashboard)
+- [x] Shared: API types, validation schemas, enums
 
 **Deliverable:** User can register, log in, see a dashboard shell.
 
