@@ -1,0 +1,188 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Enums ───────────────────────────────────────────────
+
+enum AuthProvider {
+  LOCAL
+  GOOGLE
+}
+
+enum IdeaStatus {
+  IDEA
+  PLANNING
+  PLANNED
+  IN_PROGRESS
+  DONE
+  ARCHIVED
+}
+
+enum IdeaPriority {
+  NONE
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ShareRole {
+  OWNER
+  EDIT
+  VIEW
+}
+
+enum NotificationType {
+  SHARE
+  COMMENT
+  MENTION
+  TASK_COMPLETED
+}
+
+// ─── Models ──────────────────────────────────────────────
+
+model User {
+  id             String           @id @default(cuid())
+  email          String           @unique
+  passwordHash   String?
+  name           String
+  avatarUrl      String?
+  authProvider   AuthProvider     @default(LOCAL)
+  providerUserId String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  ideas         Idea[]
+  comments      Comment[]
+  shares        Share[]
+  notifications Notification[]
+  tags          Tag[]
+  refreshTokens RefreshToken[]
+
+  @@map("users")
+}
+
+model Idea {
+  id          String       @id @default(cuid())
+  userId      String
+  title       String
+  slug        String       @unique
+  description String?
+  status      IdeaStatus   @default(IDEA)
+  priority    IdeaPriority @default(NONE)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tags    IdeaTag[]
+  comments Comment[]
+  tasks   Task[]
+  shares  Share[]
+
+  @@index([userId, status])
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("ideas")
+}
+
+model Tag {
+  id     String    @id @default(cuid())
+  userId String
+  name   String
+  color  String?
+
+  user  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ideas IdeaTag[]
+
+  @@unique([userId, name])
+  @@map("tags")
+}
+
+model IdeaTag {
+  ideaId String
+  tagId  String
+
+  idea Idea @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([ideaId, tagId])
+  @@map("idea_tags")
+}
+
+model Task {
+  id        String   @id @default(cuid())
+  ideaId    String
+  title     String
+  completed Boolean  @default(false)
+  milestone String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  idea Idea @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+
+  @@index([ideaId, sortOrder])
+  @@map("tasks")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  ideaId    String
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  idea Idea @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([ideaId, createdAt(sort: Desc)])
+  @@map("comments")
+}
+
+model Share {
+  id        String    @id @default(cuid())
+  ideaId    String
+  userId    String
+  role      ShareRole @default(VIEW)
+  createdAt DateTime  @default(now())
+
+  idea Idea @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([ideaId, userId])
+  @@map("shares")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  message   String
+  ideaId    String?
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read, createdAt(sort: Desc)])
+  @@map("notifications")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  userAgent String?
+  ipAddress String?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
