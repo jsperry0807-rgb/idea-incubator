@@ -11,6 +11,7 @@ const LoginPage = lazy(() => import("@pages/LoginPage"));
 const RegisterPage = lazy(() => import("@pages/RegisterPage"));
 const DashboardPage = lazy(() => import("@features/dashboard/pages/DashboardPage"));
 const IdeasPage = lazy(() => import("@features/ideas/pages/IdeasPage"));
+const CreateIdeaPage = lazy(() => import("@features/ideas/pages/CreateIdeaPage"));
 const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
 
 export default function App() {
@@ -37,6 +38,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <IdeasPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.NEW_IDEA}
+            element={
+              <ProtectedRoute>
+                <CreateIdeaPage />
               </ProtectedRoute>
             }
           />

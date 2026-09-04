@@ -1,4 +1,4 @@
-import type { Idea, PaginationMeta } from "@repo/shared";
+import type { CreateIdeaInput, Idea, PaginationMeta } from "@repo/shared";
 
 import { client } from "@/axios";
 import type { IdeaFilters } from "../types";
@@ -31,5 +31,10 @@ export async function getIdeas(
 
 export async function getIdea(id: string): Promise<Idea> {
   const { data } = await client.get<{ data: Idea }>(`/ideas/${id}`);
+  return data.data;
+}
+
+export async function createIdea(input: CreateIdeaInput): Promise<Idea> {
+  const { data } = await client.post<{ data: Idea }>("/ideas", input);
   return data.data;
 }

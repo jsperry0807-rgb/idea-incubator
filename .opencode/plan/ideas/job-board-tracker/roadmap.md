@@ -48,7 +48,7 @@
 - [x] Server: Tags CRUD routes
 - [x] Server: Auto-create planning folder on idea creation
 - [x] Client: Ideas list page (grid/list toggle, search, status tabs, tag filter, sort)
-- [ ] Client: Create idea form (title, description, status, priority, tags, planning folder preview)
+- [x] Client: Create idea form (title, description, status, priority, tags, planning folder preview)
 - [ ] Client: Idea detail page shell (meta, status, priority, tags)
 - [ ] Client: Tags management page
 - [x] Client: StatusBadge, PriorityDot, TagBadge components

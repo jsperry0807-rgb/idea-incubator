@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Spinner } from "@repo/ui";
+import { Link } from "react-router-dom";
+import { Button, Spinner } from "@repo/ui";
 
+import { ROUTES } from "@config/routes";
 import { useTags } from "@features/tags/hooks/useTags";
 import { useUIStore } from "@stores/ui.store";
 import { useIdeas } from "../hooks/useIdeas";
@@ -41,6 +43,11 @@ export default function IdeasPage() {
         </div>
 
         <div className="flex items-center gap-2">
+          <Link to={ROUTES.NEW_IDEA}>
+            <Button variant="primary" size="sm">
+              {t("ideas.create.newIdeaButton")}
+            </Button>
+          </Link>
           <button
             type="button"
             onClick={toggleViewMode}
