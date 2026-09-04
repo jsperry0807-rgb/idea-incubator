@@ -9,7 +9,7 @@ export default function RootLayout() {
   const location = useLocation();
   const { isAuthenticated } = useAuth();
   const isHome = location.pathname === ROUTES.HOME;
-  const isIdeas = location.pathname === ROUTES.IDEAS;
+  const isIdeas = location.pathname === ROUTES.IDEAS || location.pathname.startsWith(`${ROUTES.IDEAS}/`);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>

@@ -5,7 +5,12 @@ export const ROUTES = {
   DASHBOARD: "/dashboard",
   IDEAS: "/ideas",
   NEW_IDEA: "/ideas/new",
+  IDEA_DETAIL: "/ideas/:id",
   NOT_FOUND: "/404",
 } as const;
 
 export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];
+
+export function ideaDetailPath(id: string): string {
+  return `${ROUTES.IDEAS}/${id}`;
+}

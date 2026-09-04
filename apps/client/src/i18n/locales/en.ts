@@ -106,6 +106,18 @@ export const en = {
       success: "Idea created",
       error: "Something went wrong creating your idea.",
     },
+    detail: {
+      back: "Back to ideas",
+      status: "Status",
+      priority: "Priority",
+      createdAt: "Created",
+      updatedAt: "Updated",
+      tags: "Tags",
+      notFoundTitle: "Idea not found",
+      notFoundDescription: "This idea may have been deleted.",
+      loadError: "Something went wrong loading this idea.",
+      loadErrorDescription: "Please try again or return to the ideas list.",
+    },
   },
 } as const;
 

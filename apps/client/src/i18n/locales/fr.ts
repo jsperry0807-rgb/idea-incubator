@@ -108,5 +108,17 @@ export const fr: LocaleMessages = {
       success: "Idée créée",
       error: "Une erreur est survenue lors de la création de votre idée.",
     },
+    detail: {
+      back: "Retour aux idées",
+      status: "Statut",
+      priority: "Priorité",
+      createdAt: "Créée",
+      updatedAt: "Mise à jour",
+      tags: "Étiquettes",
+      notFoundTitle: "Idée introuvable",
+      notFoundDescription: "Cette idée a peut-être été supprimée.",
+      loadError: "Une erreur est survenue lors du chargement de cette idée.",
+      loadErrorDescription: "Veuillez réessayer ou revenir à la liste des idées.",
+    },
   },
 };

@@ -49,7 +49,7 @@
 - [x] Server: Auto-create planning folder on idea creation
 - [x] Client: Ideas list page (grid/list toggle, search, status tabs, tag filter, sort)
 - [x] Client: Create idea form (title, description, status, priority, tags, planning folder preview)
-- [ ] Client: Idea detail page shell (meta, status, priority, tags)
+- [x] Client: Idea detail page shell (meta, status, priority, tags)
 - [ ] Client: Tags management page
 - [x] Client: StatusBadge, PriorityDot, TagBadge components
 - [x] Client: Debounced search, grid/list toggle

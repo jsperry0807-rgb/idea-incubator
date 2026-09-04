@@ -108,5 +108,17 @@ export const es: LocaleMessages = {
       success: "Idea creada",
       error: "Algo salió mal al crear tu idea.",
     },
+    detail: {
+      back: "Volver a ideas",
+      status: "Estado",
+      priority: "Prioridad",
+      createdAt: "Creada",
+      updatedAt: "Actualizada",
+      tags: "Etiquetas",
+      notFoundTitle: "Idea no encontrada",
+      notFoundDescription: "Esta idea puede haber sido eliminada.",
+      loadError: "Algo salió mal al cargar esta idea.",
+      loadErrorDescription: "Inténtalo de nuevo o vuelve a la lista de ideas.",
+    },
   },
 };
