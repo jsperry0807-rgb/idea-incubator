@@ -70,7 +70,7 @@
 - [x] Client: PlanningSection component (markdown viewer/editor)
 - [x] Client: ImportMarkdownModal (drag-and-drop .md upload)
 - [x] Client: "Create risks.md" on-demand button
-- [ ] Client: Markdown rendering (react-markdown)
+- [x] Client: Markdown rendering (react-markdown)
 - [ ] Client: Markdown editor (textarea with monospace)
 - [ ] Client: Wire planning into IdeaDetailPage
 

@@ -7,6 +7,7 @@ import { usePlanningSection } from "../hooks/usePlanningSection";
 import { useCreatePlanningSection } from "../hooks/useCreatePlanningSection";
 import { useUpdatePlanningSection } from "../hooks/useUpdatePlanningSection";
 import { ImportMarkdownModal } from "./ImportMarkdownModal";
+import { MarkdownViewer } from "./MarkdownViewer";
 
 export interface PlanningSectionProps {
   ideaId: string;
@@ -142,9 +143,9 @@ export function PlanningSection({ ideaId, section }: PlanningSectionProps) {
               {t("ideas.planning.edit")}
             </Button>
           </div>
-          <pre className="max-h-80 overflow-auto whitespace-pre-wrap rounded-md border border-[var(--color-border)] bg-[var(--color-muted)]/10 p-3 font-mono text-xs leading-relaxed text-[var(--color-fg)]">
-            {content}
-          </pre>
+          <div className="max-h-96 overflow-auto rounded-md border border-[var(--color-border)] bg-[var(--color-muted)]/10 p-3">
+            <MarkdownViewer content={content} />
+          </div>
         </>
       )}
 
