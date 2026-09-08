@@ -117,6 +117,7 @@ export const es: LocaleMessages = {
       updatedAt: "Actualizada",
       tags: "Etiquetas",
       planningTitle: "Planificación",
+      tasksTitle: "Tareas",
       notFoundTitle: "Idea no encontrada",
       notFoundDescription: "Esta idea puede haber sido eliminada.",
       loadError: "Algo salió mal al cargar esta idea.",

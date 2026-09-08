@@ -10,6 +10,7 @@ import { PlanningAccordion } from "../components/PlanningAccordion";
 import { PriorityDot } from "../components/PriorityDot";
 import { StatusBadge } from "../components/StatusBadge";
 import { TagBadge } from "../components/TagBadge";
+import { TaskList } from "../components/TaskList";
 
 export default function IdeaDetailPage() {
   const { id = "" } = useParams<{ id: string }>();
@@ -125,6 +126,16 @@ export default function IdeaDetailPage() {
               {t("ideas.detail.planningTitle")}
             </h2>
             <PlanningAccordion ideaId={id} />
+          </section>
+
+          <section
+            className="flex flex-col gap-3"
+            aria-labelledby="idea-tasks-heading"
+          >
+            <h2 id="idea-tasks-heading" className="text-sm font-medium">
+              {t("ideas.detail.tasksTitle")}
+            </h2>
+            <TaskList ideaId={id} />
           </section>
         </article>
       ) : null}
