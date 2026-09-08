@@ -155,6 +155,14 @@ export const es: LocaleMessages = {
         risks: "Riesgos",
       },
     },
+    tasks: {
+      loadError: "Algo salió mal al cargar las tareas.",
+      emptyTitle: "Aún no hay tareas",
+      emptyDescription: "Las tareas aparecerán aquí, agrupadas por hito.",
+      noMilestone: "Sin hito",
+      task_one: "tarea",
+      task_other: "tareas",
+    },
   },
   tags: {
     title: "Etiquetas",

@@ -155,6 +155,14 @@ export const fr: LocaleMessages = {
         risks: "Risques",
       },
     },
+    tasks: {
+      loadError: "Une erreur est survenue lors du chargement des tâches.",
+      emptyTitle: "Aucune tâche",
+      emptyDescription: "Les tâches apparaîtront ici, regroupées par jalon.",
+      noMilestone: "Sans jalon",
+      task_one: "tâche",
+      task_other: "tâches",
+    },
   },
   tags: {
     title: "Étiquettes",

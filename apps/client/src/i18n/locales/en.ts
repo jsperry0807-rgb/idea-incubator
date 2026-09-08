@@ -153,6 +153,14 @@ export const en = {
         risks: "Risks",
       },
     },
+    tasks: {
+      loadError: "Something went wrong loading tasks.",
+      emptyTitle: "No tasks yet",
+      emptyDescription: "Tasks will appear here, grouped by milestone.",
+      noMilestone: "No milestone",
+      task_one: "task",
+      task_other: "tasks",
+    },
   },
   tags: {
     title: "Tags",
