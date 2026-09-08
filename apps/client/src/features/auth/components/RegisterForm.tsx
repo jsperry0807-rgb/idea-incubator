@@ -3,9 +3,26 @@ import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 
 import { Button, Input } from "@repo/ui";
+import { passwordSchema } from "@repo/shared";
 import { ROUTES } from "@config/routes";
 import { useAuth } from "../hooks/useAuth";
 import { authErrorMessage } from "@utils/errors";
+
+type PasswordErrorKey =
+  | "auth.register.passwordLength"
+  | "auth.register.passwordLowercase"
+  | "auth.register.passwordUppercase"
+  | "auth.register.passwordNumber";
+
+const passwordIssueMessages: Record<string, PasswordErrorKey> = {
+  "Password must contain a lowercase letter": "auth.register.passwordLowercase",
+  "Password must contain an uppercase letter": "auth.register.passwordUppercase",
+  "Password must contain a number": "auth.register.passwordNumber",
+};
+
+function passwordErrorKey(issue: { code: string; message: string }): PasswordErrorKey {
+  return passwordIssueMessages[issue.message] ?? "auth.register.passwordLength";
+}
 
 export function RegisterForm() {
   const { t } = useTranslation();
@@ -22,8 +39,9 @@ export function RegisterForm() {
     e.preventDefault();
     setError(null);
 
-    if (password.length < 8) {
-      setError(t("auth.register.passwordInvalid"));
+    const passwordResult = passwordSchema.safeParse(password);
+    if (!passwordResult.success) {
+      setError(t(passwordErrorKey(passwordResult.error.issues[0])));
       return;
     }
 
