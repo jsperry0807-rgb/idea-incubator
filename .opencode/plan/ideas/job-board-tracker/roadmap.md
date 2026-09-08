@@ -69,7 +69,7 @@
 - [x] Client: PlanningAccordion component (5 collapsible sections)
 - [x] Client: PlanningSection component (markdown viewer/editor)
 - [x] Client: ImportMarkdownModal (drag-and-drop .md upload)
-- [ ] Client: "Create risks.md" on-demand button
+- [x] Client: "Create risks.md" on-demand button
 - [ ] Client: Markdown rendering (react-markdown)
 - [ ] Client: Markdown editor (textarea with monospace)
 - [ ] Client: Wire planning into IdeaDetailPage

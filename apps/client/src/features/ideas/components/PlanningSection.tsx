@@ -4,6 +4,7 @@ import type { PlanningSectionName } from "@repo/shared";
 import { Button, Spinner, Textarea, toast } from "@repo/ui";
 
 import { usePlanningSection } from "../hooks/usePlanningSection";
+import { useCreatePlanningSection } from "../hooks/useCreatePlanningSection";
 import { useUpdatePlanningSection } from "../hooks/useUpdatePlanningSection";
 import { ImportMarkdownModal } from "./ImportMarkdownModal";
 
@@ -15,6 +16,7 @@ export interface PlanningSectionProps {
 export function PlanningSection({ ideaId, section }: PlanningSectionProps) {
   const { t } = useTranslation();
   const query = usePlanningSection(ideaId, section);
+  const createMutation = useCreatePlanningSection();
   const updateMutation = useUpdatePlanningSection();
 
   const [editing, setEditing] = useState(false);
@@ -25,6 +27,30 @@ export function PlanningSection({ ideaId, section }: PlanningSectionProps) {
     return (
       <div className="flex justify-center px-4 pb-4">
         <Spinner size="md" />
+      </div>
+    );
+  }
+
+  const notFound =
+    (query.error as { response?: { status?: number } } | undefined)?.response
+      ?.status === 404;
+
+  if (notFound) {
+    return (
+      <div className="flex flex-col items-center gap-3 px-4 pb-4 text-center">
+        <p className="text-sm text-[var(--color-muted)]">
+          {t("ideas.planning.emptyDescription")}
+        </p>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => void handleCreate()}
+          disabled={createMutation.isPending}
+        >
+          {createMutation.isPending
+            ? t("ideas.planning.creating")
+            : t("ideas.planning.createSection", { filename: `${section}.md` })}
+        </Button>
       </div>
     );
   }
@@ -40,6 +66,15 @@ export function PlanningSection({ ideaId, section }: PlanningSectionProps) {
   }
 
   const content = query.data?.content ?? "";
+
+  async function handleCreate() {
+    try {
+      await createMutation.mutateAsync({ ideaId, section });
+      toast.success(t("ideas.planning.created"));
+    } catch {
+      toast.error(t("ideas.planning.createError"));
+    }
+  }
 
   function startEdit() {
     setDraft(content);

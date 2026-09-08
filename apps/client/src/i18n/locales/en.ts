@@ -139,6 +139,11 @@ export const en = {
       importTooLarge: "File is larger than 500KB.",
       imported: "Section imported",
       removeFile: "Remove file",
+      emptyDescription: "This planning section doesn't exist yet.",
+      createSection: "Create {{filename}}",
+      creating: "Creating…",
+      created: "Section created",
+      createError: "Something went wrong creating this section.",
       sections: {
         overview: "Overview",
         "tech-stack": "Tech Stack",

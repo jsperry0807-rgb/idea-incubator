@@ -141,6 +141,11 @@ export const fr: LocaleMessages = {
       importTooLarge: "Le fichier dépasse 500 Ko.",
       imported: "Section importée",
       removeFile: "Retirer le fichier",
+      emptyDescription: "Cette section de planification n'existe pas encore.",
+      createSection: "Créer {{filename}}",
+      creating: "Création…",
+      created: "Section créée",
+      createError: "Une erreur est survenue lors de la création de cette section.",
       sections: {
         overview: "Aperçu",
         "tech-stack": "Stack technique",

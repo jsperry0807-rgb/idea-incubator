@@ -45,11 +45,6 @@ export async function readPlanningSection(
 
   const filename = `${section}.md`;
 
-  let created = false;
-  if (section === "risks") {
-    created = await storage.createIdeaSectionIfMissing(userId, ideaId, filename);
-  }
-
   let content: string;
   try {
     content = await storage.readIdeaSection(userId, ideaId, filename);
@@ -59,6 +54,28 @@ export async function readPlanningSection(
     }
     throw err;
   }
+
+  return {
+    section,
+    content,
+    exists: true,
+  };
+}
+
+export async function createPlanningSection(
+  userId: string,
+  ideaId: string,
+  section: string,
+) {
+  await assertIdeaOwnership(userId, ideaId);
+
+  const filename = `${section}.md`;
+  const created = await storage.createIdeaSectionIfMissing(
+    userId,
+    ideaId,
+    filename,
+  );
+  const content = await storage.readIdeaSection(userId, ideaId, filename);
 
   return {
     section,

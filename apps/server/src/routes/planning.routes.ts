@@ -9,6 +9,7 @@ import {
 import { validate } from "../middleware/validate";
 import { authenticate } from "../middleware/auth";
 import {
+  createPlanningSection,
   listPlanningSections,
   readPlanningSection,
   writePlanningSection,
@@ -42,6 +43,23 @@ router.get(
   async (req, res, next) => {
     try {
       const data = await readPlanningSection(
+        req.userId!,
+        String(req.params.id),
+        String(req.params.section),
+      );
+      res.json({ data });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+router.post(
+  "/:section",
+  validate({ params: planningParamsSchema }),
+  async (req, res, next) => {
+    try {
+      const data = await createPlanningSection(
         req.userId!,
         String(req.params.id),
         String(req.params.section),

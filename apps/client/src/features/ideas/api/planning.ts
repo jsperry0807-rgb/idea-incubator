@@ -6,6 +6,9 @@ export interface PlanningSectionResult {
   section: PlanningSectionName;
   content: string;
   exists: boolean;
+}
+
+export interface CreatePlanningSectionResult extends PlanningSectionResult {
   created: boolean;
 }
 
@@ -22,6 +25,16 @@ export async function getPlanningSection(
   const { data } = await client.get<{ data: PlanningSectionResult }>(
     `/ideas/${ideaId}/planning/${section}`,
     { signal },
+  );
+  return data.data;
+}
+
+export async function createPlanningSection(
+  ideaId: string,
+  section: PlanningSectionName,
+): Promise<CreatePlanningSectionResult> {
+  const { data } = await client.post<{ data: CreatePlanningSectionResult }>(
+    `/ideas/${ideaId}/planning/${section}`,
   );
   return data.data;
 }
