@@ -116,6 +116,7 @@ export const fr: LocaleMessages = {
       createdAt: "Créée",
       updatedAt: "Mise à jour",
       tags: "Étiquettes",
+      planningTitle: "Planification",
       notFoundTitle: "Idée introuvable",
       notFoundDescription: "Cette idée a peut-être été supprimée.",
       loadError: "Une erreur est survenue lors du chargement de cette idée.",

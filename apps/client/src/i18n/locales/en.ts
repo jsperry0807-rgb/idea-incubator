@@ -114,6 +114,7 @@ export const en = {
       createdAt: "Created",
       updatedAt: "Updated",
       tags: "Tags",
+      planningTitle: "Planning",
       notFoundTitle: "Idea not found",
       notFoundDescription: "This idea may have been deleted.",
       loadError: "Something went wrong loading this idea.",

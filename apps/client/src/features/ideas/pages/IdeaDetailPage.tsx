@@ -6,6 +6,7 @@ import { Card, EmptyState, Spinner } from "@repo/ui";
 
 import { ROUTES } from "@config/routes";
 import { useIdea } from "../hooks/useIdea";
+import { PlanningAccordion } from "../components/PlanningAccordion";
 import { PriorityDot } from "../components/PriorityDot";
 import { StatusBadge } from "../components/StatusBadge";
 import { TagBadge } from "../components/TagBadge";
@@ -115,6 +116,16 @@ export default function IdeaDetailPage() {
               </div>
             </div>
           ) : null}
+
+          <section
+            className="flex flex-col gap-3"
+            aria-labelledby="idea-planning-heading"
+          >
+            <h2 id="idea-planning-heading" className="text-sm font-medium">
+              {t("ideas.detail.planningTitle")}
+            </h2>
+            <PlanningAccordion ideaId={id} />
+          </section>
         </article>
       ) : null}
     </section>

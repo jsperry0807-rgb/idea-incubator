@@ -116,6 +116,7 @@ export const es: LocaleMessages = {
       createdAt: "Creada",
       updatedAt: "Actualizada",
       tags: "Etiquetas",
+      planningTitle: "Planificación",
       notFoundTitle: "Idea no encontrada",
       notFoundDescription: "Esta idea puede haber sido eliminada.",
       loadError: "Algo salió mal al cargar esta idea.",

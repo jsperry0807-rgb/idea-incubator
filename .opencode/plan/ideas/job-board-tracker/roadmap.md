@@ -72,7 +72,7 @@
 - [x] Client: "Create risks.md" on-demand button
 - [x] Client: Markdown rendering (react-markdown)
 - [x] Client: Markdown editor (textarea with monospace)
-- [ ] Client: Wire planning into IdeaDetailPage
+- [x] Client: Wire planning into IdeaDetailPage
 
 **Deliverable:** Users can plan ideas with structured markdown sections.
 
