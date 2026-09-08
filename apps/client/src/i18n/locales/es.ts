@@ -157,6 +157,7 @@ export const es: LocaleMessages = {
     },
     tasks: {
       loadError: "Algo salió mal al cargar las tareas.",
+      updateError: "Algo salió mal al actualizar esta tarea.",
       emptyTitle: "Aún no hay tareas",
       emptyDescription: "Las tareas aparecerán aquí, agrupadas por hito.",
       noMilestone: "Sin hito",

@@ -3,6 +3,7 @@ import type { Task } from "@repo/shared";
 import { EmptyState, Spinner } from "@repo/ui";
 
 import { useTasks } from "../hooks/useTasks";
+import { TaskItem } from "./TaskItem";
 
 export interface TaskListProps {
   ideaId: string;
@@ -78,17 +79,7 @@ export function TaskList({ ideaId }: TaskListProps) {
           </h3>
           <ul className="flex flex-col divide-y divide-[var(--color-border)] rounded-md border border-[var(--color-border)]">
             {group.tasks.map((task) => (
-              <li key={task.id} className="flex items-center gap-2 px-3 py-2 text-sm">
-                <span
-                  className={
-                    task.completed
-                      ? "line-through text-[var(--color-muted)]"
-                      : "text-[var(--color-fg)]"
-                  }
-                >
-                  {task.title}
-                </span>
-              </li>
+              <TaskItem key={task.id} ideaId={ideaId} task={task} />
             ))}
           </ul>
         </section>

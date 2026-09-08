@@ -155,6 +155,7 @@ export const en = {
     },
     tasks: {
       loadError: "Something went wrong loading tasks.",
+      updateError: "Something went wrong updating this task.",
       emptyTitle: "No tasks yet",
       emptyDescription: "Tasks will appear here, grouped by milestone.",
       noMilestone: "No milestone",
