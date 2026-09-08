@@ -27,6 +27,20 @@ const IDEA_INCLUDE = {
   user: { select: { id: true, name: true, avatarUrl: true } },
 } satisfies Prisma.IdeaInclude;
 
+export async function assertIdeaOwnership(
+  userId: string,
+  ideaId: string,
+): Promise<void> {
+  const idea = await prisma.idea.findFirst({
+    where: { id: ideaId, userId },
+    select: { id: true },
+  });
+
+  if (!idea) {
+    throw new NotFoundError("Idea not found");
+  }
+}
+
 export async function listIdeas(userId: string, query: IdeaListQuery) {
   const page = query.page ?? 1;
   const pageSize = query.pageSize ?? 20;
