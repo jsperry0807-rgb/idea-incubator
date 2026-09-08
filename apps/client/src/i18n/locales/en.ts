@@ -160,6 +160,8 @@ export const en = {
       add: "Add",
       addingTask: "Adding…",
       addError: "Something went wrong creating this task.",
+      reorder: "Drag to reorder",
+      reorderError: "Something went wrong reordering tasks.",
       cancel: "Cancel",
       taskPlaceholder: "What needs doing?",
       milestoneLabel: "Milestone",

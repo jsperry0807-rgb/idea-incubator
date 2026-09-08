@@ -88,7 +88,7 @@
 - [x] Client: Add task inline form
 - [x] Client: Milestone selector
 - [x] Client: Progress bars (per milestone + overall)
-- [ ] Client: Task reorder (drag-and-drop within column)
+- [x] Client: Task reorder (drag-and-drop within column)
 - [ ] Client: Wire tasks into IdeaDetailPage
 
 **Deliverable:** Task management with milestones and progress tracking.

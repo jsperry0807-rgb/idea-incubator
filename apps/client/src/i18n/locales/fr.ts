@@ -162,6 +162,8 @@ export const fr: LocaleMessages = {
       add: "Ajouter",
       addingTask: "Ajout…",
       addError: "Une erreur est survenue lors de la création de cette tâche.",
+      reorder: "Glisser pour réordonner",
+      reorderError: "Une erreur est survenue lors du réordonnancement des tâches.",
       cancel: "Annuler",
       taskPlaceholder: "Qu'y a-t-il à faire ?",
       milestoneLabel: "Jalon",

@@ -162,6 +162,8 @@ export const es: LocaleMessages = {
       add: "Añadir",
       addingTask: "Añadiendo…",
       addError: "Algo salió mal al crear esta tarea.",
+      reorder: "Arrastrar para reordenar",
+      reorderError: "Algo salió mal al reordenar las tareas.",
       cancel: "Cancelar",
       taskPlaceholder: "¿Qué hay que hacer?",
       milestoneLabel: "Hito",
