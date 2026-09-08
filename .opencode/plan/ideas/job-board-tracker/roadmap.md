@@ -66,7 +66,7 @@
 - [x] Server: FileStorageService (abstracted file read/write)
 - [x] Server: Planning section routes (GET/PUT per section)
 - [x] Server: Path traversal prevention
-- [ ] Client: PlanningAccordion component (5 collapsible sections)
+- [x] Client: PlanningAccordion component (5 collapsible sections)
 - [ ] Client: PlanningSection component (markdown viewer/editor)
 - [ ] Client: ImportMarkdownModal (drag-and-drop .md upload)
 - [ ] Client: "Create risks.md" on-demand button

@@ -119,6 +119,16 @@ export const en = {
       loadError: "Something went wrong loading this idea.",
       loadErrorDescription: "Please try again or return to the ideas list.",
     },
+    planning: {
+      loadError: "Something went wrong loading this section.",
+      sections: {
+        overview: "Overview",
+        "tech-stack": "Tech Stack",
+        features: "Features",
+        timeline: "Timeline",
+        risks: "Risks",
+      },
+    },
   },
   tags: {
     title: "Tags",

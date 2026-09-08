@@ -121,6 +121,16 @@ export const fr: LocaleMessages = {
       loadError: "Une erreur est survenue lors du chargement de cette idée.",
       loadErrorDescription: "Veuillez réessayer ou revenir à la liste des idées.",
     },
+    planning: {
+      loadError: "Une erreur est survenue lors du chargement de cette section.",
+      sections: {
+        overview: "Aperçu",
+        "tech-stack": "Stack technique",
+        features: "Fonctionnalités",
+        timeline: "Chronologie",
+        risks: "Risques",
+      },
+    },
   },
   tags: {
     title: "Étiquettes",

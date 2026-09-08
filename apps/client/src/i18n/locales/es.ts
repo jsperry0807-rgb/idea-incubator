@@ -121,6 +121,16 @@ export const es: LocaleMessages = {
       loadError: "Algo salió mal al cargar esta idea.",
       loadErrorDescription: "Inténtalo de nuevo o vuelve a la lista de ideas.",
     },
+    planning: {
+      loadError: "Algo salió mal al cargar esta sección.",
+      sections: {
+        overview: "Resumen",
+        "tech-stack": "Stack tecnológico",
+        features: "Funcionalidades",
+        timeline: "Cronograma",
+        risks: "Riesgos",
+      },
+    },
   },
   tags: {
     title: "Etiquetas",
