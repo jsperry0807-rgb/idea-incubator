@@ -156,6 +156,11 @@ export const es: LocaleMessages = {
         risks: "Riesgos",
       },
     },
+    pipeline: {
+      loadError: "Algo salió mal al cargar tu hoja de ruta.",
+      emptyColumn: "Aún no hay ideas",
+      progress: "Progreso de tareas",
+    },
     tasks: {
       loadError: "Algo salió mal al cargar las tareas.",
       updateError: "Algo salió mal al actualizar esta tarea.",

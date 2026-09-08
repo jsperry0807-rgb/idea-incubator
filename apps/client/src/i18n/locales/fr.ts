@@ -156,6 +156,11 @@ export const fr: LocaleMessages = {
         risks: "Risques",
       },
     },
+    pipeline: {
+      loadError: "Une erreur est survenue lors du chargement de votre feuille de route.",
+      emptyColumn: "Aucune idée",
+      progress: "Progression des tâches",
+    },
     tasks: {
       loadError: "Une erreur est survenue lors du chargement des tâches.",
       updateError: "Une erreur est survenue lors de la mise à jour de cette tâche.",

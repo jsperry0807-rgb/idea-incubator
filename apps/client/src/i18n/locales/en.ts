@@ -154,6 +154,11 @@ export const en = {
         risks: "Risks",
       },
     },
+    pipeline: {
+      loadError: "Something went wrong loading your roadmap.",
+      emptyColumn: "No ideas yet",
+      progress: "Task progress",
+    },
     tasks: {
       loadError: "Something went wrong loading tasks.",
       updateError: "Something went wrong updating this task.",
