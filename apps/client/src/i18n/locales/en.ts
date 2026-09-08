@@ -127,6 +127,18 @@ export const en = {
       cancel: "Cancel",
       saved: "Section saved",
       saveError: "Something went wrong saving this section.",
+      import: "Import .md",
+      importTitle: "Import Markdown File",
+      importDescription:
+        "Import file content into {{section}}. Existing content will be replaced.",
+      dropzoneText: "Drop a .md file here or click to browse",
+      dropzoneHint: "Supports .md files up to 500KB",
+      importing: "Importing…",
+      importError: "Something went wrong importing this file.",
+      importInvalidType: "Only .md or .markdown files are supported.",
+      importTooLarge: "File is larger than 500KB.",
+      imported: "Section imported",
+      removeFile: "Remove file",
       sections: {
         overview: "Overview",
         "tech-stack": "Tech Stack",

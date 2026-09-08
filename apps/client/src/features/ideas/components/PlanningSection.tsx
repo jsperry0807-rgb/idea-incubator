@@ -5,6 +5,7 @@ import { Button, Spinner, Textarea, toast } from "@repo/ui";
 
 import { usePlanningSection } from "../hooks/usePlanningSection";
 import { useUpdatePlanningSection } from "../hooks/useUpdatePlanningSection";
+import { ImportMarkdownModal } from "./ImportMarkdownModal";
 
 export interface PlanningSectionProps {
   ideaId: string;
@@ -18,6 +19,7 @@ export function PlanningSection({ ideaId, section }: PlanningSectionProps) {
 
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState("");
+  const [importOpen, setImportOpen] = useState(false);
 
   if (query.isLoading) {
     return (
@@ -93,7 +95,14 @@ export function PlanningSection({ ideaId, section }: PlanningSectionProps) {
         </>
       ) : (
         <>
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setImportOpen(true)}
+            >
+              {t("ideas.planning.import")}
+            </Button>
             <Button variant="ghost" size="sm" onClick={startEdit}>
               {t("ideas.planning.edit")}
             </Button>
@@ -103,6 +112,20 @@ export function PlanningSection({ ideaId, section }: PlanningSectionProps) {
           </pre>
         </>
       )}
+
+      <ImportMarkdownModal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        section={section}
+        onImport={async (importedContent) => {
+          await updateMutation.mutateAsync({
+            ideaId,
+            section,
+            content: importedContent,
+          });
+          toast.success(t("ideas.planning.imported"));
+        }}
+      />
     </div>
   );
 }

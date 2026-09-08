@@ -129,6 +129,18 @@ export const es: LocaleMessages = {
       cancel: "Cancelar",
       saved: "Sección guardada",
       saveError: "Algo salió mal al guardar esta sección.",
+      import: "Importar .md",
+      importTitle: "Importar archivo Markdown",
+      importDescription:
+        "Importa el contenido del archivo en {{section}}. El contenido existente se reemplazará.",
+      dropzoneText: "Suelta un archivo .md aquí o haz clic para explorar",
+      dropzoneHint: "Admite archivos .md de hasta 500 KB",
+      importing: "Importando…",
+      importError: "Algo salió mal al importar este archivo.",
+      importInvalidType: "Solo se admiten archivos .md o .markdown.",
+      importTooLarge: "El archivo supera los 500 KB.",
+      imported: "Sección importada",
+      removeFile: "Quitar archivo",
       sections: {
         overview: "Resumen",
         "tech-stack": "Stack tecnológico",

@@ -129,6 +129,18 @@ export const fr: LocaleMessages = {
       cancel: "Annuler",
       saved: "Section enregistrée",
       saveError: "Une erreur est survenue lors de l'enregistrement de cette section.",
+      import: "Importer .md",
+      importTitle: "Importer un fichier Markdown",
+      importDescription:
+        "Importez le contenu du fichier dans {{section}}. Le contenu existant sera remplacé.",
+      dropzoneText: "Déposez un fichier .md ici ou cliquez pour parcourir",
+      dropzoneHint: "Fichiers .md jusqu'à 500 Ko",
+      importing: "Importation…",
+      importError: "Une erreur est survenue lors de l'importation de ce fichier.",
+      importInvalidType: "Seuls les fichiers .md ou .markdown sont pris en charge.",
+      importTooLarge: "Le fichier dépasse 500 Ko.",
+      imported: "Section importée",
+      removeFile: "Retirer le fichier",
       sections: {
         overview: "Aperçu",
         "tech-stack": "Stack technique",
