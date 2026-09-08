@@ -95,11 +95,14 @@ export async function refresh(refreshToken: string | undefined) {
     throw new UnauthorizedError("Invalid or expired refresh token");
   }
 
-  const stored = await prisma.refreshToken.findUnique({
-    where: { tokenHash: digest(refreshToken) },
+  const consumed = await prisma.refreshToken.deleteMany({
+    where: {
+      tokenHash: digest(refreshToken),
+      expiresAt: { gt: new Date() },
+    },
   });
 
-  if (!stored || stored.expiresAt < new Date()) {
+  if (consumed.count !== 1) {
     throw new UnauthorizedError("Invalid or expired refresh token");
   }
 
@@ -108,13 +111,11 @@ export async function refresh(refreshToken: string | undefined) {
     throw new UnauthorizedError("Invalid or expired refresh token");
   }
 
-  await prisma.refreshToken.delete({ where: { id: stored.id } });
-
   const accessToken = await signAccessToken({
     sub: user.id,
     email: user.email,
   });
-  const newRefreshToken = await persistRefreshToken(user.id, refreshToken);
+  const newRefreshToken = await persistRefreshToken(user.id);
 
   return {
     accessToken,
@@ -172,10 +173,7 @@ async function createSession(
   return { accessToken, expiresIn: 900, refreshToken };
 }
 
-async function persistRefreshToken(
-  userId: string,
-  oldToken?: string,
-): Promise<string> {
+async function persistRefreshToken(userId: string): Promise<string> {
   const refreshToken = await signRefreshToken({
     sub: userId,
     jti: randomUUID(),
@@ -192,12 +190,6 @@ async function persistRefreshToken(
       expiresAt,
     },
   });
-
-  if (oldToken) {
-    await prisma.refreshToken
-      .deleteMany({ where: { tokenHash: digest(oldToken) } })
-      .catch(() => {});
-  }
 
   return refreshToken;
 }
