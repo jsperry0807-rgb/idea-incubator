@@ -5,8 +5,10 @@ import { ensureUniqueSlug, slugify } from "../lib/slug";
 import { storage } from "./storage.service";
 import type {
   CreateIdeaInput,
+  IdeaPipeline,
   IdeaPriority,
   IdeaStatus,
+  PipelineIdea,
   Tag,
   UpdateIdeaInput,
 } from "@repo/shared";
@@ -112,6 +114,32 @@ export async function getIdea(userId: string, id: string) {
   }
 
   return toIdeaDto(idea);
+}
+
+export async function getPipeline(userId: string): Promise<IdeaPipeline> {
+  const ideas = await prisma.idea.findMany({
+    where: { userId },
+    include: {
+      tags: { include: { tag: true } },
+      tasks: { select: { completed: true } },
+    },
+    orderBy: { updatedAt: "desc" },
+  });
+
+  const pipeline: IdeaPipeline = {
+    IDEA: [],
+    PLANNING: [],
+    PLANNED: [],
+    IN_PROGRESS: [],
+    DONE: [],
+    ARCHIVED: [],
+  };
+
+  for (const idea of ideas) {
+    pipeline[idea.status].push(toPipelineIdeaDto(idea));
+  }
+
+  return pipeline;
 }
 
 export async function createIdea(userId: string, input: CreateIdeaInput) {
@@ -225,6 +253,18 @@ async function generateUniqueSlug(
   );
 }
 
+function toIdeaTags(ideaTags: { tagId: string; tag: Tag }[]) {
+  return ideaTags.map(({ tagId, tag }) => ({
+    tagId,
+    tag: {
+      id: tag.id,
+      userId: tag.userId,
+      name: tag.name,
+      color: tag.color,
+    },
+  }));
+}
+
 function toIdeaDto(idea: {
   id: string;
   userId: string;
@@ -247,14 +287,29 @@ function toIdeaDto(idea: {
     priority: idea.priority,
     createdAt: idea.createdAt.toISOString(),
     updatedAt: idea.updatedAt.toISOString(),
-    tags: idea.tags.map(({ tagId, tag }) => ({
-      tagId,
-      tag: {
-        id: tag.id,
-        userId: tag.userId,
-        name: tag.name,
-        color: tag.color,
-      },
-    })),
+    tags: toIdeaTags(idea.tags),
+  };
+}
+
+function toPipelineIdeaDto(idea: {
+  id: string;
+  userId: string;
+  title: string;
+  slug: string;
+  status: IdeaStatus;
+  priority: IdeaPriority;
+  tags: { tagId: string; tag: Tag }[];
+  tasks: { completed: boolean }[];
+}): PipelineIdea {
+  return {
+    id: idea.id,
+    userId: idea.userId,
+    title: idea.title,
+    slug: idea.slug,
+    status: idea.status,
+    priority: idea.priority,
+    tags: toIdeaTags(idea.tags),
+    taskCount: idea.tasks.length,
+    completedTaskCount: idea.tasks.filter((task) => task.completed).length,
   };
 }

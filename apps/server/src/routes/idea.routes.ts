@@ -13,6 +13,7 @@ import {
   createIdea,
   deleteIdea,
   getIdea,
+  getPipeline,
   listIdeas,
   updateIdea,
 } from "../services/idea.service";
@@ -27,6 +28,14 @@ router.get("/", validate({ query: ideaListQuerySchema }), async (req, res, next)
   try {
     const result = await listIdeas(req.userId!, req.query as unknown as IdeaListQuery);
     res.json({ data: result.items, meta: result.meta });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/pipeline", async (req, res, next) => {
+  try {
+    res.json({ data: await getPipeline(req.userId!) });
   } catch (err) {
     next(err);
   }

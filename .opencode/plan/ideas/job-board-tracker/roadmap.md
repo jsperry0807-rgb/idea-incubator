@@ -99,7 +99,7 @@
 
 **Goal:** Visual Kanban board for moving ideas through status pipeline.
 
-- [ ] Server: Pipeline endpoint (ideas grouped by status)
+- [x] Server: Pipeline endpoint (ideas grouped by status)
 - [ ] Server: Quick status change endpoint
 - [ ] Client: KanbanBoard component (6 columns)
 - [ ] Client: KanbanColumn component (header + card list)
