@@ -4,6 +4,7 @@ import {
   idParamSchema,
   ideaListQuerySchema,
   updateIdeaSchema,
+  updateIdeaStatusSchema,
   type IdeaListQuery,
 } from "@repo/shared";
 
@@ -59,6 +60,14 @@ router.post("/", validate(createIdeaSchema), async (req, res, next) => {
 });
 
 router.patch("/:id", validate({ params: idParamSchema, body: updateIdeaSchema }), async (req, res, next) => {
+  try {
+    res.json({ data: await updateIdea(req.userId!, String(req.params.id), req.body) });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.patch("/:id/status", validate({ params: idParamSchema, body: updateIdeaStatusSchema }), async (req, res, next) => {
   try {
     res.json({ data: await updateIdea(req.userId!, String(req.params.id), req.body) });
   } catch (err) {
