@@ -16,8 +16,6 @@ import { env } from "../config/env";
 
 const router: RouterType = Router();
 
-router.use(authRateLimit);
-
 const COOKIE_NAME = getRefreshTokenCookieName();
 
 function setRefreshCookie(res: Response, token: string) {
@@ -34,7 +32,7 @@ function clearRefreshCookie(res: Response) {
   res.clearCookie(COOKIE_NAME, { path: "/" });
 }
 
-router.post("/register", validate(registerSchema), async (req, res, next) => {
+router.post("/register", authRateLimit, validate(registerSchema), async (req, res, next) => {
   try {
     const result = await register(req.body);
     setRefreshCookie(res, result.refreshToken);
@@ -50,7 +48,7 @@ router.post("/register", validate(registerSchema), async (req, res, next) => {
   }
 });
 
-router.post("/login", validate(loginSchema), async (req, res, next) => {
+router.post("/login", authRateLimit, validate(loginSchema), async (req, res, next) => {
   try {
     const result = await login(req.body);
     setRefreshCookie(res, result.refreshToken);
