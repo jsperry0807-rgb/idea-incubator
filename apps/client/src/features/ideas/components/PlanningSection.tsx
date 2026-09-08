@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { PlanningSectionName } from "@repo/shared";
-import { Button, Spinner, Textarea, toast } from "@repo/ui";
+import { Button, Spinner, toast } from "@repo/ui";
 
 import { usePlanningSection } from "../hooks/usePlanningSection";
 import { useCreatePlanningSection } from "../hooks/useCreatePlanningSection";
 import { useUpdatePlanningSection } from "../hooks/useUpdatePlanningSection";
 import { ImportMarkdownModal } from "./ImportMarkdownModal";
+import { MarkdownEditor } from "./MarkdownEditor";
 import { MarkdownViewer } from "./MarkdownViewer";
 
 export interface PlanningSectionProps {
@@ -101,11 +102,10 @@ export function PlanningSection({ ideaId, section }: PlanningSectionProps) {
     <div className="flex flex-col gap-2 px-4 pb-4">
       {editing ? (
         <>
-          <Textarea
-            className="min-h-48 font-mono"
+          <MarkdownEditor
             aria-label={t(`ideas.planning.sections.${section}`)}
             value={draft}
-            onChange={(event) => setDraft(event.target.value)}
+            onChange={setDraft}
             autoFocus
           />
           <div className="flex items-center justify-end gap-2">

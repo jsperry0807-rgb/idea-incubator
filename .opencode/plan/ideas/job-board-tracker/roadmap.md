@@ -71,7 +71,7 @@
 - [x] Client: ImportMarkdownModal (drag-and-drop .md upload)
 - [x] Client: "Create risks.md" on-demand button
 - [x] Client: Markdown rendering (react-markdown)
-- [ ] Client: Markdown editor (textarea with monospace)
+- [x] Client: Markdown editor (textarea with monospace)
 - [ ] Client: Wire planning into IdeaDetailPage
 
 **Deliverable:** Users can plan ideas with structured markdown sections.
