@@ -87,7 +87,7 @@
 - [x] Client: TaskItem component (checkbox, title, milestone badge)
 - [x] Client: Add task inline form
 - [x] Client: Milestone selector
-- [ ] Client: Progress bars (per milestone + overall)
+- [x] Client: Progress bars (per milestone + overall)
 - [ ] Client: Task reorder (drag-and-drop within column)
 - [ ] Client: Wire tasks into IdeaDetailPage
 

@@ -169,6 +169,8 @@ export const fr: LocaleMessages = {
       emptyTitle: "Aucune tâche",
       emptyDescription: "Les tâches apparaîtront ici, regroupées par jalon.",
       noMilestone: "Sans jalon",
+      overall: "Global",
+      overallProgress: "Progression globale {{percent}}%",
       task_one: "tâche",
       task_other: "tâches",
     },

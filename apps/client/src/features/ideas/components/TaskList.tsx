@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import type { Task } from "@repo/shared";
-import { EmptyState, Spinner } from "@repo/ui";
+import { EmptyState, ProgressBar, Spinner } from "@repo/ui";
 
 import { useTasks } from "../hooks/useTasks";
 import { AddTaskForm } from "./AddTaskForm";
@@ -29,6 +29,10 @@ function groupTasksByMilestone(tasks: Task[]): TaskGroup[] {
     milestone,
     tasks: items,
   }));
+}
+
+function progressPercent(completed: number, total: number): number {
+  return total === 0 ? 0 : Math.round((completed / total) * 100);
 }
 
 export function TaskList({ ideaId }: TaskListProps) {
@@ -72,24 +76,58 @@ export function TaskList({ ideaId }: TaskListProps) {
 
   const groups = groupTasksByMilestone(tasks);
 
+  const total = tasks.length;
+  const completed = tasks.filter((task) => task.completed).length;
+  const overallPercent = progressPercent(completed, total);
+
   return (
     <div className="flex flex-col gap-4 px-4 pb-4">
       <AddTaskForm ideaId={ideaId} />
-      {groups.map((group) => (
-        <section key={group.milestone ?? ""} className="flex flex-col gap-2">
-          <h3 className="flex items-center justify-between text-sm font-medium text-[var(--color-fg)]">
-            <span>{group.milestone ?? t("ideas.tasks.noMilestone")}</span>
-            <span className="text-xs font-normal text-[var(--color-muted)]">
-              {t("ideas.tasks.task", { count: group.tasks.length })}
-            </span>
-          </h3>
-          <ul className="flex flex-col divide-y divide-[var(--color-border)] rounded-md border border-[var(--color-border)]">
-            {group.tasks.map((task) => (
-              <TaskItem key={task.id} ideaId={ideaId} task={task} />
-            ))}
-          </ul>
-        </section>
-      ))}
+
+      <div className="flex flex-col gap-1.5">
+        <div className="flex items-center justify-between text-sm">
+          <span className="font-medium text-[var(--color-fg)]">
+            {t("ideas.tasks.overall")}
+          </span>
+          <span className="text-xs text-[var(--color-muted)]">
+            {completed}/{total} · {overallPercent}%
+          </span>
+        </div>
+        <ProgressBar
+          value={overallPercent}
+          ariaLabel={t("ideas.tasks.overallProgress", {
+            percent: overallPercent,
+          })}
+        />
+      </div>
+
+      {groups.map((group) => {
+        const groupCompleted = group.tasks.filter((task) => task.completed).length;
+        const groupPercent = progressPercent(groupCompleted, group.tasks.length);
+
+        return (
+          <section key={group.milestone ?? ""} className="flex flex-col gap-2">
+            <h3 className="flex flex-col gap-1.5 text-sm font-medium text-[var(--color-fg)]">
+              <div className="flex items-center justify-between">
+                <span>{group.milestone ?? t("ideas.tasks.noMilestone")}</span>
+                <span className="text-xs font-normal text-[var(--color-muted)]">
+                  {groupCompleted}/{group.tasks.length}{" "}
+                  {t("ideas.tasks.task", { count: group.tasks.length })}
+                </span>
+              </div>
+              <ProgressBar
+                value={groupPercent}
+                ariaLabel={group.milestone ?? t("ideas.tasks.noMilestone")}
+              />
+            </h3>
+            <ul className="flex flex-col divide-y divide-[var(--color-border)] rounded-md border border-[var(--color-border)]">
+              {group.tasks.map((task) => (
+                <TaskItem key={task.id} ideaId={ideaId} task={task} />
+              ))}
+            </ul>
+          </section>
+        );
+      })}
     </div>
   );
 }

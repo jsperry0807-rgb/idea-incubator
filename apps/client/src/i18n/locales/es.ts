@@ -169,6 +169,8 @@ export const es: LocaleMessages = {
       emptyTitle: "Aún no hay tareas",
       emptyDescription: "Las tareas aparecerán aquí, agrupadas por hito.",
       noMilestone: "Sin hito",
+      overall: "General",
+      overallProgress: "Progreso general {{percent}}%",
       task_one: "tarea",
       task_other: "tareas",
     },

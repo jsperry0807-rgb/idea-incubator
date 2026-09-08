@@ -167,6 +167,8 @@ export const en = {
       emptyTitle: "No tasks yet",
       emptyDescription: "Tasks will appear here, grouped by milestone.",
       noMilestone: "No milestone",
+      overall: "Overall",
+      overallProgress: "Overall progress {{percent}}%",
       task_one: "task",
       task_other: "tasks",
     },
