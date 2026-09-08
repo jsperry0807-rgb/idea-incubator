@@ -102,7 +102,7 @@
 - [x] Server: Pipeline endpoint (ideas grouped by status)
 - [x] Server: Quick status change endpoint
 - [x] Client: KanbanBoard component (6 columns)
-- [ ] Client: KanbanColumn component (header + card list)
+- [x] Client: KanbanColumn component (header + card list)
 - [ ] Client: KanbanCard component (compact idea card)
 - [ ] Client: DragOverlay component (visual feedback)
 - [ ] Client: @dnd-kit integration (drag between columns)
