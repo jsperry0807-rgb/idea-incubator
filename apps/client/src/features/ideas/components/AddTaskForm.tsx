@@ -1,8 +1,10 @@
-import { useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Input, toast } from "@repo/ui";
 
 import { useCreateTask } from "../hooks/useCreateTask";
+import { useTasks } from "../hooks/useTasks";
+import { MilestoneSelector } from "./MilestoneSelector";
 
 export interface AddTaskFormProps {
   ideaId: string;
@@ -11,12 +13,26 @@ export interface AddTaskFormProps {
 export function AddTaskForm({ ideaId }: AddTaskFormProps) {
   const { t } = useTranslation();
   const createTask = useCreateTask(ideaId);
+  const tasksQuery = useTasks(ideaId);
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
+  const [milestone, setMilestone] = useState("");
+
+  const milestones = useMemo(
+    () => [
+      ...new Set(
+        (tasksQuery.data ?? [])
+          .map((task) => task.milestone)
+          .filter((value): value is string => Boolean(value)),
+      ),
+    ],
+    [tasksQuery.data],
+  );
 
   function close() {
     setOpen(false);
     setTitle("");
+    setMilestone("");
   }
 
   async function handleSubmit(event: FormEvent) {
@@ -25,7 +41,10 @@ export function AddTaskForm({ ideaId }: AddTaskFormProps) {
       return;
     }
     try {
-      await createTask.mutateAsync({ title: title.trim() });
+      await createTask.mutateAsync({
+        title: title.trim(),
+        ...(milestone.trim() ? { milestone: milestone.trim() } : {}),
+      });
       close();
     } catch {
       toast.error(t("ideas.tasks.addError"));
@@ -51,32 +70,42 @@ export function AddTaskForm({ ideaId }: AddTaskFormProps) {
   }
 
   return (
-    <form onSubmit={(event) => void handleSubmit(event)} className="flex items-center gap-2">
-      <Input
-        autoFocus
-        value={title}
-        onChange={(event) => setTitle(event.target.value)}
-        placeholder={t("ideas.tasks.taskPlaceholder")}
-        aria-label={t("ideas.tasks.addTask")}
-        className="flex-1"
-      />
-      <Button
-        type="submit"
-        size="sm"
-        variant="primary"
-        disabled={createTask.isPending || !title.trim()}
-      >
-        {createTask.isPending ? t("ideas.tasks.addingTask") : t("ideas.tasks.add")}
-      </Button>
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={close}
-        disabled={createTask.isPending}
-      >
-        {t("ideas.tasks.cancel")}
-      </Button>
+    <form onSubmit={(event) => void handleSubmit(event)} className="flex flex-col gap-2">
+      <div className="flex flex-wrap items-center gap-2">
+        <Input
+          autoFocus
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          placeholder={t("ideas.tasks.taskPlaceholder")}
+          aria-label={t("ideas.tasks.taskPlaceholder")}
+          className="min-w-40 flex-1"
+        />
+        <MilestoneSelector
+          value={milestone}
+          onChange={setMilestone}
+          milestones={milestones}
+          placeholder={t("ideas.tasks.milestonePlaceholder")}
+          aria-label={t("ideas.tasks.milestoneLabel")}
+          className="w-44"
+        />
+        <Button
+          type="submit"
+          size="sm"
+          variant="primary"
+          disabled={createTask.isPending || !title.trim()}
+        >
+          {createTask.isPending ? t("ideas.tasks.addingTask") : t("ideas.tasks.add")}
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={close}
+          disabled={createTask.isPending}
+        >
+          {t("ideas.tasks.cancel")}
+        </Button>
+      </div>
     </form>
   );
 }

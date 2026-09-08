@@ -164,6 +164,8 @@ export const fr: LocaleMessages = {
       addError: "Une erreur est survenue lors de la création de cette tâche.",
       cancel: "Annuler",
       taskPlaceholder: "Qu'y a-t-il à faire ?",
+      milestoneLabel: "Jalon",
+      milestonePlaceholder: "Jalon (facultatif)",
       emptyTitle: "Aucune tâche",
       emptyDescription: "Les tâches apparaîtront ici, regroupées par jalon.",
       noMilestone: "Sans jalon",

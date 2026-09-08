@@ -164,6 +164,8 @@ export const es: LocaleMessages = {
       addError: "Algo salió mal al crear esta tarea.",
       cancel: "Cancelar",
       taskPlaceholder: "¿Qué hay que hacer?",
+      milestoneLabel: "Hito",
+      milestonePlaceholder: "Hito (opcional)",
       emptyTitle: "Aún no hay tareas",
       emptyDescription: "Las tareas aparecerán aquí, agrupadas por hito.",
       noMilestone: "Sin hito",

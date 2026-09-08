@@ -162,6 +162,8 @@ export const en = {
       addError: "Something went wrong creating this task.",
       cancel: "Cancel",
       taskPlaceholder: "What needs doing?",
+      milestoneLabel: "Milestone",
+      milestonePlaceholder: "Milestone (optional)",
       emptyTitle: "No tasks yet",
       emptyDescription: "Tasks will appear here, grouped by milestone.",
       noMilestone: "No milestone",
