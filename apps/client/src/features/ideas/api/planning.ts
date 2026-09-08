@@ -9,6 +9,11 @@ export interface PlanningSectionResult {
   created: boolean;
 }
 
+export interface PlanningSectionUpdateResult {
+  section: PlanningSectionName;
+  updatedAt: string;
+}
+
 export async function getPlanningSection(
   ideaId: string,
   section: PlanningSectionName,
@@ -17,6 +22,18 @@ export async function getPlanningSection(
   const { data } = await client.get<{ data: PlanningSectionResult }>(
     `/ideas/${ideaId}/planning/${section}`,
     { signal },
+  );
+  return data.data;
+}
+
+export async function updatePlanningSection(
+  ideaId: string,
+  section: PlanningSectionName,
+  content: string,
+): Promise<PlanningSectionUpdateResult> {
+  const { data } = await client.put<{ data: PlanningSectionUpdateResult }>(
+    `/ideas/${ideaId}/planning/${section}`,
+    { content },
   );
   return data.data;
 }

@@ -67,7 +67,7 @@
 - [x] Server: Planning section routes (GET/PUT per section)
 - [x] Server: Path traversal prevention
 - [x] Client: PlanningAccordion component (5 collapsible sections)
-- [ ] Client: PlanningSection component (markdown viewer/editor)
+- [x] Client: PlanningSection component (markdown viewer/editor)
 - [ ] Client: ImportMarkdownModal (drag-and-drop .md upload)
 - [ ] Client: "Create risks.md" on-demand button
 - [ ] Client: Markdown rendering (react-markdown)

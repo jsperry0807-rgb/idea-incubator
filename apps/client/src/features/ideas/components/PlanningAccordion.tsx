@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PLANNING_SECTION_NAMES, type PlanningSectionName } from "@repo/shared";
 
-import { PlanningAccordionSection } from "./PlanningAccordionSection";
+import { PlanningSection } from "./PlanningSection";
 
 export interface PlanningAccordionProps {
   ideaId: string;
@@ -33,7 +33,7 @@ export function PlanningAccordion({ ideaId }: PlanningAccordionProps) {
             <ChevronDown className="text-[var(--color-muted)] transition-transform duration-150 group-open:rotate-180" />
           </summary>
           {requested[section] ? (
-            <PlanningAccordionSection ideaId={ideaId} section={section} />
+            <PlanningSection ideaId={ideaId} section={section} />
           ) : null}
         </details>
       ))}

@@ -123,6 +123,12 @@ export const fr: LocaleMessages = {
     },
     planning: {
       loadError: "Une erreur est survenue lors du chargement de cette section.",
+      edit: "Modifier",
+      save: "Enregistrer",
+      saving: "Enregistrement…",
+      cancel: "Annuler",
+      saved: "Section enregistrée",
+      saveError: "Une erreur est survenue lors de l'enregistrement de cette section.",
       sections: {
         overview: "Aperçu",
         "tech-stack": "Stack technique",

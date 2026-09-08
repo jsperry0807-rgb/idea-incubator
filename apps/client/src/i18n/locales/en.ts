@@ -121,6 +121,12 @@ export const en = {
     },
     planning: {
       loadError: "Something went wrong loading this section.",
+      edit: "Edit",
+      save: "Save",
+      saving: "Saving…",
+      cancel: "Cancel",
+      saved: "Section saved",
+      saveError: "Something went wrong saving this section.",
       sections: {
         overview: "Overview",
         "tech-stack": "Tech Stack",

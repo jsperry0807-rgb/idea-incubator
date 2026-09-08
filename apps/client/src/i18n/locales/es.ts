@@ -123,6 +123,12 @@ export const es: LocaleMessages = {
     },
     planning: {
       loadError: "Algo salió mal al cargar esta sección.",
+      edit: "Editar",
+      save: "Guardar",
+      saving: "Guardando…",
+      cancel: "Cancelar",
+      saved: "Sección guardada",
+      saveError: "Algo salió mal al guardar esta sección.",
       sections: {
         overview: "Resumen",
         "tech-stack": "Stack tecnológico",
