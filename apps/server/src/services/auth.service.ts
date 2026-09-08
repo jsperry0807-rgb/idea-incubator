@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import bcrypt from "bcryptjs";
 
 import prisma from "../lib/prisma";
@@ -36,6 +36,10 @@ export interface TokenPair {
 }
 
 const REFRESH_TOKEN_COOKIE = "refresh_token";
+
+function digest(value: string): string {
+  return createHash("sha256").update(value).digest("hex");
+}
 
 export async function register(input: RegisterInput) {
   const existing = await prisma.user.findUnique({
@@ -92,7 +96,7 @@ export async function refresh(refreshToken: string | undefined) {
   }
 
   const stored = await prisma.refreshToken.findUnique({
-    where: { token: refreshToken },
+    where: { tokenHash: digest(refreshToken) },
   });
 
   if (!stored || stored.expiresAt < new Date()) {
@@ -130,7 +134,7 @@ export async function me(userId: string) {
 export async function logout(refreshToken: string | undefined) {
   if (refreshToken) {
     await prisma.refreshToken
-      .deleteMany({ where: { token: refreshToken } })
+      .deleteMany({ where: { tokenHash: digest(refreshToken) } })
       .catch(() => {});
   }
 }
@@ -184,14 +188,14 @@ async function persistRefreshToken(
   await prisma.refreshToken.create({
     data: {
       userId,
-      token: refreshToken,
+      tokenHash: digest(refreshToken),
       expiresAt,
     },
   });
 
   if (oldToken) {
     await prisma.refreshToken
-      .deleteMany({ where: { token: oldToken } })
+      .deleteMany({ where: { tokenHash: digest(oldToken) } })
       .catch(() => {});
   }
 

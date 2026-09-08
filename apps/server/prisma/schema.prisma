@@ -175,7 +175,7 @@ model Notification {
 model RefreshToken {
   id        String   @id @default(cuid())
   userId    String
-  token     String   @unique
+  tokenHash String   @unique
   userAgent String?
   ipAddress String?
   expiresAt DateTime
