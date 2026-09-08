@@ -1,5 +1,9 @@
-import axios, { AxiosError } from "axios";
-import type { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
+import axios from "axios";
+import type {
+  AxiosError,
+  AxiosRequestConfig,
+  InternalAxiosRequestConfig,
+} from "axios";
 
 import type { ApiEnvelope, HealthResponse } from "@repo/shared";
 
