@@ -158,6 +158,12 @@ export const fr: LocaleMessages = {
     tasks: {
       loadError: "Une erreur est survenue lors du chargement des tâches.",
       updateError: "Une erreur est survenue lors de la mise à jour de cette tâche.",
+      addTask: "Ajouter une tâche",
+      add: "Ajouter",
+      addingTask: "Ajout…",
+      addError: "Une erreur est survenue lors de la création de cette tâche.",
+      cancel: "Annuler",
+      taskPlaceholder: "Qu'y a-t-il à faire ?",
       emptyTitle: "Aucune tâche",
       emptyDescription: "Les tâches apparaîtront ici, regroupées par jalon.",
       noMilestone: "Sans jalon",

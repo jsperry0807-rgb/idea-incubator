@@ -85,7 +85,7 @@
 - [x] Server: Tasks CRUD routes (list, create, update, delete per idea)
 - [x] Client: TaskList component (grouped by milestone)
 - [x] Client: TaskItem component (checkbox, title, milestone badge)
-- [ ] Client: Add task inline form
+- [x] Client: Add task inline form
 - [ ] Client: Milestone selector
 - [ ] Client: Progress bars (per milestone + overall)
 - [ ] Client: Task reorder (drag-and-drop within column)

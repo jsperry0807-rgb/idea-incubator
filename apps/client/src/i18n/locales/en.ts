@@ -156,6 +156,12 @@ export const en = {
     tasks: {
       loadError: "Something went wrong loading tasks.",
       updateError: "Something went wrong updating this task.",
+      addTask: "Add task",
+      add: "Add",
+      addingTask: "Adding…",
+      addError: "Something went wrong creating this task.",
+      cancel: "Cancel",
+      taskPlaceholder: "What needs doing?",
       emptyTitle: "No tasks yet",
       emptyDescription: "Tasks will appear here, grouped by milestone.",
       noMilestone: "No milestone",

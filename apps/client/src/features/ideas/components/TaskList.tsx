@@ -3,6 +3,7 @@ import type { Task } from "@repo/shared";
 import { EmptyState, Spinner } from "@repo/ui";
 
 import { useTasks } from "../hooks/useTasks";
+import { AddTaskForm } from "./AddTaskForm";
 import { TaskItem } from "./TaskItem";
 
 export interface TaskListProps {
@@ -36,8 +37,11 @@ export function TaskList({ ideaId }: TaskListProps) {
 
   if (query.isLoading) {
     return (
-      <div className="flex justify-center px-4 pb-4">
-        <Spinner size="md" />
+      <div className="flex flex-col gap-3 px-4 pb-4">
+        <AddTaskForm ideaId={ideaId} />
+        <div className="flex justify-center py-4">
+          <Spinner size="md" />
+        </div>
       </div>
     );
   }
@@ -56,7 +60,8 @@ export function TaskList({ ideaId }: TaskListProps) {
 
   if (tasks.length === 0) {
     return (
-      <div className="px-4 pb-4">
+      <div className="flex flex-col gap-3 px-4 pb-4">
+        <AddTaskForm ideaId={ideaId} />
         <EmptyState
           title={t("ideas.tasks.emptyTitle")}
           description={t("ideas.tasks.emptyDescription")}
@@ -69,6 +74,7 @@ export function TaskList({ ideaId }: TaskListProps) {
 
   return (
     <div className="flex flex-col gap-4 px-4 pb-4">
+      <AddTaskForm ideaId={ideaId} />
       {groups.map((group) => (
         <section key={group.milestone ?? ""} className="flex flex-col gap-2">
           <h3 className="flex items-center justify-between text-sm font-medium text-[var(--color-fg)]">
