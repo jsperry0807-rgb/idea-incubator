@@ -1,4 +1,5 @@
 import type {
+  ActivityType,
   AuthProvider,
   IdeaPriority,
   IdeaStatus,
@@ -58,6 +59,18 @@ export interface DashboardStats {
   byStatus: Record<IdeaStatus, number>;
   totalTasks: number;
   completedTasks: number;
+}
+
+export interface ActivityItem {
+  id: string;
+  type: ActivityType;
+  ideaId: string;
+  ideaTitle: string;
+  createdAt: string;
+  meta?: {
+    text?: string;
+    role?: ShareRole;
+  };
 }
 
 export interface Task {
