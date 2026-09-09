@@ -6,6 +6,7 @@ export const es: LocaleMessages = {
     nav: {
       home: "Inicio",
       ideas: "Ideas",
+      roadmap: "Hoja de ruta",
       tags: "Etiquetas",
     },
   },
@@ -53,6 +54,10 @@ export const es: LocaleMessages = {
   ideas: {
     title: "Ideas",
     subtitle: "Captura, planifica y sigue tus ideas.",
+    roadmap: {
+      title: "Hoja de ruta",
+      subtitle: "Arrastra las ideas entre columnas de estado para planificar tu flujo.",
+    },
     searchPlaceholder: "Buscar ideas…",
     loadError: "Algo salió mal al cargar tus ideas.",
     viewGrid: "Vista de cuadrícula",
@@ -155,6 +160,12 @@ export const es: LocaleMessages = {
         timeline: "Cronograma",
         risks: "Riesgos",
       },
+    },
+    pipeline: {
+      loadError: "Algo salió mal al cargar tu hoja de ruta.",
+      emptyColumn: "Aún no hay ideas",
+      progress: "Progreso de tareas",
+      moveError: "Algo salió mal al mover esta idea.",
     },
     tasks: {
       loadError: "Algo salió mal al cargar las tareas.",

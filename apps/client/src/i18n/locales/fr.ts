@@ -6,6 +6,7 @@ export const fr: LocaleMessages = {
     nav: {
       home: "Accueil",
       ideas: "Idées",
+      roadmap: "Feuille de route",
       tags: "Étiquettes",
     },
   },
@@ -53,6 +54,10 @@ export const fr: LocaleMessages = {
   ideas: {
     title: "Idées",
     subtitle: "Capturez, planifiez et suivez vos idées.",
+    roadmap: {
+      title: "Feuille de route",
+      subtitle: "Faites glisser les idées entre les colonnes pour planifier votre pipeline.",
+    },
     searchPlaceholder: "Rechercher des idées…",
     loadError: "Une erreur est survenue lors du chargement de vos idées.",
     viewGrid: "Vue en grille",
@@ -155,6 +160,12 @@ export const fr: LocaleMessages = {
         timeline: "Chronologie",
         risks: "Risques",
       },
+    },
+    pipeline: {
+      loadError: "Une erreur est survenue lors du chargement de votre feuille de route.",
+      emptyColumn: "Aucune idée",
+      progress: "Progression des tâches",
+      moveError: "Une erreur est survenue lors du déplacement de cette idée.",
     },
     tasks: {
       loadError: "Une erreur est survenue lors du chargement des tâches.",

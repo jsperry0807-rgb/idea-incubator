@@ -5,6 +5,7 @@ export const ROUTES = {
   DASHBOARD: "/dashboard",
   IDEAS: "/ideas",
   NEW_IDEA: "/ideas/new",
+  ROADMAP: "/roadmap",
   TAGS: "/tags",
   IDEA_DETAIL: "/ideas/:id",
   NOT_FOUND: "/404",

@@ -4,6 +4,7 @@ export const en = {
     nav: {
       home: "Home",
       ideas: "Ideas",
+      roadmap: "Roadmap",
       tags: "Tags",
     },
   },
@@ -51,6 +52,10 @@ export const en = {
   ideas: {
     title: "Ideas",
     subtitle: "Capture, plan, and track your ideas.",
+    roadmap: {
+      title: "Roadmap",
+      subtitle: "Drag ideas between status columns to plan your pipeline.",
+    },
     searchPlaceholder: "Search ideas…",
     loadError: "Something went wrong loading your ideas.",
     viewGrid: "Grid view",
@@ -153,6 +158,12 @@ export const en = {
         timeline: "Timeline",
         risks: "Risks",
       },
+    },
+    pipeline: {
+      loadError: "Something went wrong loading your roadmap.",
+      emptyColumn: "No ideas yet",
+      progress: "Task progress",
+      moveError: "Something went wrong moving this idea.",
     },
     tasks: {
       loadError: "Something went wrong loading tasks.",

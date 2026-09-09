@@ -39,6 +39,20 @@ export interface Idea {
   tags: IdeaTag[];
 }
 
+export interface PipelineIdea {
+  id: string;
+  userId: string;
+  title: string;
+  slug: string;
+  status: IdeaStatus;
+  priority: IdeaPriority;
+  tags: IdeaTag[];
+  taskCount: number;
+  completedTaskCount: number;
+}
+
+export type IdeaPipeline = Record<IdeaStatus, PipelineIdea[]>;
+
 export interface Task {
   id: string;
   ideaId: string;

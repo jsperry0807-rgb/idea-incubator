@@ -29,6 +29,10 @@ export const updateIdeaSchema = z
     message: "At least one field must be provided",
   });
 
+export const updateIdeaStatusSchema = z.object({
+  status: statusEnum,
+});
+
 export const ideaListQuerySchema = z.object({
   page: z.coerce.number().int().min(1).optional(),
   pageSize: z.coerce.number().int().min(1).max(100).optional(),
@@ -42,4 +46,5 @@ export const ideaListQuerySchema = z.object({
 
 export type CreateIdeaInput = z.infer<typeof createIdeaSchema>;
 export type UpdateIdeaInput = z.infer<typeof updateIdeaSchema>;
+export type UpdateIdeaStatusInput = z.infer<typeof updateIdeaStatusSchema>;
 export type IdeaListQuery = z.infer<typeof ideaListQuerySchema>;

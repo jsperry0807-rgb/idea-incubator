@@ -4,6 +4,7 @@ import {
   idParamSchema,
   ideaListQuerySchema,
   updateIdeaSchema,
+  updateIdeaStatusSchema,
   type IdeaListQuery,
 } from "@repo/shared";
 
@@ -13,6 +14,7 @@ import {
   createIdea,
   deleteIdea,
   getIdea,
+  getPipeline,
   listIdeas,
   updateIdea,
 } from "../services/idea.service";
@@ -27,6 +29,14 @@ router.get("/", validate({ query: ideaListQuerySchema }), async (req, res, next)
   try {
     const result = await listIdeas(req.userId!, req.query as unknown as IdeaListQuery);
     res.json({ data: result.items, meta: result.meta });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/pipeline", async (req, res, next) => {
+  try {
+    res.json({ data: await getPipeline(req.userId!) });
   } catch (err) {
     next(err);
   }
@@ -50,6 +60,14 @@ router.post("/", validate(createIdeaSchema), async (req, res, next) => {
 });
 
 router.patch("/:id", validate({ params: idParamSchema, body: updateIdeaSchema }), async (req, res, next) => {
+  try {
+    res.json({ data: await updateIdea(req.userId!, String(req.params.id), req.body) });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.patch("/:id/status", validate({ params: idParamSchema, body: updateIdeaStatusSchema }), async (req, res, next) => {
   try {
     res.json({ data: await updateIdea(req.userId!, String(req.params.id), req.body) });
   } catch (err) {

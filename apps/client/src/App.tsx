@@ -10,6 +10,11 @@ const HomePage = lazy(() => import("@pages/HomePage"));
 const LoginPage = lazy(() => import("@pages/LoginPage"));
 const RegisterPage = lazy(() => import("@pages/RegisterPage"));
 const DashboardPage = lazy(() => import("@features/dashboard/pages/DashboardPage"));
+const IdeasPage = lazy(() => import("@features/ideas/pages/IdeasPage"));
+const CreateIdeaPage = lazy(() => import("@features/ideas/pages/CreateIdeaPage"));
+const RoadmapPage = lazy(() => import("@features/ideas/pages/RoadmapPage"));
+const TagsPage = lazy(() => import("@features/tags/pages/TagsPage"));
+const IdeaDetailPage = lazy(() => import("@features/ideas/pages/IdeaDetailPage"));
 const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
 
 export default function App() {
@@ -28,6 +33,46 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.IDEAS}
+            element={
+              <ProtectedRoute>
+                <IdeasPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.NEW_IDEA}
+            element={
+              <ProtectedRoute>
+                <CreateIdeaPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.ROADMAP}
+            element={
+              <ProtectedRoute>
+                <RoadmapPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.TAGS}
+            element={
+              <ProtectedRoute>
+                <TagsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.IDEA_DETAIL}
+            element={
+              <ProtectedRoute>
+                <IdeaDetailPage />
               </ProtectedRoute>
             }
           />
