@@ -8,6 +8,7 @@ export const fr: LocaleMessages = {
       ideas: "Idées",
       roadmap: "Feuille de route",
       tags: "Étiquettes",
+      logout: "Se déconnecter",
     },
   },
   home: {
@@ -50,6 +51,37 @@ export const fr: LocaleMessages = {
   },
   dashboard: {
     title: "Tableau de bord",
+    greeting: "Bonjour, {{name}}",
+    stats: {
+      totalIdeas: "Idées totales",
+      inPlanning: "En planification",
+      planned: "Planifiées",
+      done: "Terminées",
+      loadError: "Une erreur est survenue lors du chargement des statistiques.",
+    },
+    activity: {
+      title: "Activité récente",
+      empty: "Aucune activité récente",
+      loadError: "Une erreur est survenue lors du chargement de l'activité récente.",
+      IDEA_CREATED: "Idée créée",
+      IDEA_UPDATED: "Idée mise à jour",
+      COMMENT: "Commentaire sur une idée",
+      SHARE: "Idée partagée",
+    },
+    needsAttention: {
+      title: "Nécessite une attention",
+      empty: "Tout est à jour — aucune idée obsolète.",
+      loadError: "Une erreur est survenue lors du chargement des idées nécessitant une attention.",
+      staleFor: "{{count, plural, one {# jour} other {# jours}}}",
+    },
+    inProgress: {
+      title: "En cours",
+      empty: "Aucune idée en cours actuellement.",
+    },
+    chart: {
+      title: "Idées par statut",
+      count: "Idées",
+    },
   },
   ideas: {
     title: "Idées",

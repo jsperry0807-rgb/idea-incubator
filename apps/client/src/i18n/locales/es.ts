@@ -8,6 +8,7 @@ export const es: LocaleMessages = {
       ideas: "Ideas",
       roadmap: "Hoja de ruta",
       tags: "Etiquetas",
+      logout: "Cerrar sesión",
     },
   },
   home: {
@@ -50,6 +51,37 @@ export const es: LocaleMessages = {
   },
   dashboard: {
     title: "Panel de control",
+    greeting: "Hola, {{name}}",
+    stats: {
+      totalIdeas: "Ideas totales",
+      inPlanning: "En planificación",
+      planned: "Planificadas",
+      done: "Completadas",
+      loadError: "Algo salió mal al cargar las estadísticas del panel.",
+    },
+    activity: {
+      title: "Actividad reciente",
+      empty: "No hay actividad reciente",
+      loadError: "Algo salió mal al cargar la actividad reciente.",
+      IDEA_CREATED: "Idea creada",
+      IDEA_UPDATED: "Idea actualizada",
+      COMMENT: "Comentario en idea",
+      SHARE: "Idea compartida",
+    },
+    needsAttention: {
+      title: "Necesita atención",
+      empty: "Todo al día — no hay ideas obsoletas.",
+      loadError: "Algo salió mal al cargar las ideas que necesitan atención.",
+      staleFor: "{{count, plural, one {# día} other {# días}}}",
+    },
+    inProgress: {
+      title: "En curso",
+      empty: "No hay ideas en curso ahora mismo.",
+    },
+    chart: {
+      title: "Ideas por estado",
+      count: "Ideas",
+    },
   },
   ideas: {
     title: "Ideas",

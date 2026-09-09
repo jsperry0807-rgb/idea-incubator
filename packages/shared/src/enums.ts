@@ -38,8 +38,17 @@ export const NotificationType = {
 } as const;
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType];
 
+export const ActivityType = {
+  IDEA_CREATED: "IDEA_CREATED",
+  IDEA_UPDATED: "IDEA_UPDATED",
+  COMMENT: "COMMENT",
+  SHARE: "SHARE",
+} as const;
+export type ActivityType = (typeof ActivityType)[keyof typeof ActivityType];
+
 export const IDEA_STATUS_VALUES = Object.values(IdeaStatus);
 export const IDEA_PRIORITY_VALUES = Object.values(IdeaPriority);
 export const SHARE_ROLE_VALUES = Object.values(ShareRole);
 export const NOTIFICATION_TYPE_VALUES = Object.values(NotificationType);
+export const ACTIVITY_TYPE_VALUES = Object.values(ActivityType);
 export const AUTH_PROVIDER_VALUES = Object.values(AuthProvider);

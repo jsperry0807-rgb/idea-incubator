@@ -1,4 +1,5 @@
 import type {
+  ActivityType,
   AuthProvider,
   IdeaPriority,
   IdeaStatus,
@@ -44,14 +45,36 @@ export interface PipelineIdea {
   userId: string;
   title: string;
   slug: string;
+  description: string | null;
   status: IdeaStatus;
   priority: IdeaPriority;
   tags: IdeaTag[];
   taskCount: number;
   completedTaskCount: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type IdeaPipeline = Record<IdeaStatus, PipelineIdea[]>;
+
+export interface DashboardStats {
+  totalIdeas: number;
+  byStatus: Record<IdeaStatus, number>;
+  totalTasks: number;
+  completedTasks: number;
+}
+
+export interface ActivityItem {
+  id: string;
+  type: ActivityType;
+  ideaId: string;
+  ideaTitle: string;
+  createdAt: string;
+  meta?: {
+    text?: string;
+    role?: ShareRole;
+  };
+}
 
 export interface Task {
   id: string;

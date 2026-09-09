@@ -4,10 +4,12 @@ export {
   IdeaPriority,
   ShareRole,
   NotificationType,
+  ActivityType,
   IDEA_STATUS_VALUES,
   IDEA_PRIORITY_VALUES,
   SHARE_ROLE_VALUES,
   NOTIFICATION_TYPE_VALUES,
+  ACTIVITY_TYPE_VALUES,
   AUTH_PROVIDER_VALUES,
 } from "./enums";
 export type {
@@ -16,11 +18,14 @@ export type {
   IdeaPriority as IdeaPriorityType,
   ShareRole as ShareRoleType,
   NotificationType as NotificationTypeType,
+  ActivityType as ActivityTypeType,
 } from "./enums";
 
 export type {
+  ActivityItem,
   AuthUser,
   Comment,
+  DashboardStats,
   Idea,
   IdeaPipeline,
   IdeaTag,

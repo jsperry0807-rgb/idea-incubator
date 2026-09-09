@@ -296,20 +296,26 @@ function toPipelineIdeaDto(idea: {
   userId: string;
   title: string;
   slug: string;
+  description: string | null;
   status: IdeaStatus;
   priority: IdeaPriority;
   tags: { tagId: string; tag: Tag }[];
   tasks: { completed: boolean }[];
+  createdAt: Date;
+  updatedAt: Date;
 }): PipelineIdea {
   return {
     id: idea.id,
     userId: idea.userId,
     title: idea.title,
     slug: idea.slug,
+    description: idea.description,
     status: idea.status,
     priority: idea.priority,
     tags: toIdeaTags(idea.tags),
     taskCount: idea.tasks.length,
     completedTaskCount: idea.tasks.filter((task) => task.completed).length,
+    createdAt: idea.createdAt.toISOString(),
+    updatedAt: idea.updatedAt.toISOString(),
   };
 }

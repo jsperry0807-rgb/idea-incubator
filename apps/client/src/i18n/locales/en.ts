@@ -6,6 +6,7 @@ export const en = {
       ideas: "Ideas",
       roadmap: "Roadmap",
       tags: "Tags",
+      logout: "Log out",
     },
   },
   home: {
@@ -48,6 +49,37 @@ export const en = {
   },
   dashboard: {
     title: "Dashboard",
+    greeting: "Hi, {{name}}",
+    stats: {
+      totalIdeas: "Total Ideas",
+      inPlanning: "In Planning",
+      planned: "Planned",
+      done: "Done",
+      loadError: "Something went wrong loading your dashboard stats.",
+    },
+    activity: {
+      title: "Recent Activity",
+      empty: "No recent activity",
+      loadError: "Something went wrong loading recent activity.",
+      IDEA_CREATED: "Created idea",
+      IDEA_UPDATED: "Updated idea",
+      COMMENT: "Commented on idea",
+      SHARE: "Shared idea",
+    },
+    needsAttention: {
+      title: "Needs Attention",
+      empty: "All caught up — no stale ideas.",
+      loadError: "Something went wrong loading ideas that need attention.",
+      staleFor: "{{count, plural, one {# day} other {# days}}}",
+    },
+    inProgress: {
+      title: "In Progress",
+      empty: "No ideas in progress right now.",
+    },
+    chart: {
+      title: "Ideas by Status",
+      count: "Ideas",
+    },
   },
   ideas: {
     title: "Ideas",

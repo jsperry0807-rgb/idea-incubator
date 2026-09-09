@@ -1,35 +1,61 @@
+import { Suspense, lazy } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { usePipeline } from "@/features/ideas/hooks/usePipeline";
+import { Card, Spinner } from "@repo/ui";
+import { ActivityFeed } from "../components/ActivityFeed";
+import { IdeaProgressCard } from "../components/IdeaProgressCard";
+import { NeedsAttention } from "../components/NeedsAttention";
+import { StatsGrid } from "../components/StatsGrid";
+
+const StatsChart = lazy(() =>
+  import("../components/StatsChart").then((m) => ({ default: m.StatsChart })),
+);
 
 export default function DashboardPage() {
   const { t } = useTranslation();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
+  const pipelineQuery = usePipeline();
+  const inProgress = pipelineQuery.data?.IN_PROGRESS ?? [];
 
   return (
-    <section style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-      <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div>
-          <h1 style={{ fontSize: "1.75rem", fontWeight: 800, margin: 0 }}>{t("dashboard.title")}</h1>
-          <p style={{ color: "var(--color-muted)", margin: "0.25rem 0 0" }}>
-            {user ? `Signed in as ${user.name} (${user.email})` : ""}
-          </p>
-        </div>
-        <button
-          onClick={() => logout()}
-          style={{
-            padding: "0.5rem 1rem",
-            borderRadius: "var(--radius)",
-            border: "1px solid var(--color-border)",
-            background: "transparent",
-            color: "var(--color-fg)",
-            cursor: "pointer",
-          }}
-        >
-          Log out
-        </button>
+    <section className="flex flex-col gap-6">
+      <header>
+        <h1 className="text-2xl font-extrabold text-[var(--color-fg)]">
+          {user ? t("dashboard.greeting", { name: user.name }) : t("dashboard.title")}
+        </h1>
       </header>
-      <p style={{ color: "var(--color-muted)" }}>Your dashboard content will appear here.</p>
+
+      <StatsGrid />
+
+      <Suspense
+        fallback={
+          <Card className="flex justify-center p-4">
+            <Spinner size="md" />
+          </Card>
+        }
+      >
+        <StatsChart />
+      </Suspense>
+
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <ActivityFeed />
+        <NeedsAttention />
+      </div>
+
+      {inProgress.length > 0 ? (
+        <section className="flex flex-col gap-3">
+          <h2 className="text-sm font-semibold text-[var(--color-fg)]">
+            {t("dashboard.inProgress.title")}
+          </h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {inProgress.map((idea) => (
+              <IdeaProgressCard key={idea.id} idea={idea} />
+            ))}
+          </div>
+        </section>
+      ) : null}
     </section>
   );
 }

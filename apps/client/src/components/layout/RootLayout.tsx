@@ -7,7 +7,7 @@ import { useAuth } from "@features/auth/hooks/useAuth";
 export default function RootLayout() {
   const { t } = useTranslation();
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const isHome = location.pathname === ROUTES.HOME;
   const isIdeas = location.pathname === ROUTES.IDEAS || location.pathname.startsWith(`${ROUTES.IDEAS}/`);
 
@@ -76,6 +76,22 @@ export default function RootLayout() {
               >
                 {t("app.nav.tags")}
               </Link>
+              <button
+                type="button"
+                onClick={() => logout()}
+                style={{
+                  color: "var(--color-muted)",
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  fontSize: "inherit",
+                  fontFamily: "inherit",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                }}
+              >
+                {t("app.nav.logout")}
+              </button>
             </>
           ) : null}
           <LanguageSwitcher />
