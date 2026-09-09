@@ -63,16 +63,16 @@
 
 **Goal:** Users can read and edit markdown-backed planning sections for each idea.
 
-- [ ] Server: FileStorageService (abstracted file read/write)
-- [ ] Server: Planning section routes (GET/PUT per section)
-- [ ] Server: Path traversal prevention
-- [ ] Client: PlanningAccordion component (5 collapsible sections)
-- [ ] Client: PlanningSection component (markdown viewer/editor)
-- [ ] Client: ImportMarkdownModal (drag-and-drop .md upload)
-- [ ] Client: "Create risks.md" on-demand button
-- [ ] Client: Markdown rendering (react-markdown)
-- [ ] Client: Markdown editor (textarea with monospace)
-- [ ] Client: Wire planning into IdeaDetailPage
+- [x] Server: FileStorageService (abstracted file read/write)
+- [x] Server: Planning section routes (GET/PUT per section)
+- [x] Server: Path traversal prevention
+- [x] Client: PlanningAccordion component (5 collapsible sections)
+- [x] Client: PlanningSection component (markdown viewer/editor)
+- [x] Client: ImportMarkdownModal (drag-and-drop .md upload)
+- [x] Client: "Create risks.md" on-demand button
+- [x] Client: Markdown rendering (react-markdown)
+- [x] Client: Markdown editor (textarea with monospace)
+- [x] Client: Wire planning into IdeaDetailPage
 
 **Deliverable:** Users can plan ideas with structured markdown sections.
 

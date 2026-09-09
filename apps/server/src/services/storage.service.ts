@@ -1,14 +1,21 @@
-import { access, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-import { env } from "../config/env";
 import { NotFoundError } from "../lib/errors";
 import {
   PLANNING_SECTIONS,
   PLANNING_TEMPLATES,
   getTemplate,
 } from "../lib/planningTemplates";
+import { LocalFileStore } from "./file-store.service";
+import type { FileStore } from "./file-store.service";
 
+/**
+ * Planning-aware file storage for a single user's idea folders.
+ *
+ * Depends on the {@link FileStore} abstraction rather than the filesystem
+ * directly, so the backend can be swapped (e.g. in-memory or object storage)
+ * without touching this layer.
+ */
 export interface FileStorageService {
   createIdeaFolder(userId: string, ideaId: string): Promise<void>;
   writeIdeaSection(
@@ -27,33 +34,42 @@ export interface FileStorageService {
     ideaId: string,
     filename: string,
   ): Promise<boolean>;
+  listIdeaSections(userId: string, ideaId: string): Promise<string[]>;
   deleteIdeaFolder(userId: string, ideaId: string): Promise<void>;
   ideaFolderExists(userId: string, ideaId: string): Promise<boolean>;
 }
 
 export class LocalFileStorage implements FileStorageService {
-  private readonly root: string;
+  constructor(private readonly store: FileStore) {}
 
-  constructor(root = env.STORAGE_PATH) {
-    this.root = path.resolve(root, "content");
+  private assertMarkdown(filename: string): void {
+    if (!filename.endsWith(".md")) {
+      throw new NotFoundError("Invalid filename");
+    }
   }
 
-  // Resolves segments under the storage root and rejects any path traversal.
-  private safeResolve(...segments: string[]): string {
-    const full = path.resolve(this.root, ...segments);
-    if (full !== this.root && !full.startsWith(`${this.root}${path.sep}`)) {
-      throw new NotFoundError("Invalid path");
-    }
-    return full;
+  private ideaPath(userId: string, ideaId: string): string {
+    return path.join(userId, ideaId);
+  }
+
+  private ideaSectionPath(
+    userId: string,
+    ideaId: string,
+    filename: string,
+  ): string {
+    return path.join(userId, ideaId, filename);
   }
 
   async createIdeaFolder(userId: string, ideaId: string): Promise<void> {
-    const dir = this.safeResolve(userId, ideaId);
-    await mkdir(dir, { recursive: true });
+    const dir = this.ideaPath(userId, ideaId);
+    await this.store.mkdir(dir);
 
     await Promise.all(
       PLANNING_SECTIONS.map((section) =>
-        writeFile(path.join(dir, `${section}.md`), PLANNING_TEMPLATES[section], "utf8"),
+        this.store.write(
+          this.ideaSectionPath(userId, ideaId, `${section}.md`),
+          PLANNING_TEMPLATES[section],
+        ),
       ),
     );
   }
@@ -64,9 +80,8 @@ export class LocalFileStorage implements FileStorageService {
     filename: string,
     content: string,
   ): Promise<void> {
-    if (!filename.endsWith(".md")) throw new NotFoundError("Invalid filename");
-    const file = this.safeResolve(userId, ideaId, filename);
-    await writeFile(file, content, "utf8");
+    this.assertMarkdown(filename);
+    await this.store.write(this.ideaSectionPath(userId, ideaId, filename), content);
   }
 
   async readIdeaSection(
@@ -74,13 +89,8 @@ export class LocalFileStorage implements FileStorageService {
     ideaId: string,
     filename: string,
   ): Promise<string> {
-    if (!filename.endsWith(".md")) throw new NotFoundError("Invalid filename");
-    const file = this.safeResolve(userId, ideaId, filename);
-    try {
-      return await readFile(file, "utf8");
-    } catch {
-      throw new NotFoundError("Planning section not found");
-    }
+    this.assertMarkdown(filename);
+    return this.store.read(this.ideaSectionPath(userId, ideaId, filename));
   }
 
   async createIdeaSectionIfMissing(
@@ -90,33 +100,29 @@ export class LocalFileStorage implements FileStorageService {
   ): Promise<boolean> {
     const template = getTemplate(filename.replace(/\.md$/, ""));
     if (!template) throw new NotFoundError("Unknown planning section");
-    if (await this.ideaFolderExists(userId, ideaId)) {
-      const file = this.safeResolve(userId, ideaId, filename);
-      try {
-        await access(file);
-        return false;
-      } catch {
-        await this.writeIdeaSection(userId, ideaId, filename, template);
-        return true;
-      }
-    }
-    return false;
+    if (!(await this.ideaFolderExists(userId, ideaId))) return false;
+
+    const rel = this.ideaSectionPath(userId, ideaId, filename);
+    if (await this.store.exists(rel)) return false;
+
+    await this.store.write(rel, template);
+    return true;
+  }
+
+  async listIdeaSections(userId: string, ideaId: string): Promise<string[]> {
+    const names = await this.store.list(this.ideaPath(userId, ideaId));
+    return names.filter((name) => name.endsWith(".md")).sort();
   }
 
   async deleteIdeaFolder(userId: string, ideaId: string): Promise<void> {
-    const dir = this.safeResolve(userId, ideaId);
-    await rm(dir, { recursive: true, force: true });
+    await this.store.deleteAll(this.ideaPath(userId, ideaId));
   }
 
   async ideaFolderExists(userId: string, ideaId: string): Promise<boolean> {
-    const dir = this.safeResolve(userId, ideaId);
-    try {
-      await access(dir);
-      return true;
-    } catch {
-      return false;
-    }
+    return this.store.exists(this.ideaPath(userId, ideaId));
   }
 }
 
-export const storage: FileStorageService = new LocalFileStorage();
+export const storage: FileStorageService = new LocalFileStorage(
+  new LocalFileStore(),
+);

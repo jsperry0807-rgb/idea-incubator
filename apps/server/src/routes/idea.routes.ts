@@ -16,6 +16,7 @@ import {
   listIdeas,
   updateIdea,
 } from "../services/idea.service";
+import planningRoutes from "./planning.routes";
 
 const router: RouterType = Router();
 
@@ -63,5 +64,7 @@ router.delete("/:id", validate({ params: idParamSchema }), async (req, res, next
     next(err);
   }
 });
+
+router.use("/:id/planning", planningRoutes);
 
 export default router;
