@@ -6,6 +6,7 @@ export const en = {
       ideas: "Ideas",
       roadmap: "Roadmap",
       tags: "Tags",
+      logout: "Log out",
     },
   },
   home: {
@@ -70,6 +71,10 @@ export const en = {
       empty: "All caught up — no stale ideas.",
       loadError: "Something went wrong loading ideas that need attention.",
       staleFor: "{{count, plural, one {# day} other {# days}}}",
+    },
+    inProgress: {
+      title: "In Progress",
+      empty: "No ideas in progress right now.",
     },
   },
   ideas: {

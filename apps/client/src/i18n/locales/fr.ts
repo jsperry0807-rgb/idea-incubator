@@ -8,6 +8,7 @@ export const fr: LocaleMessages = {
       ideas: "Idées",
       roadmap: "Feuille de route",
       tags: "Étiquettes",
+      logout: "Se déconnecter",
     },
   },
   home: {
@@ -72,6 +73,10 @@ export const fr: LocaleMessages = {
       empty: "Tout est à jour — aucune idée obsolète.",
       loadError: "Une erreur est survenue lors du chargement des idées nécessitant une attention.",
       staleFor: "{{count, plural, one {# jour} other {# jours}}}",
+    },
+    inProgress: {
+      title: "En cours",
+      empty: "Aucune idée en cours actuellement.",
     },
   },
   ideas: {

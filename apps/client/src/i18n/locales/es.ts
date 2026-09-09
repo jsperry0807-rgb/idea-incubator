@@ -8,6 +8,7 @@ export const es: LocaleMessages = {
       ideas: "Ideas",
       roadmap: "Hoja de ruta",
       tags: "Etiquetas",
+      logout: "Cerrar sesión",
     },
   },
   home: {
@@ -72,6 +73,10 @@ export const es: LocaleMessages = {
       empty: "Todo al día — no hay ideas obsoletas.",
       loadError: "Algo salió mal al cargar las ideas que necesitan atención.",
       staleFor: "{{count, plural, one {# día} other {# días}}}",
+    },
+    inProgress: {
+      title: "En curso",
+      empty: "No hay ideas en curso ahora mismo.",
     },
   },
   ideas: {
