@@ -50,6 +50,14 @@ export const fr: LocaleMessages = {
   },
   dashboard: {
     title: "Tableau de bord",
+    greeting: "Bonjour, {{name}}",
+    stats: {
+      totalIdeas: "Idées totales",
+      inPlanning: "En planification",
+      planned: "Planifiées",
+      done: "Terminées",
+      loadError: "Une erreur est survenue lors du chargement des statistiques.",
+    },
   },
   ideas: {
     title: "Idées",

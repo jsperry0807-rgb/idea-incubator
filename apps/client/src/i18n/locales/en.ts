@@ -48,6 +48,14 @@ export const en = {
   },
   dashboard: {
     title: "Dashboard",
+    greeting: "Hi, {{name}}",
+    stats: {
+      totalIdeas: "Total Ideas",
+      inPlanning: "In Planning",
+      planned: "Planned",
+      done: "Done",
+      loadError: "Something went wrong loading your dashboard stats.",
+    },
   },
   ideas: {
     title: "Ideas",

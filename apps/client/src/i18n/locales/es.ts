@@ -50,6 +50,14 @@ export const es: LocaleMessages = {
   },
   dashboard: {
     title: "Panel de control",
+    greeting: "Hola, {{name}}",
+    stats: {
+      totalIdeas: "Ideas totales",
+      inPlanning: "En planificación",
+      planned: "Planificadas",
+      done: "Completadas",
+      loadError: "Algo salió mal al cargar las estadísticas del panel.",
+    },
   },
   ideas: {
     title: "Ideas",

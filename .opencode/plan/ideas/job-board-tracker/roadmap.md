@@ -120,7 +120,7 @@
 
 - [x] Server: Dashboard stats endpoint
 - [x] Server: Dashboard activity endpoint
-- [ ] Client: StatsGrid component (4 stat cards)
+- [x] Client: StatsGrid component (4 stat cards)
 - [ ] Client: ActivityFeed component (recent actions)
 - [ ] Client: NeedsAttention component (stale ideas)
 - [ ] Client: IdeaProgressCard component
