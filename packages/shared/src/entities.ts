@@ -45,6 +45,7 @@ export interface PipelineIdea {
   userId: string;
   title: string;
   slug: string;
+  description: string | null;
   status: IdeaStatus;
   priority: IdeaPriority;
   tags: IdeaTag[];

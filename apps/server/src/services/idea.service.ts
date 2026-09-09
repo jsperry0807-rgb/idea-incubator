@@ -296,6 +296,7 @@ function toPipelineIdeaDto(idea: {
   userId: string;
   title: string;
   slug: string;
+  description: string | null;
   status: IdeaStatus;
   priority: IdeaPriority;
   tags: { tagId: string; tag: Tag }[];
@@ -308,6 +309,7 @@ function toPipelineIdeaDto(idea: {
     userId: idea.userId,
     title: idea.title,
     slug: idea.slug,
+    description: idea.description,
     status: idea.status,
     priority: idea.priority,
     tags: toIdeaTags(idea.tags),

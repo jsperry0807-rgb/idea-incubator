@@ -123,7 +123,7 @@
 - [x] Client: StatsGrid component (4 stat cards)
 - [x] Client: ActivityFeed component (recent actions)
 - [x] Client: NeedsAttention component (stale ideas)
-- [ ] Client: IdeaProgressCard component
+- [x] Client: IdeaProgressCard component
 - [ ] Client: DashboardPage (greeting, stats, activity, in-progress)
 - [ ] Client: Recharts bar chart (optional)
 
