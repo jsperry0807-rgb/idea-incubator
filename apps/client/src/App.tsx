@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 import { ROUTES } from "@config/routes";
 import RootLayout from "@components/layout/RootLayout";
-import { AuthProvider } from "@features/auth/context/AuthContext";
+import { AuthProvider } from "@features/auth/context/AuthProvider";
 import { ProtectedRoute } from "@features/auth/components/ProtectedRoute";
 
 const HomePage = lazy(() => import("@pages/HomePage"));
