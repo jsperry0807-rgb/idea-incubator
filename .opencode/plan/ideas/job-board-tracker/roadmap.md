@@ -103,8 +103,8 @@
 - [x] Server: Quick status change endpoint
 - [x] Client: KanbanBoard component (6 columns)
 - [x] Client: KanbanColumn component (header + card list)
-- [ ] Client: KanbanCard component (compact idea card)
-- [ ] Client: DragOverlay component (visual feedback)
+- [x] Client: KanbanCard component (compact idea card)
+- [x] Client: DragOverlay component (visual feedback)
 - [ ] Client: @dnd-kit integration (drag between columns)
 - [ ] Client: Optimistic updates (instant move, rollback on error)
 - [ ] Client: Filter bar (tag, priority)
