@@ -53,6 +53,13 @@ export interface PipelineIdea {
 
 export type IdeaPipeline = Record<IdeaStatus, PipelineIdea[]>;
 
+export interface DashboardStats {
+  totalIdeas: number;
+  byStatus: Record<IdeaStatus, number>;
+  totalTasks: number;
+  completedTasks: number;
+}
+
 export interface Task {
   id: string;
   ideaId: string;

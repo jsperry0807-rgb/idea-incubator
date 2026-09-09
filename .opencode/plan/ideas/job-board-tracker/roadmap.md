@@ -118,7 +118,7 @@
 
 **Goal:** Overview dashboard with stats, activity, and quick actions.
 
-- [ ] Server: Dashboard stats endpoint
+- [x] Server: Dashboard stats endpoint
 - [ ] Server: Dashboard activity endpoint
 - [ ] Client: StatsGrid component (4 stat cards)
 - [ ] Client: ActivityFeed component (recent actions)
