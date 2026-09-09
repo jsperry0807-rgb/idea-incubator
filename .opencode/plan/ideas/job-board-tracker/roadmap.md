@@ -108,7 +108,7 @@
 - [x] Client: @dnd-kit integration (drag between columns)
 - [x] Client: Optimistic updates (instant move, rollback on error)
 - [x] Client: Filter bar (tag, priority)
-- [ ] Client: RoadmapPage
+- [x] Client: RoadmapPage
 
 **Deliverable:** Drag-and-drop Kanban board.
 

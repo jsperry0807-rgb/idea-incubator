@@ -57,6 +57,16 @@ export default function RootLayout() {
                 {t("app.nav.ideas")}
               </Link>
               <Link
+                to={ROUTES.ROADMAP}
+                style={{
+                  color: location.pathname === ROUTES.ROADMAP ? "var(--color-fg)" : "var(--color-muted)",
+                  fontWeight: location.pathname === ROUTES.ROADMAP ? 600 : 400,
+                  textDecoration: "none",
+                }}
+              >
+                {t("app.nav.roadmap")}
+              </Link>
+              <Link
                 to={ROUTES.TAGS}
                 style={{
                   color: location.pathname === ROUTES.TAGS ? "var(--color-fg)" : "var(--color-muted)",
