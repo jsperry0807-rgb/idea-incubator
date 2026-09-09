@@ -67,6 +67,12 @@ export const es: LocaleMessages = {
       COMMENT: "Comentario en idea",
       SHARE: "Idea compartida",
     },
+    needsAttention: {
+      title: "Necesita atención",
+      empty: "Todo al día — no hay ideas obsoletas.",
+      loadError: "Algo salió mal al cargar las ideas que necesitan atención.",
+      staleFor: "{{count, plural, one {# día} other {# días}}}",
+    },
   },
   ideas: {
     title: "Ideas",

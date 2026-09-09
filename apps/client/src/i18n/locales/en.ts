@@ -65,6 +65,12 @@ export const en = {
       COMMENT: "Commented on idea",
       SHARE: "Shared idea",
     },
+    needsAttention: {
+      title: "Needs Attention",
+      empty: "All caught up — no stale ideas.",
+      loadError: "Something went wrong loading ideas that need attention.",
+      staleFor: "{{count, plural, one {# day} other {# days}}}",
+    },
   },
   ideas: {
     title: "Ideas",

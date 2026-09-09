@@ -50,6 +50,8 @@ export interface PipelineIdea {
   tags: IdeaTag[];
   taskCount: number;
   completedTaskCount: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type IdeaPipeline = Record<IdeaStatus, PipelineIdea[]>;
