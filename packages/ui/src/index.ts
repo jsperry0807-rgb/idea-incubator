@@ -10,6 +10,8 @@ export { Badge } from "./Badge";
 export type { BadgeProps } from "./Badge";
 export { Spinner } from "./Spinner";
 export type { SpinnerProps } from "./Spinner";
+export { ProgressBar } from "./ProgressBar";
+export type { ProgressBarProps } from "./ProgressBar";
 export { EmptyState } from "./EmptyState";
 export type { EmptyStateProps } from "./EmptyState";
 export { Modal } from "./Modal";

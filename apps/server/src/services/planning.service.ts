@@ -1,21 +1,10 @@
-import prisma from "../lib/prisma";
 import { NotFoundError } from "../lib/errors";
 import {
   PLANNING_SECTIONS,
   RISKS_SECTION,
 } from "../lib/planningTemplates";
 import { storage } from "./storage.service";
-
-export async function assertIdeaOwnership(userId: string, ideaId: string): Promise<void> {
-  const idea = await prisma.idea.findFirst({
-    where: { id: ideaId, userId },
-    select: { id: true },
-  });
-
-  if (!idea) {
-    throw new NotFoundError("Idea not found");
-  }
-}
+import { assertIdeaOwnership } from "./idea.service";
 
 const ALL_SECTIONS = [...PLANNING_SECTIONS, RISKS_SECTION];
 

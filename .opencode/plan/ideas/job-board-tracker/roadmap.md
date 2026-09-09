@@ -82,14 +82,14 @@
 
 **Goal:** Users can create tasks grouped by milestones with progress tracking.
 
-- [ ] Server: Tasks CRUD routes (list, create, update, delete per idea)
-- [ ] Client: TaskList component (grouped by milestone)
-- [ ] Client: TaskItem component (checkbox, title, milestone badge)
-- [ ] Client: Add task inline form
-- [ ] Client: Milestone selector
-- [ ] Client: Progress bars (per milestone + overall)
-- [ ] Client: Task reorder (drag-and-drop within column)
-- [ ] Client: Wire tasks into IdeaDetailPage
+- [x] Server: Tasks CRUD routes (list, create, update, delete per idea)
+- [x] Client: TaskList component (grouped by milestone)
+- [x] Client: TaskItem component (checkbox, title, milestone badge)
+- [x] Client: Add task inline form
+- [x] Client: Milestone selector
+- [x] Client: Progress bars (per milestone + overall)
+- [x] Client: Task reorder (drag-and-drop within column)
+- [x] Client: Wire tasks into IdeaDetailPage
 
 **Deliverable:** Task management with milestones and progress tracking.
 
