@@ -105,8 +105,8 @@
 - [x] Client: KanbanColumn component (header + card list)
 - [x] Client: KanbanCard component (compact idea card)
 - [x] Client: DragOverlay component (visual feedback)
-- [ ] Client: @dnd-kit integration (drag between columns)
-- [ ] Client: Optimistic updates (instant move, rollback on error)
+- [x] Client: @dnd-kit integration (drag between columns)
+- [x] Client: Optimistic updates (instant move, rollback on error)
 - [ ] Client: Filter bar (tag, priority)
 - [ ] Client: RoadmapPage
 

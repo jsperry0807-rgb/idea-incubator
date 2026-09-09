@@ -158,6 +158,7 @@ export const en = {
       loadError: "Something went wrong loading your roadmap.",
       emptyColumn: "No ideas yet",
       progress: "Task progress",
+      moveError: "Something went wrong moving this idea.",
     },
     tasks: {
       loadError: "Something went wrong loading tasks.",

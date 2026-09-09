@@ -160,6 +160,7 @@ export const fr: LocaleMessages = {
       loadError: "Une erreur est survenue lors du chargement de votre feuille de route.",
       emptyColumn: "Aucune idée",
       progress: "Progression des tâches",
+      moveError: "Une erreur est survenue lors du déplacement de cette idée.",
     },
     tasks: {
       loadError: "Une erreur est survenue lors du chargement des tâches.",

@@ -1,7 +1,36 @@
 import { useTranslation } from "react-i18next";
+import { useDraggable, useDroppable } from "@dnd-kit/core";
 import type { IdeaStatus, PipelineIdea } from "@repo/shared";
 
 import { KanbanCard } from "./KanbanCard";
+
+function DraggableKanbanCard({ idea }: { idea: PipelineIdea }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    isDragging,
+  } = useDraggable({
+    id: idea.id,
+    data: { idea },
+  });
+
+  const style = transform
+    ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
+    : undefined;
+
+  return (
+    <KanbanCard
+      idea={idea}
+      style={style}
+      dragAttributes={attributes}
+      dragListeners={listeners}
+      setNodeRef={setNodeRef}
+      isDragging={isDragging}
+    />
+  );
+}
 
 export interface KanbanColumnProps {
   status: IdeaStatus;
@@ -10,11 +39,23 @@ export interface KanbanColumnProps {
 
 export function KanbanColumn({ status, ideas }: KanbanColumnProps) {
   const { t } = useTranslation();
+  const { setNodeRef, isOver } = useDroppable({
+    id: status,
+    data: { status },
+  });
 
   return (
     <section
-      className="flex w-64 shrink-0 flex-col gap-2"
+      ref={setNodeRef}
       aria-label={t(`ideas.status.${status}`)}
+      className={[
+        "flex w-64 shrink-0 flex-col gap-2 p-2 transition-colors",
+        isOver
+          ? "rounded-[var(--radius)] bg-[var(--color-accent)]/5 ring-2 ring-[var(--color-accent)]/40"
+          : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
       <header className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-[var(--color-fg)]">
@@ -32,7 +73,7 @@ export function KanbanColumn({ status, ideas }: KanbanColumnProps) {
       ) : (
         <ul className="flex flex-col gap-2">
           {ideas.map((idea) => (
-            <KanbanCard key={idea.id} idea={idea} />
+            <DraggableKanbanCard key={idea.id} idea={idea} />
           ))}
         </ul>
       )}

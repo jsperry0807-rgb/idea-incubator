@@ -160,6 +160,7 @@ export const es: LocaleMessages = {
       loadError: "Algo salió mal al cargar tu hoja de ruta.",
       emptyColumn: "Aún no hay ideas",
       progress: "Progreso de tareas",
+      moveError: "Algo salió mal al mover esta idea.",
     },
     tasks: {
       loadError: "Algo salió mal al cargar las tareas.",

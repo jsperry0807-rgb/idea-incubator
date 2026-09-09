@@ -1,4 +1,9 @@
+import type { CSSProperties } from "react";
 import { useTranslation } from "react-i18next";
+import type {
+  DraggableAttributes,
+  DraggableSyntheticListeners,
+} from "@dnd-kit/core";
 import type { PipelineIdea } from "@repo/shared";
 import { ProgressBar } from "@repo/ui";
 
@@ -12,16 +17,39 @@ function progressPercent(completed: number, total: number): number {
 export interface KanbanCardProps {
   idea: PipelineIdea;
   className?: string;
+  style?: CSSProperties;
+  dragAttributes?: DraggableAttributes;
+  dragListeners?: DraggableSyntheticListeners;
+  setNodeRef?: (node: HTMLElement | null) => void;
+  isDragging?: boolean;
 }
 
-export function KanbanCard({ idea, className }: KanbanCardProps) {
+export function KanbanCard({
+  idea,
+  className,
+  style,
+  dragAttributes,
+  dragListeners,
+  setNodeRef,
+  isDragging = false,
+}: KanbanCardProps) {
   const { t } = useTranslation();
   const percent = progressPercent(idea.completedTaskCount, idea.taskCount);
+  const draggable = Boolean(dragListeners);
 
   return (
     <li
+      ref={setNodeRef}
+      style={style}
+      tabIndex={draggable ? 0 : undefined}
+      role={draggable ? "button" : undefined}
+      {...dragAttributes}
+      {...dragListeners}
       className={[
-        "flex flex-col gap-2 rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-bg)] p-3 shadow-sm",
+        "flex select-none flex-col gap-2 rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-bg)] p-3 shadow-sm",
+        draggable ? "cursor-grab touch-none" : "",
+        isDragging ? "opacity-40" : "",
+        isDragging ? "z-10" : "",
         className,
       ]
         .filter(Boolean)
