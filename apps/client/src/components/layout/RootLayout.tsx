@@ -2,11 +2,14 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ROUTES } from "@config/routes";
 import { LanguageSwitcher } from "@components/layout/LanguageSwitcher";
+import { useAuth } from "@features/auth/hooks/useAuth";
 
 export default function RootLayout() {
   const { t } = useTranslation();
   const location = useLocation();
+  const { isAuthenticated } = useAuth();
   const isHome = location.pathname === ROUTES.HOME;
+  const isIdeas = location.pathname === ROUTES.IDEAS || location.pathname.startsWith(`${ROUTES.IDEAS}/`);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
@@ -41,6 +44,30 @@ export default function RootLayout() {
           >
             {t("app.nav.home")}
           </Link>
+          {isAuthenticated ? (
+            <>
+              <Link
+                to={ROUTES.IDEAS}
+                style={{
+                  color: isIdeas ? "var(--color-fg)" : "var(--color-muted)",
+                  fontWeight: isIdeas ? 600 : 400,
+                  textDecoration: "none",
+                }}
+              >
+                {t("app.nav.ideas")}
+              </Link>
+              <Link
+                to={ROUTES.TAGS}
+                style={{
+                  color: location.pathname === ROUTES.TAGS ? "var(--color-fg)" : "var(--color-muted)",
+                  fontWeight: location.pathname === ROUTES.TAGS ? 600 : 400,
+                  textDecoration: "none",
+                }}
+              >
+                {t("app.nav.tags")}
+              </Link>
+            </>
+          ) : null}
           <LanguageSwitcher />
         </nav>
       </header>

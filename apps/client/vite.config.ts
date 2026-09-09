@@ -16,6 +16,7 @@ export default defineConfig({
       '@features': fileURLToPath(new URL('./src/features', import.meta.url)),
       '@i18n': fileURLToPath(new URL('./src/i18n', import.meta.url)),
       '@pages': fileURLToPath(new URL('./src/pages', import.meta.url)),
+      '@stores': fileURLToPath(new URL('./src/stores', import.meta.url)),
       '@utils': fileURLToPath(new URL('./src/utils', import.meta.url)),
     }
   }
