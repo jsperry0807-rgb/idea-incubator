@@ -76,6 +76,10 @@ export const en = {
       title: "In Progress",
       empty: "No ideas in progress right now.",
     },
+    chart: {
+      title: "Ideas by Status",
+      count: "Ideas",
+    },
   },
   ideas: {
     title: "Ideas",

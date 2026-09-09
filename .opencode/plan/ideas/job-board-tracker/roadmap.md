@@ -125,7 +125,7 @@
 - [x] Client: NeedsAttention component (stale ideas)
 - [x] Client: IdeaProgressCard component
 - [x] Client: DashboardPage (greeting, stats, activity, in-progress)
-- [ ] Client: Recharts bar chart (optional)
+- [x] Client: Recharts bar chart (optional)
 
 **Deliverable:** Dashboard with stats and activity feed.
 

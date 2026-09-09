@@ -1,11 +1,17 @@
+import { Suspense, lazy } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { usePipeline } from "@/features/ideas/hooks/usePipeline";
+import { Card, Spinner } from "@repo/ui";
 import { ActivityFeed } from "../components/ActivityFeed";
 import { IdeaProgressCard } from "../components/IdeaProgressCard";
 import { NeedsAttention } from "../components/NeedsAttention";
 import { StatsGrid } from "../components/StatsGrid";
+
+const StatsChart = lazy(() =>
+  import("../components/StatsChart").then((m) => ({ default: m.StatsChart })),
+);
 
 export default function DashboardPage() {
   const { t } = useTranslation();
@@ -22,6 +28,16 @@ export default function DashboardPage() {
       </header>
 
       <StatsGrid />
+
+      <Suspense
+        fallback={
+          <Card className="flex justify-center p-4">
+            <Spinner size="md" />
+          </Card>
+        }
+      >
+        <StatsChart />
+      </Suspense>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <ActivityFeed />

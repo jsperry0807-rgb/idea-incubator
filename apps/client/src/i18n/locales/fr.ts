@@ -78,6 +78,10 @@ export const fr: LocaleMessages = {
       title: "En cours",
       empty: "Aucune idée en cours actuellement.",
     },
+    chart: {
+      title: "Idées par statut",
+      count: "Idées",
+    },
   },
   ideas: {
     title: "Idées",
