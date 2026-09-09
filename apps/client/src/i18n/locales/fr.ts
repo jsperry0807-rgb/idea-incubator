@@ -58,6 +58,15 @@ export const fr: LocaleMessages = {
       done: "Terminées",
       loadError: "Une erreur est survenue lors du chargement des statistiques.",
     },
+    activity: {
+      title: "Activité récente",
+      empty: "Aucune activité récente",
+      loadError: "Une erreur est survenue lors du chargement de l'activité récente.",
+      IDEA_CREATED: "Idée créée",
+      IDEA_UPDATED: "Idée mise à jour",
+      COMMENT: "Commentaire sur une idée",
+      SHARE: "Idée partagée",
+    },
   },
   ideas: {
     title: "Idées",

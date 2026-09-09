@@ -56,6 +56,15 @@ export const en = {
       done: "Done",
       loadError: "Something went wrong loading your dashboard stats.",
     },
+    activity: {
+      title: "Recent Activity",
+      empty: "No recent activity",
+      loadError: "Something went wrong loading recent activity.",
+      IDEA_CREATED: "Created idea",
+      IDEA_UPDATED: "Updated idea",
+      COMMENT: "Commented on idea",
+      SHARE: "Shared idea",
+    },
   },
   ideas: {
     title: "Ideas",

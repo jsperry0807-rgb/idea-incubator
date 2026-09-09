@@ -58,6 +58,15 @@ export const es: LocaleMessages = {
       done: "Completadas",
       loadError: "Algo salió mal al cargar las estadísticas del panel.",
     },
+    activity: {
+      title: "Actividad reciente",
+      empty: "No hay actividad reciente",
+      loadError: "Algo salió mal al cargar la actividad reciente.",
+      IDEA_CREATED: "Idea creada",
+      IDEA_UPDATED: "Idea actualizada",
+      COMMENT: "Comentario en idea",
+      SHARE: "Idea compartida",
+    },
   },
   ideas: {
     title: "Ideas",
