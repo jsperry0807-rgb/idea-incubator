@@ -13,6 +13,7 @@ const envSchema = z.object({
     .string()
     .default("http://localhost:5173")
     .transform((v) => v.split(",").map((s) => s.trim()).filter(Boolean)),
+  STORAGE_PATH: z.string().default("./storage"),
 });
 
 const parsed = envSchema.safeParse(process.env);

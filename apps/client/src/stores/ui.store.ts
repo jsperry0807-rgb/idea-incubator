@@ -12,6 +12,15 @@ function getInitialTheme(): Theme {
   return "system";
 }
 
+export type IdeasViewMode = "grid" | "list";
+
+const VIEW_MODE_STORAGE_KEY = "app.ideasView";
+
+function getInitialViewMode(): IdeasViewMode {
+  const stored = typeof window !== "undefined" ? window.localStorage.getItem(VIEW_MODE_STORAGE_KEY) : null;
+  return stored === "list" ? "list" : "grid";
+}
+
 interface ModalState {
   isOpen: boolean;
   contentId: string | null;
@@ -21,6 +30,7 @@ interface UIState {
   sidebarOpen: boolean;
   theme: Theme;
   modal: ModalState;
+  ideasViewMode: IdeasViewMode;
 
   toggleSidebar: () => void;
   setSidebarOpen: (open: boolean) => void;
@@ -30,6 +40,9 @@ interface UIState {
 
   openModal: (contentId: string) => void;
   closeModal: () => void;
+
+  setIdeasViewMode: (mode: IdeasViewMode) => void;
+  toggleIdeasViewMode: () => void;
 }
 
 function applyTheme(theme: Theme) {
@@ -56,6 +69,7 @@ export const useUIStore = create<UIState>((set, get) => ({
   sidebarOpen: false,
   theme: getInitialTheme(),
   modal: { isOpen: false, contentId: null },
+  ideasViewMode: getInitialViewMode(),
 
   toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
 
@@ -74,6 +88,22 @@ export const useUIStore = create<UIState>((set, get) => ({
 
   openModal: (contentId) => set({ modal: { isOpen: true, contentId } }),
   closeModal: () => set({ modal: { isOpen: false, contentId: null } }),
+
+  setIdeasViewMode: (mode) => {
+    if (typeof window !== "undefined") {
+      try {
+        window.localStorage.setItem(VIEW_MODE_STORAGE_KEY, mode);
+      } catch {
+        // ignore storage errors
+      }
+    }
+    set({ ideasViewMode: mode });
+  },
+
+  toggleIdeasViewMode: () => {
+    const next: IdeasViewMode = get().ideasViewMode === "grid" ? "list" : "grid";
+    get().setIdeasViewMode(next);
+  },
 }));
 
 if (typeof window !== "undefined") {

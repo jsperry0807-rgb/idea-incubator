@@ -1,6 +1,9 @@
 import { StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+import { Toaster } from "@repo/ui";
 
 import '@i18n';
 import '@assets/styles/global.css';
@@ -16,12 +19,24 @@ if (!rootEl) {
   );
 }
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30_000,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
 createRoot(rootEl).render(
   <StrictMode>
-    <BrowserRouter>
-      <Suspense fallback={null}>
-        <App />
-      </Suspense>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Suspense fallback={null}>
+          <App />
+        </Suspense>
+      </BrowserRouter>
+      <Toaster />
+    </QueryClientProvider>
   </StrictMode>,
 );

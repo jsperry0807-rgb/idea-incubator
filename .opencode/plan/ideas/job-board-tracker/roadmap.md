@@ -44,16 +44,16 @@
 
 **Goal:** Users can create, view, edit, delete ideas with tags and search.
 
-- [ ] Server: Ideas CRUD routes (list with filters, get, create, update, delete)
-- [ ] Server: Tags CRUD routes
-- [ ] Server: Auto-create planning folder on idea creation
-- [ ] Client: Ideas list page (grid/list toggle, search, status tabs, tag filter, sort)
-- [ ] Client: Create idea form (title, description, status, priority, tags, planning folder preview)
-- [ ] Client: Idea detail page shell (meta, status, priority, tags)
-- [ ] Client: Tags management page
-- [ ] Client: StatusBadge, PriorityDot, TagBadge components
-- [ ] Client: Debounced search, grid/list toggle
-- [ ] Shared: IdeaStatus, IdeaPriority enums
+- [x] Server: Ideas CRUD routes (list with filters, get, create, update, delete)
+- [x] Server: Tags CRUD routes
+- [x] Server: Auto-create planning folder on idea creation
+- [x] Client: Ideas list page (grid/list toggle, search, status tabs, tag filter, sort)
+- [x] Client: Create idea form (title, description, status, priority, tags, planning folder preview)
+- [x] Client: Idea detail page shell (meta, status, priority, tags)
+- [x] Client: Tags management page
+- [x] Client: StatusBadge, PriorityDot, TagBadge components
+- [x] Client: Debounced search, grid/list toggle
+- [x] Shared: IdeaStatus, IdeaPriority enums
 
 **Deliverable:** Full ideas CRUD with search, filter, tags.
 
