@@ -107,7 +107,7 @@
 - [x] Client: DragOverlay component (visual feedback)
 - [x] Client: @dnd-kit integration (drag between columns)
 - [x] Client: Optimistic updates (instant move, rollback on error)
-- [ ] Client: Filter bar (tag, priority)
+- [x] Client: Filter bar (tag, priority)
 - [ ] Client: RoadmapPage
 
 **Deliverable:** Drag-and-drop Kanban board.

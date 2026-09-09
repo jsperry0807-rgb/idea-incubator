@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   DndContext,
@@ -10,19 +10,30 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from "@dnd-kit/core";
-import { IDEA_STATUS_VALUES, type IdeaStatus, type PipelineIdea } from "@repo/shared";
+import {
+  IDEA_STATUS_VALUES,
+  type IdeaPipeline,
+  type IdeaPriority,
+  type IdeaStatus,
+  type PipelineIdea,
+} from "@repo/shared";
 import { Spinner, toast } from "@repo/ui";
 
+import { useTags } from "@features/tags/hooks/useTags";
 import { usePipeline } from "../hooks/usePipeline";
 import { useUpdateIdeaStatus } from "../hooks/useUpdateIdeaStatus";
 import { DragOverlay } from "./DragOverlay";
 import { KanbanColumn } from "./KanbanColumn";
+import { PipelineFilterBar } from "./PipelineFilterBar";
 
 export function KanbanBoard() {
   const { t } = useTranslation();
   const query = usePipeline();
+  const tagsQuery = useTags();
   const statusMutation = useUpdateIdeaStatus();
   const [activeIdea, setActiveIdea] = useState<PipelineIdea | null>(null);
+  const [tagFilter, setTagFilter] = useState("");
+  const [priorityFilter, setPriorityFilter] = useState<IdeaPriority | "">("");
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 3 } }),
@@ -62,6 +73,21 @@ export function KanbanBoard() {
     setActiveIdea(null);
   }
 
+  const pipeline = query.data;
+
+  const filteredPipeline = useMemo<IdeaPipeline>(() => {
+    const result = {} as IdeaPipeline;
+    for (const status of IDEA_STATUS_VALUES) {
+      result[status] = (pipeline?.[status] ?? []).filter((idea) => {
+        const tagMatch =
+          !tagFilter || idea.tags.some(({ tagId }) => tagId === tagFilter);
+        const priorityMatch = !priorityFilter || idea.priority === priorityFilter;
+        return tagMatch && priorityMatch;
+      });
+    }
+    return result;
+  }, [pipeline, tagFilter, priorityFilter]);
+
   if (query.isLoading) {
     return (
       <div className="flex justify-center py-12">
@@ -78,26 +104,34 @@ export function KanbanBoard() {
     return null;
   }
 
-  const pipeline = query.data;
-
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={pointerWithin}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-      onDragCancel={handleDragCancel}
-    >
-      <div className="flex gap-4 overflow-x-auto pb-4">
-        {IDEA_STATUS_VALUES.map((status) => (
-          <KanbanColumn
-            key={status}
-            status={status}
-            ideas={pipeline[status]}
-          />
-        ))}
-      </div>
-      <DragOverlay active={activeIdea} />
-    </DndContext>
+    <>
+      <PipelineFilterBar
+        tags={tagsQuery.data ?? []}
+        tagId={tagFilter}
+        priority={priorityFilter}
+        onTagChange={setTagFilter}
+        onPriorityChange={setPriorityFilter}
+      />
+
+      <DndContext
+        sensors={sensors}
+        collisionDetection={pointerWithin}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDragCancel={handleDragCancel}
+      >
+        <div className="flex gap-4 overflow-x-auto pb-4">
+          {IDEA_STATUS_VALUES.map((status) => (
+            <KanbanColumn
+              key={status}
+              status={status}
+              ideas={filteredPipeline[status]}
+            />
+          ))}
+        </div>
+        <DragOverlay active={activeIdea} />
+      </DndContext>
+    </>
   );
 }
