@@ -1,7 +1,7 @@
 import type { IdeaPriority } from "@repo/shared";
 
 const DOT_CLASSES: Record<IdeaPriority, string> = {
-  NONE: "bg-transparent border border-zinc-300",
+  NONE: "bg-transparent border border-[var(--color-border)]",
   LOW: "bg-zinc-400",
   MEDIUM: "bg-amber-400",
   HIGH: "bg-orange-500",

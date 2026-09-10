@@ -10,6 +10,9 @@ export const en = {
       notifications: "Notifications",
       shared: "Shared",
     },
+    theme: {
+      toggle: "Toggle theme",
+    },
   },
   home: {
     welcome: "Welcome",

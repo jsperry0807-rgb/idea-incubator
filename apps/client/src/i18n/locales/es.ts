@@ -12,6 +12,9 @@ export const es: LocaleMessages = {
       notifications: "Notificaciones",
       shared: "Compartidos",
     },
+    theme: {
+      toggle: "Cambiar tema",
+    },
   },
   home: {
     welcome: "Bienvenido",

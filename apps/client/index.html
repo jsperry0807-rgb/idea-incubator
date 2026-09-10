@@ -39,7 +39,7 @@
     <meta name="twitter:image" content="https://www.example.com/og-image.jpg" />
 
     <!-- Theme color for browser UI -->
-    <meta name="theme-color" content="#111111" />
+    <meta name="theme-color" content="#ffffff" />
     <meta name="color-scheme" content="light dark" />
 
     <!-- Favicons -->
@@ -51,6 +51,27 @@
     <!-- Preconnects (adjust/remove as needed, e.g. for API, fonts, analytics) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
 
+    <!-- Apply persisted theme before first paint (prevents theme flash) -->
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem("app.theme");
+          var root = document.documentElement;
+          var isDark =
+            theme === "dark" ||
+            (theme !== "light" &&
+              window.matchMedia &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          root.dataset.theme = isDark ? "dark" : "light";
+          root.classList.toggle("dark", isDark);
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute("content", isDark ? "#0b0b0c" : "#ffffff");
+        } catch (err) {
+          /* storage unavailable — fall back to system theme */
+        }
+      })();
+    </script>
+
     <!-- Minimal critical CSS: prevents FOUC / layout shift before your bundle loads -->
     <style>
       :root {
@@ -59,10 +80,20 @@
         --color-fg: #111111;
       }
       @media (prefers-color-scheme: dark) {
-        :root {
+        :root:not([data-theme="light"]) {
+          color-scheme: dark;
           --color-bg: #0b0b0c;
           --color-fg: #f2f2f2;
         }
+      }
+      :root[data-theme="dark"],
+      :root.dark {
+        color-scheme: dark;
+        --color-bg: #0b0b0c;
+        --color-fg: #f2f2f2;
+      }
+      :root[data-theme="light"] {
+        color-scheme: light;
       }
       *,
       *::before,

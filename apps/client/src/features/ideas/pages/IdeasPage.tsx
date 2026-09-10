@@ -73,7 +73,7 @@ export default function IdeasPage() {
           <Spinner size="lg" />
         </div>
       ) : error ? (
-        <p className="text-sm text-red-600">{t("ideas.loadError")}</p>
+        <p className="text-sm text-red-600 dark:text-red-400">{t("ideas.loadError")}</p>
       ) : viewMode === "grid" ? (
         <IdeaGrid ideas={ideasQuery.data?.items ?? []} />
       ) : (
