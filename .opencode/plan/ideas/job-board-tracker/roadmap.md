@@ -140,7 +140,7 @@
 - [x] Server: Comments CRUD routes
 - [x] Server: Notification routes (list, mark read, mark all read)
 - [x] Server: Auto-create notifications on share/comment
-- [ ] Client: ShareModal (email invite + access list)
+- [x] Client: ShareModal (email invite + access list)
 - [ ] Client: ShareList, InviteForm, AccessRoleSelect
 - [ ] Client: CommentThread, CommentForm
 - [ ] Client: NotificationBell (header bell with badge)

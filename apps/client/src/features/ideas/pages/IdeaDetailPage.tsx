@@ -1,13 +1,15 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Card, EmptyState, Spinner } from "@repo/ui";
+import { Button, Card, EmptyState, Spinner } from "@repo/ui";
 
+import { useAuth } from "@features/auth/hooks/useAuth";
 import { ROUTES } from "@config/routes";
 import { useIdea } from "../hooks/useIdea";
 import { PlanningAccordion } from "../components/PlanningAccordion";
 import { PriorityDot } from "../components/PriorityDot";
+import { ShareModal } from "../components/sharing/ShareModal";
 import { StatusBadge } from "../components/StatusBadge";
 import { TagBadge } from "../components/TagBadge";
 import { TaskList } from "../components/TaskList";
@@ -15,12 +17,17 @@ import { TaskList } from "../components/TaskList";
 export default function IdeaDetailPage() {
   const { id = "" } = useParams<{ id: string }>();
   const { t, i18n } = useTranslation();
+  const { user } = useAuth();
+  const [shareOpen, setShareOpen] = useState(false);
 
   const ideaQuery = useIdea(id);
   const isLoading = ideaQuery.isLoading;
   const notFound =
     (ideaQuery.error as { response?: { status?: number } } | undefined)
       ?.response?.status === 404;
+  const isOwner = Boolean(
+    user && ideaQuery.data && ideaQuery.data.userId === user.id,
+  );
 
   const dateFormatter = useMemo(
     () =>
@@ -57,9 +64,20 @@ export default function IdeaDetailPage() {
       ) : ideaQuery.data ? (
         <article className="flex flex-col gap-5">
           <header className="flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <PriorityDot priority={ideaQuery.data.priority} />
-              <StatusBadge status={ideaQuery.data.status} />
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <PriorityDot priority={ideaQuery.data.priority} />
+                <StatusBadge status={ideaQuery.data.status} />
+              </div>
+              {isOwner ? (
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => setShareOpen(true)}
+                >
+                  {t("ideas.sharing.button")}
+                </Button>
+              ) : null}
             </div>
             <h1 className="text-2xl font-extrabold">{ideaQuery.data.title}</h1>
             {ideaQuery.data.description ? (
@@ -138,6 +156,15 @@ export default function IdeaDetailPage() {
             <TaskList ideaId={id} />
           </section>
         </article>
+      ) : null}
+
+      {isOwner && ideaQuery.data ? (
+        <ShareModal
+          open={shareOpen}
+          onClose={() => setShareOpen(false)}
+          ideaId={id}
+          ideaTitle={ideaQuery.data.title}
+        />
       ) : null}
     </section>
   );
