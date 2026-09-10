@@ -9,6 +9,7 @@ export const es: LocaleMessages = {
       roadmap: "Hoja de ruta",
       tags: "Etiquetas",
       logout: "Cerrar sesión",
+      notifications: "Notificaciones",
     },
   },
   home: {

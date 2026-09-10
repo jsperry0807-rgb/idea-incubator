@@ -143,7 +143,7 @@
 - [x] Client: ShareModal (email invite + access list)
 - [x] Client: ShareList, InviteForm, AccessRoleSelect
 - [x] Client: CommentThread, CommentForm
-- [ ] Client: NotificationBell (header bell with badge)
+- [x] Client: NotificationBell (header bell with badge)
 - [ ] Client: NotificationPanel (dropdown with list)
 - [ ] Client: "Shared with me" page
 - [ ] Client: Wire comments into IdeaDetailPage

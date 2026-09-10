@@ -7,6 +7,7 @@ export const en = {
       roadmap: "Roadmap",
       tags: "Tags",
       logout: "Log out",
+      notifications: "Notifications",
     },
   },
   home: {

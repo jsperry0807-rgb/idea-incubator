@@ -1,5 +1,6 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { NotificationBell } from "@features/notifications/components/NotificationBell";
 import { ROUTES } from "@config/routes";
 import { LanguageSwitcher } from "@components/layout/LanguageSwitcher";
 import { useAuth } from "@features/auth/hooks/useAuth";
@@ -76,6 +77,7 @@ export default function RootLayout() {
               >
                 {t("app.nav.tags")}
               </Link>
+              <NotificationBell />
               <button
                 type="button"
                 onClick={() => logout()}
