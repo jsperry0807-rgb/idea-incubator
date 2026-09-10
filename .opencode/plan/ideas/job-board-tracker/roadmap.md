@@ -161,7 +161,7 @@
 - [x] Mobile responsive (sidebar, Kanban, cards, planning, comments)
 - [ ] i18n: add all translation keys (en/es/fr)
 - [x] Accessibility: WCAG 2.1 AA audit
-- [ ] Settings page (profile, theme, account deletion)
+- [x] Settings page (profile, theme, account deletion)
 - [ ] Error boundaries
 - [ ] Loading states / skeletons
 - [ ] CI/CD: add test step to workflow

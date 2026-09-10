@@ -21,5 +21,20 @@ export const loginSchema = z.object({
 
 export const refreshSchema = z.object({});
 
+export const updateProfileSchema = z.object({
+  name: z.string().trim().min(1).max(100).optional(),
+  avatarUrl: z
+    .union([z.string().trim().url(), z.literal("")])
+    .transform((value) => (value === "" ? null : value))
+    .nullable()
+    .optional(),
+});
+
+export const deleteAccountSchema = z.object({
+  password: z.string().min(1),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
+export type DeleteAccountInput = z.infer<typeof deleteAccountSchema>;

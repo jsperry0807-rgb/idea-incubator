@@ -8,6 +8,7 @@ export const ROUTES = {
   ROADMAP: "/roadmap",
   TAGS: "/tags",
   SHARED: "/shared",
+  SETTINGS: "/settings",
   IDEA_DETAIL: "/ideas/:id",
   NOT_FOUND: "/404",
 } as const;

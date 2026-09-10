@@ -13,6 +13,7 @@ export const fr: LocaleMessages = {
       notifications: "Notifications",
       shared: "Partagés",
       menu: "Ouvrir le menu",
+      settings: "Paramètres",
     },
     theme: {
       toggle: "Changer de thème",
@@ -322,5 +323,40 @@ export const fr: LocaleMessages = {
     deleteError: "Une erreur est survenue lors de la suppression de l'étiquette.",
     emptyTitle: "Aucune étiquette pour le moment",
     emptyDescription: "Créez votre première étiquette pour commencer à organiser vos idées.",
+  },
+  settings: {
+    title: "Paramètres",
+    subtitle: "Gérez votre profil, l'apparence et votre compte.",
+    profile: {
+      title: "Profil",
+      name: "Nom complet",
+      avatarUrl: "URL de l'avatar",
+      avatarUrlPlaceholder: "https://example.com/avatar.png",
+      save: "Enregistrer les modifications",
+      saved: "Profil mis à jour",
+      saveError: "Impossible de mettre à jour le profil.",
+    },
+    theme: {
+      title: "Thème",
+      light: "Clair",
+      dark: "Sombre",
+      system: "Système",
+    },
+    danger: {
+      title: "Zone de danger",
+      description:
+        "Supprimez définitivement votre compte et toutes les données associées. Cette action est irréversible.",
+      delete: "Supprimer le compte",
+      confirmTitle: "Êtes-vous sûr ?",
+      confirmPrompt: "Saisissez votre mot de passe pour confirmer la suppression.",
+      password: "Mot de passe",
+      passwordPlaceholder: "Votre mot de passe actuel",
+      cancel: "Annuler",
+      deleteForever: "Supprimer mon compte",
+      deleting: "Suppression…",
+      deleted: "Compte supprimé",
+      deleteError: "Impossible de supprimer le compte. Réessayez.",
+      wrongPassword: "Mot de passe incorrect.",
+    },
   },
 };

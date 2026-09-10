@@ -37,6 +37,7 @@ export default function RootLayout() {
     else if (location.pathname === ROUTES.ROADMAP) label = t("app.nav.roadmap");
     else if (location.pathname === ROUTES.TAGS) label = t("app.nav.tags");
     else if (location.pathname === ROUTES.SHARED) label = t("app.nav.shared");
+    else if (location.pathname === ROUTES.SETTINGS) label = t("app.nav.settings");
     document.title = label ? `${label} · ${t("app.name")}` : t("app.name");
   }, [i18n.resolvedLanguage, location.pathname, t, isIdeas]);
 
@@ -86,6 +87,11 @@ export default function RootLayout() {
           to: ROUTES.SHARED,
           label: t("app.nav.shared"),
           active: location.pathname === ROUTES.SHARED,
+        },
+        {
+          to: ROUTES.SETTINGS,
+          label: t("app.nav.settings"),
+          active: location.pathname === ROUTES.SETTINGS,
         },
       ]
     : [];
