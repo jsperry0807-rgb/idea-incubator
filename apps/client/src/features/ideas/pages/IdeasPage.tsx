@@ -56,7 +56,7 @@ export default function IdeasPage() {
             aria-label={viewMode === "grid" ? t("ideas.viewList") : t("ideas.viewGrid")}
             title={viewMode === "grid" ? t("ideas.viewList") : t("ideas.viewGrid")}
           >
-            {viewMode === "grid" ? "≡ List" : "▦ Grid"}
+            {viewMode === "grid" ? `≡ ${t("ideas.viewList")}` : `▦ ${t("ideas.viewGrid")}`}
           </button>
         </div>
       </header>

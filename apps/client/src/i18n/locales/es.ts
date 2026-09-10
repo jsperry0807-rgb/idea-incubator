@@ -5,6 +5,7 @@ export const es: LocaleMessages = {
     name: "App",
     skipToContent: "Saltar al contenido",
     loading: "Cargando…",
+    language: "Idioma",
     nav: {
       home: "Inicio",
       ideas: "Ideas",
@@ -108,6 +109,7 @@ export const es: LocaleMessages = {
       priority: "Prioridad",
       tag: "Etiqueta",
       sort: "Ordenar",
+      status: "Filtrar por estado",
     },
     status: {
       ALL: "Todas",
@@ -124,6 +126,7 @@ export const es: LocaleMessages = {
       MEDIUM: "Media",
       HIGH: "Alta",
       CRITICAL: "Crítica",
+      label: "Prioridad: {{priority}}",
     },
     sort: {
       recent: "Más recientes",

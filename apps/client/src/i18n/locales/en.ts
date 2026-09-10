@@ -3,6 +3,7 @@ export const en = {
     name: "App",
     skipToContent: "Skip to content",
     loading: "Loading…",
+    language: "Language",
     nav: {
       home: "Home",
       ideas: "Ideas",
@@ -106,6 +107,7 @@ export const en = {
       priority: "Priority",
       tag: "Tag",
       sort: "Sort",
+      status: "Filter by status",
     },
     status: {
       ALL: "All",
@@ -122,6 +124,7 @@ export const en = {
       MEDIUM: "Medium",
       HIGH: "High",
       CRITICAL: "Critical",
+      label: "Priority: {{priority}}",
     },
     sort: {
       recent: "Most recent",

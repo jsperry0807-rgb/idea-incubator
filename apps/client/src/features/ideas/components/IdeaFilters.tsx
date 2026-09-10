@@ -18,7 +18,7 @@ export function IdeaFilters({ filters, tags, onChange }: IdeaFiltersProps) {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap gap-2" role="tablist" aria-label="Filter by status">
+      <div className="flex flex-wrap gap-2" role="tablist" aria-label={t("ideas.filter.status")}>
         {STATUS_TABS.map((tab) => {
           const active = filters.status === tab || (tab === "ALL" && !filters.status);
           return (
