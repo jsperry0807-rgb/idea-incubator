@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Spinner } from "@repo/ui";
+import { Skeleton } from "@repo/ui";
 
 import { useComments } from "../../hooks/useComments";
 import { CommentForm } from "./CommentForm";
@@ -27,8 +27,18 @@ export function CommentThread({ ideaId, ideaOwnerId }: CommentThreadProps) {
   return (
     <div className="flex flex-col gap-4">
       {query.isLoading ? (
-        <div className="flex justify-center py-6">
-          <Spinner size="md" />
+        <div className="flex flex-col gap-4" role="status" aria-busy="true">
+          <span className="sr-only">{t("app.loading")}</span>
+          {Array.from({ length: 3 }, (_, index) => (
+            <div key={index} className="flex items-start gap-3">
+              <Skeleton className="size-9 shrink-0 rounded-full" />
+              <div className="flex flex-1 flex-col gap-1.5">
+                <Skeleton className="h-3.5 w-32" />
+                <Skeleton className="h-3 w-full" />
+                <Skeleton className="h-3 w-2/3" />
+              </div>
+            </div>
+          ))}
         </div>
       ) : query.isError ? (
         <p className="text-sm text-[var(--color-danger)]">

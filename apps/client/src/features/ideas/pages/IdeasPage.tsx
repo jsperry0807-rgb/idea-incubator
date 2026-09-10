@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { Button, Spinner } from "@repo/ui";
+import { Button } from "@repo/ui";
 
 import { ROUTES } from "@config/routes";
 import { useTags } from "@features/tags/hooks/useTags";
@@ -11,6 +11,7 @@ import { IdeaGrid } from "../components/IdeaGrid";
 import { IdeaList } from "../components/IdeaListRow";
 import { IdeaFilters } from "../components/IdeaFilters";
 import { IdeaSearch } from "../components/IdeaSearch";
+import { IdeaGridSkeleton, IdeaListSkeleton } from "../components/skeletons";
 import type { IdeaFilters as IdeaFiltersState } from "../types";
 
 const DEFAULT_FILTERS: IdeaFiltersState = {
@@ -70,9 +71,11 @@ export default function IdeasPage() {
       <IdeaFilters filters={filters} tags={tagsQuery.data ?? []} onChange={patchFilters} />
 
       {isLoading ? (
-        <div className="flex justify-center py-12">
-          <Spinner size="lg" />
-        </div>
+        viewMode === "grid" ? (
+          <IdeaGridSkeleton />
+        ) : (
+          <IdeaListSkeleton />
+        )
       ) : error ? (
         <p className="text-sm text-red-600 dark:text-red-400">{t("ideas.loadError")}</p>
       ) : viewMode === "grid" ? (

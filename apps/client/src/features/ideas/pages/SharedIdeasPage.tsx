@@ -1,8 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { EmptyState, Spinner } from "@repo/ui";
+import { EmptyState } from "@repo/ui";
 
 import { useSharedWithMe } from "../hooks/useSharedWithMe";
 import { SharedIdeaCard } from "../components/sharing/SharedIdeaCard";
+import { IdeaGridSkeleton } from "../components/skeletons";
 
 export default function SharedIdeasPage() {
   const { t } = useTranslation();
@@ -18,9 +19,7 @@ export default function SharedIdeasPage() {
       </header>
 
       {query.isLoading ? (
-        <div className="flex justify-center py-12">
-          <Spinner size="lg" />
-        </div>
+        <IdeaGridSkeleton />
       ) : query.isError ? (
         <EmptyState
           title={t("ideas.shared.loadError")}

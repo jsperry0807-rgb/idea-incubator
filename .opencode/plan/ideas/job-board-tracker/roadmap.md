@@ -163,7 +163,7 @@
 - [x] Accessibility: WCAG 2.1 AA audit
 - [x] Settings page (profile, theme, account deletion)
 - [x] Error boundaries
-- [ ] Loading states / skeletons
+- [x] Loading states / skeletons
 - [ ] CI/CD: add test step to workflow
 - [ ] Deploy: client to Vercel, server to Railway/Render
 - [ ] README: screenshots, setup, tech stack, live demo

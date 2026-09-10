@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { Spinner, toast } from "@repo/ui";
+import { Skeleton, toast } from "@repo/ui";
 import type { Notification, NotificationType } from "@repo/shared";
 
 import { ideaDetailPath } from "@config/routes";
@@ -126,8 +126,17 @@ export function NotificationPanel({
 
       <div className="flex-1 overflow-y-auto">
         {query.isLoading ? (
-          <div className="flex justify-center py-8">
-            <Spinner size="md" />
+          <div className="flex flex-col gap-3 px-4 py-4" role="status" aria-busy="true">
+            <span className="sr-only">{t("app.loading")}</span>
+            {Array.from({ length: 3 }, (_, index) => (
+              <div key={index} className="flex items-start gap-3">
+                <Skeleton className="size-3 shrink-0 rounded-full" />
+                <div className="flex flex-1 flex-col gap-1">
+                  <Skeleton className="h-3 w-4/5" />
+                  <Skeleton className="h-3 w-1/2" />
+                </div>
+              </div>
+            ))}
           </div>
         ) : query.isError ? (
           <p className="px-4 py-8 text-sm text-[var(--color-danger)]">

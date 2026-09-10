@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
-import { Card, Spinner } from "@repo/ui";
+import { Card } from "@repo/ui";
 
 import { useDashboardStats } from "../hooks/useDashboardStats";
+import { StatsGridSkeleton } from "./skeletons";
 
 interface StatCardProps {
   label: string;
@@ -26,11 +27,7 @@ export function StatsGrid() {
   const query = useDashboardStats();
 
   if (query.isLoading) {
-    return (
-      <div className="flex justify-center py-8">
-        <Spinner size="md" />
-      </div>
-    );
+    return <StatsGridSkeleton />;
   }
 
   if (query.isError) {

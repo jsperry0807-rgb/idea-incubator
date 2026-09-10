@@ -2,6 +2,7 @@ export const en = {
   app: {
     name: "App",
     skipToContent: "Skip to content",
+    loading: "Loading…",
     nav: {
       home: "Home",
       ideas: "Ideas",

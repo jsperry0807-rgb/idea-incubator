@@ -19,3 +19,5 @@ export type { ModalProps } from "./Modal";
 export { Toaster } from "./Toaster";
 export { toast, dismissToast, useToasts } from "./toast-store";
 export type { Toast, ToastTone } from "./toast-store";
+export { Skeleton } from "./Skeleton";
+export type { SkeletonProps } from "./Skeleton";

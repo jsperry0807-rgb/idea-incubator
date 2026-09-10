@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { Toaster } from "@repo/ui";
 
+import { AppSkeleton } from "@components/loading/AppSkeleton";
 import { ErrorBoundary } from "@components/error/ErrorBoundary";
 import '@i18n';
 import '@assets/styles/global.css';
@@ -34,7 +35,7 @@ createRoot(rootEl).render(
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <Suspense fallback={null}>
+          <Suspense fallback={<AppSkeleton />}>
             <App />
           </Suspense>
         </BrowserRouter>

@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Button, Card, EmptyState, Spinner } from "@repo/ui";
+import { Button, Card, EmptyState } from "@repo/ui";
 
 import { useAuth } from "@features/auth/hooks/useAuth";
 import { ROUTES } from "@config/routes";
@@ -14,6 +14,7 @@ import { ShareModal } from "../components/sharing/ShareModal";
 import { StatusBadge } from "../components/StatusBadge";
 import { TagBadge } from "../components/TagBadge";
 import { TaskList } from "../components/TaskList";
+import { IdeaDetailSkeleton } from "../components/skeletons";
 
 export default function IdeaDetailPage() {
   const { id = "" } = useParams<{ id: string }>();
@@ -49,9 +50,7 @@ export default function IdeaDetailPage() {
       </Link>
 
       {isLoading ? (
-        <div className="flex justify-center py-12">
-          <Spinner size="lg" />
-        </div>
+        <IdeaDetailSkeleton />
       ) : notFound ? (
         <EmptyState
           title={t("ideas.detail.notFoundTitle")}

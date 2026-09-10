@@ -17,7 +17,7 @@ import {
   type IdeaStatus,
   type PipelineIdea,
 } from "@repo/shared";
-import { Spinner, toast } from "@repo/ui";
+import { toast } from "@repo/ui";
 
 import { useTags } from "@features/tags/hooks/useTags";
 import { usePipeline } from "../hooks/usePipeline";
@@ -25,6 +25,7 @@ import { useUpdateIdeaStatus } from "../hooks/useUpdateIdeaStatus";
 import { DragOverlay } from "./DragOverlay";
 import { KanbanColumn } from "./KanbanColumn";
 import { PipelineFilterBar } from "./PipelineFilterBar";
+import { KanbanBoardSkeleton } from "./skeletons";
 
 export function KanbanBoard() {
   const { t } = useTranslation();
@@ -89,11 +90,7 @@ export function KanbanBoard() {
   }, [pipeline, tagFilter, priorityFilter]);
 
   if (query.isLoading) {
-    return (
-      <div className="flex justify-center py-12">
-        <Spinner size="lg" />
-      </div>
-    );
+    return <KanbanBoardSkeleton />;
   }
 
   if (query.isError) {

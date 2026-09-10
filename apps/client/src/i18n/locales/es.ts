@@ -2,8 +2,9 @@ import type { LocaleMessages } from "./en";
 
 export const es: LocaleMessages = {
   app: {
-    name: "Aplicación",
+    name: "App",
     skipToContent: "Saltar al contenido",
+    loading: "Cargando…",
     nav: {
       home: "Inicio",
       ideas: "Ideas",

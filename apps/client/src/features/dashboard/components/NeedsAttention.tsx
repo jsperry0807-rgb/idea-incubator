@@ -1,11 +1,12 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Card, Spinner } from "@repo/ui";
+import { Card } from "@repo/ui";
 import type { IdeaStatus, PipelineIdea } from "@repo/shared";
 
 import { ideaDetailPath } from "@config/routes";
 import { usePipeline } from "@/features/ideas/hooks/usePipeline";
+import { NeedsAttentionSkeleton } from "./skeletons";
 
 const STALE_DAYS = 7;
 
@@ -47,13 +48,7 @@ export function NeedsAttention() {
   }, [pipelineQuery.data]);
 
   if (pipelineQuery.isLoading) {
-    return (
-      <Card className="p-4">
-        <div className="flex justify-center py-6">
-          <Spinner size="md" />
-        </div>
-      </Card>
-    );
+    return <NeedsAttentionSkeleton />;
   }
 
   if (pipelineQuery.isError) {
