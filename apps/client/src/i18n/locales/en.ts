@@ -284,6 +284,14 @@ export const en = {
     readError: "Something went wrong updating the notification.",
     markedAll: "Marked all as read",
   },
+  shortcuts: {
+    title: "Keyboard shortcuts",
+    search: "Search ideas",
+    create: "Create new idea",
+    save: "Save form",
+    close: "Close / dismiss",
+    help: "Show shortcuts",
+  },
   tags: {
     title: "Tags",
     subtitle: "Organize your ideas with colored tags.",

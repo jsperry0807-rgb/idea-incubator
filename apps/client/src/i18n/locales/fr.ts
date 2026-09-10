@@ -286,6 +286,14 @@ export const fr: LocaleMessages = {
     readError: "Une erreur est survenue lors de la mise à jour de la notification.",
     markedAll: "Tout a été marqué comme lu",
   },
+  shortcuts: {
+    title: "Raccourcis clavier",
+    search: "Rechercher des idées",
+    create: "Créer une nouvelle idée",
+    save: "Enregistrer le formulaire",
+    close: "Fermer / ignorer",
+    help: "Afficher les raccourcis",
+  },
   tags: {
     title: "Étiquettes",
     subtitle: "Organisez vos idées avec des étiquettes colorées.",

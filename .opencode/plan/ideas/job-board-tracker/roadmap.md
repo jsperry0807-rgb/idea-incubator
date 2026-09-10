@@ -156,7 +156,7 @@
 
 **Goal:** Production-ready with keyboard shortcuts, responsive design, accessibility, i18n.
 
-- [ ] Keyboard shortcuts (/ search, n create, Esc close, Cmd+Enter save, ? help)
+- [x] Keyboard shortcuts (/ search, n create, Esc close, Cmd+Enter save, ? help)
 - [ ] Dark mode refinements (test all components)
 - [ ] Mobile responsive (sidebar, Kanban, cards, planning, comments)
 - [ ] i18n: add all translation keys (en/es/fr)

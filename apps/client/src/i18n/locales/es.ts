@@ -286,6 +286,14 @@ export const es: LocaleMessages = {
     readError: "Algo salió mal al actualizar la notificación.",
     markedAll: "Todo marcado como leído",
   },
+  shortcuts: {
+    title: "Atajos de teclado",
+    search: "Buscar ideas",
+    create: "Crear nueva idea",
+    save: "Guardar formulario",
+    close: "Cerrar / descartar",
+    help: "Mostrar atajos",
+  },
   tags: {
     title: "Etiquetas",
     subtitle: "Organiza tus ideas con etiquetas de color.",

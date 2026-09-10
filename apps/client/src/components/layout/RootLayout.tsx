@@ -5,6 +5,7 @@ import { NotificationBell } from "@features/notifications/components/Notificatio
 import { NotificationPanel } from "@features/notifications/components/NotificationPanel";
 import { ROUTES } from "@config/routes";
 import { LanguageSwitcher } from "@components/layout/LanguageSwitcher";
+import { GlobalShortcuts } from "@components/shortcuts/GlobalShortcuts";
 import { useAuth } from "@features/auth/hooks/useAuth";
 
 export default function RootLayout() {
@@ -122,6 +123,8 @@ export default function RootLayout() {
           <LanguageSwitcher />
         </nav>
       </header>
+
+      {isAuthenticated ? <GlobalShortcuts /> : null}
 
       <main style={{ flex: 1, width: "100%", maxWidth: "var(--max-width)", marginInline: "auto", padding: "2rem" }}>
         <Outlet />
