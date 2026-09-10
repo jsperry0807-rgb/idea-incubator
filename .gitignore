@@ -27,4 +27,5 @@ logs
 Thumbs.db
 
 .opencode/agent
+.opencode/sessions
 .opencode/skills
