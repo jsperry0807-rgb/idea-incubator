@@ -7,6 +7,7 @@ import { Button, Card, EmptyState, Spinner } from "@repo/ui";
 import { useAuth } from "@features/auth/hooks/useAuth";
 import { ROUTES } from "@config/routes";
 import { useIdea } from "../hooks/useIdea";
+import { CommentThread } from "../components/comments/CommentThread";
 import { PlanningAccordion } from "../components/PlanningAccordion";
 import { PriorityDot } from "../components/PriorityDot";
 import { ShareModal } from "../components/sharing/ShareModal";
@@ -154,6 +155,16 @@ export default function IdeaDetailPage() {
               {t("ideas.detail.tasksTitle")}
             </h2>
             <TaskList ideaId={id} />
+          </section>
+
+          <section
+            className="flex flex-col gap-3"
+            aria-labelledby="idea-comments-heading"
+          >
+            <h2 id="idea-comments-heading" className="text-sm font-medium">
+              {t("ideas.detail.commentsTitle")}
+            </h2>
+            <CommentThread ideaId={id} ideaOwnerId={ideaQuery.data.userId} />
           </section>
         </article>
       ) : null}

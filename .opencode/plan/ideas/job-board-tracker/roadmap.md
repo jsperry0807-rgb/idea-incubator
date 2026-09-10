@@ -146,7 +146,7 @@
 - [x] Client: NotificationBell (header bell with badge)
 - [x] Client: NotificationPanel (dropdown with list)
 - [x] Client: "Shared with me" page
-- [ ] Client: Wire comments into IdeaDetailPage
+- [x] Client: Wire comments into IdeaDetailPage
 
 **Deliverable:** Full collaboration with sharing, comments, notifications.
 

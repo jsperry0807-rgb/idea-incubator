@@ -155,6 +155,7 @@ export const en = {
       tags: "Tags",
       planningTitle: "Planning",
       tasksTitle: "Tasks",
+      commentsTitle: "Comments",
       notFoundTitle: "Idea not found",
       notFoundDescription: "This idea may have been deleted.",
       loadError: "Something went wrong loading this idea.",
