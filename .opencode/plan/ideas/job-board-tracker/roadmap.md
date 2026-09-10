@@ -137,7 +137,7 @@
 
 - [x] Server: Share management routes (add, change role, remove, list)
 - [x] Server: Shared-with-me endpoint
-- [ ] Server: Comments CRUD routes
+- [x] Server: Comments CRUD routes
 - [ ] Server: Notification routes (list, mark read, mark all read)
 - [ ] Server: Auto-create notifications on share/comment
 - [ ] Client: ShareModal (email invite + access list)

@@ -43,6 +43,33 @@ export async function assertIdeaOwnership(
   }
 }
 
+export async function assertIdeaAccess(
+  userId: string,
+  ideaId: string,
+): Promise<void> {
+  const idea = await prisma.idea.findFirst({
+    where: { id: ideaId },
+    select: { userId: true },
+  });
+
+  if (!idea) {
+    throw new NotFoundError("Idea not found");
+  }
+
+  if (idea.userId === userId) {
+    return;
+  }
+
+  const share = await prisma.share.findUnique({
+    where: { ideaId_userId: { ideaId, userId } },
+    select: { id: true },
+  });
+
+  if (!share) {
+    throw new NotFoundError("Idea not found");
+  }
+}
+
 export async function listIdeas(userId: string, query: IdeaListQuery) {
   const page = query.page ?? 1;
   const pageSize = query.pageSize ?? 20;

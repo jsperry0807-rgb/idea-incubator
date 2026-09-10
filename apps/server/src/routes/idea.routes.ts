@@ -19,6 +19,7 @@ import {
   updateIdea,
 } from "../services/idea.service";
 import { getSharedWithMe } from "../services/share.service";
+import commentRoutes from "./comment.routes";
 import planningRoutes from "./planning.routes";
 import shareRoutes from "./share.routes";
 import taskRoutes from "./task.routes";
@@ -94,6 +95,7 @@ router.delete("/:id", validate({ params: idParamSchema }), async (req, res, next
   }
 });
 
+router.use("/:id/comments", commentRoutes);
 router.use("/:id/planning", planningRoutes);
 router.use("/:id/shares", shareRoutes);
 router.use("/:id/tasks", taskRoutes);
