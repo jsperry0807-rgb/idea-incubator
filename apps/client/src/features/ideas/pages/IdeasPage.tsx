@@ -51,7 +51,7 @@ export default function IdeasPage() {
           <button
             type="button"
             onClick={toggleViewMode}
-            className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm text-[var(--color-fg)] transition-colors hover:bg-[var(--color-muted)]/10"
+            className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm text-[var(--color-fg)] transition-colors hover:bg-[var(--color-muted)]/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
             aria-label={viewMode === "grid" ? t("ideas.viewList") : t("ideas.viewGrid")}
             title={viewMode === "grid" ? t("ideas.viewList") : t("ideas.viewGrid")}
           >
@@ -63,6 +63,7 @@ export default function IdeasPage() {
       <IdeaSearch
         value={filters.search ?? ""}
         placeholder={t("ideas.searchPlaceholder")}
+        aria-label={t("ideas.searchPlaceholder")}
         onDebouncedChange={(search) => patchFilters({ search: search || undefined })}
       />
 

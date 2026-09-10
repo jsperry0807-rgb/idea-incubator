@@ -17,6 +17,7 @@ export function ThemeToggle() {
       aria-label={t("app.theme.toggle")}
       title={t("app.theme.toggle")}
       onClick={toggleTheme}
+      className="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
       style={{
         width: "2rem",
         height: "2rem",

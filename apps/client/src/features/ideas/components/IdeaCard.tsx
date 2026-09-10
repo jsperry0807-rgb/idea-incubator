@@ -12,7 +12,7 @@ export function IdeaCard({ idea }: { idea: Idea }) {
     <Card className="flex flex-col gap-3 p-4 transition-shadow hover:shadow-md">
       <Link
         to={ideaDetailPath(idea.id)}
-        className="flex h-full flex-col gap-3"
+        className="flex h-full flex-col gap-3 rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
       >
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2">

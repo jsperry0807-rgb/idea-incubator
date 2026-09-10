@@ -11,7 +11,7 @@ import { useAuth } from "@features/auth/hooks/useAuth";
 import { useUIStore } from "@stores/ui.store";
 
 export default function RootLayout() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const location = useLocation();
   const { isAuthenticated, logout } = useAuth();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -27,6 +27,18 @@ export default function RootLayout() {
   useEffect(() => {
     setSidebarOpen(false);
   }, [location.pathname, setSidebarOpen]);
+
+  useEffect(() => {
+    document.documentElement.lang = i18n.resolvedLanguage ?? "en";
+
+    let label: string | null = null;
+    if (location.pathname === ROUTES.HOME) label = t("app.nav.home");
+    else if (isIdeas) label = t("app.nav.ideas");
+    else if (location.pathname === ROUTES.ROADMAP) label = t("app.nav.roadmap");
+    else if (location.pathname === ROUTES.TAGS) label = t("app.nav.tags");
+    else if (location.pathname === ROUTES.SHARED) label = t("app.nav.shared");
+    document.title = label ? `${label} · ${t("app.name")}` : t("app.name");
+  }, [i18n.resolvedLanguage, location.pathname, t, isIdeas]);
 
   useEffect(() => {
     if (!sidebarOpen) return undefined;
@@ -47,7 +59,7 @@ export default function RootLayout() {
 
   const navLinkClasses = (active: boolean) =>
     [
-      "rounded-md",
+      "rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]",
       active
         ? "text-[var(--color-fg)] font-semibold"
         : "text-[var(--color-muted)] hover:text-[var(--color-fg)]",
@@ -80,6 +92,12 @@ export default function RootLayout() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-[var(--color-bg)] focus:px-4 focus:py-2 focus:text-sm focus:text-[var(--color-fg)] focus:shadow-lg focus:outline-2 focus:outline-[var(--color-accent)]"
+      >
+        {t("app.skipToContent")}
+      </a>
       <header className="flex items-center justify-between gap-4 border-b border-[var(--color-border)] px-4 py-3 sm:px-6 lg:px-8">
         <div className="flex min-w-0 items-center gap-2">
           <button
@@ -87,7 +105,7 @@ export default function RootLayout() {
             aria-label={t("app.nav.menu")}
             aria-expanded={sidebarOpen}
             onClick={toggleSidebar}
-            className="inline-flex size-9 shrink-0 items-center justify-center rounded-md text-[var(--color-muted)] transition-colors hover:bg-[var(--color-muted)]/10 hover:text-[var(--color-fg)] md:hidden"
+            className="inline-flex size-9 shrink-0 items-center justify-center rounded-md text-[var(--color-muted)] transition-colors hover:bg-[var(--color-muted)]/10 hover:text-[var(--color-fg)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)] md:hidden"
           >
             <svg
               aria-hidden="true"
@@ -125,7 +143,7 @@ export default function RootLayout() {
             <button
               type="button"
               onClick={() => logout()}
-              className="cursor-pointer border-none bg-none p-0 font-inherit text-[var(--color-muted)] transition-colors hover:text-[var(--color-fg)]"
+              className="cursor-pointer border-none bg-none p-0 font-inherit text-[var(--color-muted)] transition-colors hover:text-[var(--color-fg)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
             >
               {t("app.nav.logout")}
             </button>
@@ -162,14 +180,14 @@ export default function RootLayout() {
             <Link
               to={ROUTES.HOME}
               onClick={() => setSidebarOpen(false)}
-              className="rounded-md px-3 pb-3 pt-1 text-sm font-semibold text-[var(--color-fg)]"
+              className="rounded-md px-3 pb-3 pt-1 text-sm font-semibold text-[var(--color-fg)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
             >
               {t("app.name")}
             </Link>
             <Link
               to={ROUTES.HOME}
               onClick={() => setSidebarOpen(false)}
-              className="rounded-md px-3 py-2 text-sm text-[var(--color-muted)] transition-colors hover:bg-[var(--color-muted)]/10 hover:text-[var(--color-fg)]"
+              className="rounded-md px-3 py-2 text-sm text-[var(--color-muted)] transition-colors hover:bg-[var(--color-muted)]/10 hover:text-[var(--color-fg)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
             >
               {t("app.nav.home")}
             </Link>
@@ -179,7 +197,7 @@ export default function RootLayout() {
                 to={link.to}
                 onClick={() => setSidebarOpen(false)}
                 className={[
-                  "rounded-md px-3 py-2 text-sm transition-colors hover:bg-[var(--color-muted)]/10 hover:text-[var(--color-fg)]",
+                  "rounded-md px-3 py-2 text-sm transition-colors hover:bg-[var(--color-muted)]/10 hover:text-[var(--color-fg)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]",
                   link.active
                     ? "bg-[var(--color-accent)]/10 font-semibold text-[var(--color-fg)]"
                     : "text-[var(--color-muted)]",
@@ -195,7 +213,7 @@ export default function RootLayout() {
                   setSidebarOpen(false);
                   logout();
                 }}
-                className="cursor-pointer rounded-md border-none bg-none px-3 py-2 text-left text-sm text-[var(--color-danger)] transition-colors hover:bg-[var(--color-muted)]/10"
+                className="cursor-pointer rounded-md border-none bg-none px-3 py-2 text-left text-sm text-[var(--color-danger)] transition-colors hover:bg-[var(--color-muted)]/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
               >
                 {t("app.nav.logout")}
               </button>
@@ -206,7 +224,7 @@ export default function RootLayout() {
 
       {isAuthenticated ? <GlobalShortcuts /> : null}
 
-      <main className="mx-auto w-full max-w-[var(--max-width)] flex-1 p-4 sm:p-6 lg:p-8">
+      <main id="main-content" className="mx-auto w-full max-w-[var(--max-width)] flex-1 p-4 sm:p-6 lg:p-8">
         <Outlet />
       </main>
 

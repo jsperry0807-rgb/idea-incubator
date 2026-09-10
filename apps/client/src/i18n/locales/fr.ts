@@ -3,6 +3,7 @@ import type { LocaleMessages } from "./en";
 export const fr: LocaleMessages = {
   app: {
     name: "Application",
+    skipToContent: "Aller au contenu",
     nav: {
       home: "Accueil",
       ideas: "Idées",

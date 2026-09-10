@@ -17,6 +17,7 @@ export function NotificationBell({ onClick }: NotificationBellProps) {
       onClick={onClick}
       aria-label={t("app.nav.notifications")}
       title={t("app.nav.notifications")}
+      className="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
       style={{
         position: "relative",
         display: "inline-flex",

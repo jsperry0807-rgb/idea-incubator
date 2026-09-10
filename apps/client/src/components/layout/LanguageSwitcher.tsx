@@ -18,6 +18,7 @@ export function LanguageSwitcher() {
       aria-label="Language"
       value={current}
       onChange={(event) => void i18n.changeLanguage(event.target.value)}
+      className="rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
       style={{
         background: "var(--color-bg)",
         color: "var(--color-fg)",

@@ -1,6 +1,7 @@
 export const en = {
   app: {
     name: "App",
+    skipToContent: "Skip to content",
     nav: {
       home: "Home",
       ideas: "Ideas",

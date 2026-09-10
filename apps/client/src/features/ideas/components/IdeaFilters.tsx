@@ -31,7 +31,7 @@ export function IdeaFilters({ filters, tags, onChange }: IdeaFiltersProps) {
                 onChange({ status: tab === "ALL" ? undefined : tab })
               }
               className={[
-                "rounded-full border px-3 py-1.5 text-sm transition-colors",
+                "rounded-full border px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]",
                 active
                   ? "border-[var(--color-accent)] bg-[var(--color-accent)]/10 text-[var(--color-accent)] font-medium"
                   : "border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-muted)] hover:text-[var(--color-fg)]",
