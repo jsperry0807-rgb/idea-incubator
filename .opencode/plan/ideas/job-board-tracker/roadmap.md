@@ -144,7 +144,7 @@
 - [x] Client: ShareList, InviteForm, AccessRoleSelect
 - [x] Client: CommentThread, CommentForm
 - [x] Client: NotificationBell (header bell with badge)
-- [ ] Client: NotificationPanel (dropdown with list)
+- [x] Client: NotificationPanel (dropdown with list)
 - [ ] Client: "Shared with me" page
 - [ ] Client: Wire comments into IdeaDetailPage
 

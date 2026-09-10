@@ -267,6 +267,14 @@ export const fr: LocaleMessages = {
       edited: "(modifié)",
     },
   },
+  notifications: {
+    title: "Notifications",
+    markAllRead: "Tout marquer comme lu",
+    empty: "Vous êtes à jour.",
+    loadError: "Une erreur est survenue lors du chargement des notifications.",
+    readError: "Une erreur est survenue lors de la mise à jour de la notification.",
+    markedAll: "Tout a été marqué comme lu",
+  },
   tags: {
     title: "Étiquettes",
     subtitle: "Organisez vos idées avec des étiquettes colorées.",

@@ -1,6 +1,8 @@
+import { useRef, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { NotificationBell } from "@features/notifications/components/NotificationBell";
+import { NotificationPanel } from "@features/notifications/components/NotificationPanel";
 import { ROUTES } from "@config/routes";
 import { LanguageSwitcher } from "@components/layout/LanguageSwitcher";
 import { useAuth } from "@features/auth/hooks/useAuth";
@@ -9,6 +11,8 @@ export default function RootLayout() {
   const { t } = useTranslation();
   const location = useLocation();
   const { isAuthenticated, logout } = useAuth();
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const notificationAnchorRef = useRef<HTMLSpanElement>(null);
   const isHome = location.pathname === ROUTES.HOME;
   const isIdeas = location.pathname === ROUTES.IDEAS || location.pathname.startsWith(`${ROUTES.IDEAS}/`);
 
@@ -77,7 +81,16 @@ export default function RootLayout() {
               >
                 {t("app.nav.tags")}
               </Link>
-              <NotificationBell />
+              <span ref={notificationAnchorRef} style={{ position: "relative" }}>
+                <NotificationBell
+                  onClick={() => setNotificationsOpen((value) => !value)}
+                />
+                <NotificationPanel
+                  open={notificationsOpen}
+                  onClose={() => setNotificationsOpen(false)}
+                  anchorRef={notificationAnchorRef}
+                />
+              </span>
               <button
                 type="button"
                 onClick={() => logout()}

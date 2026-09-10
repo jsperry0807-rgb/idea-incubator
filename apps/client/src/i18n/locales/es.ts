@@ -267,6 +267,14 @@ export const es: LocaleMessages = {
       edited: "(editado)",
     },
   },
+  notifications: {
+    title: "Notificaciones",
+    markAllRead: "Marcar todo como leído",
+    empty: "Estás al día.",
+    loadError: "Algo salió mal al cargar las notificaciones.",
+    readError: "Algo salió mal al actualizar la notificación.",
+    markedAll: "Todo marcado como leído",
+  },
   tags: {
     title: "Etiquetas",
     subtitle: "Organiza tus ideas con etiquetas de color.",

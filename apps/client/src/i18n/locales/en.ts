@@ -265,6 +265,14 @@ export const en = {
       edited: "(edited)",
     },
   },
+  notifications: {
+    title: "Notifications",
+    markAllRead: "Mark all read",
+    empty: "You're all caught up.",
+    loadError: "Something went wrong loading notifications.",
+    readError: "Something went wrong updating the notification.",
+    markedAll: "Marked all as read",
+  },
   tags: {
     title: "Tags",
     subtitle: "Organize your ideas with colored tags.",
