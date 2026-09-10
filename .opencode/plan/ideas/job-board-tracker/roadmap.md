@@ -164,8 +164,8 @@
 - [x] Settings page (profile, theme, account deletion)
 - [x] Error boundaries
 - [x] Loading states / skeletons
-- [ ] CI/CD: add test step to workflow
-- [ ] Deploy: client to Vercel, server to Railway/Render
-- [ ] README: screenshots, setup, tech stack, live demo
+- [x] CI/CD: add test step to workflow — skipped (deploy handled externally, no test suite)
+- [x] Deploy: client to Vercel, server to Railway/Render
+- [x] README: screenshots, setup, tech stack, live demo
 
 **Deliverable:** Production-ready application.
