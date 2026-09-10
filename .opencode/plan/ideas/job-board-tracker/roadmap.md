@@ -142,7 +142,7 @@
 - [x] Server: Auto-create notifications on share/comment
 - [x] Client: ShareModal (email invite + access list)
 - [x] Client: ShareList, InviteForm, AccessRoleSelect
-- [ ] Client: CommentThread, CommentForm
+- [x] Client: CommentThread, CommentForm
 - [ ] Client: NotificationBell (header bell with badge)
 - [ ] Client: NotificationPanel (dropdown with list)
 - [ ] Client: "Shared with me" page
