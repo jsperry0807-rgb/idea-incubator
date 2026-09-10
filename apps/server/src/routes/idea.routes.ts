@@ -18,6 +18,7 @@ import {
   listIdeas,
   updateIdea,
 } from "../services/idea.service";
+import { getSharedWithMe } from "../services/share.service";
 import planningRoutes from "./planning.routes";
 import shareRoutes from "./share.routes";
 import taskRoutes from "./task.routes";
@@ -38,6 +39,14 @@ router.get("/", validate({ query: ideaListQuerySchema }), async (req, res, next)
 router.get("/pipeline", async (req, res, next) => {
   try {
     res.json({ data: await getPipeline(req.userId!) });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/shared", async (req, res, next) => {
+  try {
+    res.json({ data: await getSharedWithMe(req.userId!) });
   } catch (err) {
     next(err);
   }

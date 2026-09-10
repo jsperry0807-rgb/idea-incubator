@@ -1,11 +1,49 @@
 import prisma from "../lib/prisma";
 import { ConflictError, NotFoundError } from "../lib/errors";
-import { assertIdeaOwnership } from "./idea.service";
+import { assertIdeaOwnership, toIdeaTags } from "./idea.service";
 import type {
   CreateShareInput,
+  SharedIdea,
   Share,
   UpdateShareInput,
 } from "@repo/shared";
+
+export async function getSharedWithMe(userId: string): Promise<SharedIdea[]> {
+  const shares = await prisma.share.findMany({
+    where: { userId },
+    select: {
+      role: true,
+      idea: {
+        include: {
+          tags: { include: { tag: true } },
+          user: {
+            select: { id: true, name: true, avatarUrl: true },
+          },
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return shares.map(({ role, idea }) => ({
+    idea: {
+      id: idea.id,
+      title: idea.title,
+      slug: idea.slug,
+      description: idea.description,
+      status: idea.status,
+      priority: idea.priority,
+      tags: toIdeaTags(idea.tags),
+      updatedAt: idea.updatedAt.toISOString(),
+    },
+    sharedBy: {
+      id: idea.user.id,
+      name: idea.user.name,
+      avatarUrl: idea.user.avatarUrl,
+    },
+    role,
+  }));
+}
 
 export async function listShares(userId: string, ideaId: string): Promise<Share[]> {
   await assertIdeaOwnership(userId, ideaId);

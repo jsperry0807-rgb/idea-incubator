@@ -32,6 +32,7 @@ export type {
   Notification,
   PipelineIdea,
   Share,
+  SharedIdea,
   Tag,
   Task,
   User,

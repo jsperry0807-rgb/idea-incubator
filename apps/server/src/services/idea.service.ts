@@ -253,7 +253,7 @@ async function generateUniqueSlug(
   );
 }
 
-function toIdeaTags(ideaTags: { tagId: string; tag: Tag }[]) {
+export function toIdeaTags(ideaTags: { tagId: string; tag: Tag }[]) {
   return ideaTags.map(({ tagId, tag }) => ({
     tagId,
     tag: {
