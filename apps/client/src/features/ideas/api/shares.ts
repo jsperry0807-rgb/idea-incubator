@@ -1,6 +1,18 @@
-import type { CreateShareInput, Share, ShareRole } from "@repo/shared";
+import type {
+  CreateShareInput,
+  SharedIdea,
+  Share,
+  ShareRole,
+} from "@repo/shared";
 
 import { client } from "@/axios";
+
+export async function getSharedWithMe(signal?: AbortSignal): Promise<SharedIdea[]> {
+  const { data } = await client.get<{ data: SharedIdea[] }>("/ideas/shared", {
+    signal,
+  });
+  return data.data;
+}
 
 export async function getShares(
   ideaId: string,

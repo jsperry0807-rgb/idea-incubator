@@ -145,7 +145,7 @@
 - [x] Client: CommentThread, CommentForm
 - [x] Client: NotificationBell (header bell with badge)
 - [x] Client: NotificationPanel (dropdown with list)
-- [ ] Client: "Shared with me" page
+- [x] Client: "Shared with me" page
 - [ ] Client: Wire comments into IdeaDetailPage
 
 **Deliverable:** Full collaboration with sharing, comments, notifications.

@@ -10,6 +10,7 @@ export const fr: LocaleMessages = {
       tags: "Étiquettes",
       logout: "Se déconnecter",
       notifications: "Notifications",
+      shared: "Partagés",
     },
   },
   home: {
@@ -265,6 +266,15 @@ export const fr: LocaleMessages = {
       delete: "Supprimer",
       deleteConfirm: "Supprimer ?",
       edited: "(modifié)",
+    },
+    shared: {
+      title: "Partagées avec moi",
+      subtitle: "Des idées que d'autres ont partagées avec vous.",
+      emptyTitle: "Rien de partagé pour l'instant",
+      emptyDescription: "Les idées partagées avec vous apparaîtront ici.",
+      loadError: "Une erreur est survenue",
+      loadErrorDescription: "Veuillez réessayer plus tard.",
+      sharedBy: "Partagée par {{name}}",
     },
   },
   notifications: {

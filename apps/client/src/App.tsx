@@ -14,6 +14,7 @@ const IdeasPage = lazy(() => import("@features/ideas/pages/IdeasPage"));
 const CreateIdeaPage = lazy(() => import("@features/ideas/pages/CreateIdeaPage"));
 const RoadmapPage = lazy(() => import("@features/ideas/pages/RoadmapPage"));
 const TagsPage = lazy(() => import("@features/tags/pages/TagsPage"));
+const SharedIdeasPage = lazy(() => import("@features/ideas/pages/SharedIdeasPage"));
 const IdeaDetailPage = lazy(() => import("@features/ideas/pages/IdeaDetailPage"));
 const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
 
@@ -57,6 +58,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <RoadmapPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.SHARED}
+            element={
+              <ProtectedRoute>
+                <SharedIdeasPage />
               </ProtectedRoute>
             }
           />

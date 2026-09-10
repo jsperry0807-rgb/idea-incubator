@@ -81,6 +81,16 @@ export default function RootLayout() {
               >
                 {t("app.nav.tags")}
               </Link>
+              <Link
+                to={ROUTES.SHARED}
+                style={{
+                  color: location.pathname === ROUTES.SHARED ? "var(--color-fg)" : "var(--color-muted)",
+                  fontWeight: location.pathname === ROUTES.SHARED ? 600 : 400,
+                  textDecoration: "none",
+                }}
+              >
+                {t("app.nav.shared")}
+              </Link>
               <span ref={notificationAnchorRef} style={{ position: "relative" }}>
                 <NotificationBell
                   onClick={() => setNotificationsOpen((value) => !value)}

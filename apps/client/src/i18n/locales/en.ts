@@ -8,6 +8,7 @@ export const en = {
       tags: "Tags",
       logout: "Log out",
       notifications: "Notifications",
+      shared: "Shared",
     },
   },
   home: {
@@ -263,6 +264,15 @@ export const en = {
       delete: "Delete",
       deleteConfirm: "Delete?",
       edited: "(edited)",
+    },
+    shared: {
+      title: "Shared with me",
+      subtitle: "Ideas that others have shared with you.",
+      emptyTitle: "Nothing shared yet",
+      emptyDescription: "Ideas shared with you will appear here.",
+      loadError: "Something went wrong",
+      loadErrorDescription: "Please try again later.",
+      sharedBy: "Shared by {{name}}",
     },
   },
   notifications: {

@@ -10,6 +10,7 @@ export const es: LocaleMessages = {
       tags: "Etiquetas",
       logout: "Cerrar sesión",
       notifications: "Notificaciones",
+      shared: "Compartidos",
     },
   },
   home: {
@@ -265,6 +266,15 @@ export const es: LocaleMessages = {
       delete: "Eliminar",
       deleteConfirm: "¿Eliminar?",
       edited: "(editado)",
+    },
+    shared: {
+      title: "Compartidos conmigo",
+      subtitle: "Ideas que otros han compartido contigo.",
+      emptyTitle: "Nada compartido aún",
+      emptyDescription: "Las ideas compartidas contigo aparecerán aquí.",
+      loadError: "Algo salió mal",
+      loadErrorDescription: "Inténtalo de nuevo más tarde.",
+      sharedBy: "Compartida por {{name}}",
     },
   },
   notifications: {
