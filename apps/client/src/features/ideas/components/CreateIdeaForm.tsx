@@ -140,7 +140,7 @@ export function CreateIdeaForm() {
               aria-checked={status === opt.value}
               onClick={() => setStatus(opt.value)}
               className={[
-                "rounded-md border px-3 py-1.5 text-sm transition-colors",
+                "rounded-md border px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]",
                 status === opt.value
                   ? "border-[var(--color-accent)] bg-[var(--color-accent)]/10 text-[var(--color-fg)]"
                   : "border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-muted)] hover:bg-[var(--color-muted)]/10",
@@ -163,7 +163,7 @@ export function CreateIdeaForm() {
               aria-checked={priority === opt.value}
               onClick={() => setPriority(opt.value)}
               className={[
-                "flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors",
+                "flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]",
                 priority === opt.value
                   ? "border-[var(--color-accent)] bg-[var(--color-accent)]/10 text-[var(--color-fg)]"
                   : "border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-muted)] hover:bg-[var(--color-muted)]/10",
@@ -196,7 +196,7 @@ export function CreateIdeaForm() {
                   aria-pressed={selected}
                   onClick={() => toggleTag(tag.id)}
                   className={[
-                    "rounded-md border px-3 py-1 text-sm transition-colors",
+                    "rounded-md border px-3 py-1 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]",
                     selected
                       ? "border-[var(--color-accent)] bg-[var(--color-accent)]/10 text-[var(--color-fg)]"
                       : "border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-muted)] hover:bg-[var(--color-muted)]/10",

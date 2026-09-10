@@ -46,7 +46,7 @@ export function KanbanCard({
       {...dragAttributes}
       {...dragListeners}
       className={[
-        "flex select-none flex-col gap-2 rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-bg)] p-3 shadow-sm",
+        "flex select-none flex-col gap-2 rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-bg)] p-3 shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]",
         draggable ? "cursor-grab touch-none" : "",
         isDragging ? "opacity-40" : "",
         isDragging ? "z-10" : "",

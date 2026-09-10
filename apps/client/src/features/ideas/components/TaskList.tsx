@@ -16,7 +16,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { Task } from "@repo/shared";
-import { EmptyState, ProgressBar, Spinner, toast } from "@repo/ui";
+import { EmptyState, ProgressBar, Skeleton, toast } from "@repo/ui";
 
 import { useTasks } from "../hooks/useTasks";
 import { useReorderTasks } from "../hooks/useReorderTasks";
@@ -111,11 +111,15 @@ export function TaskList({ ideaId }: TaskListProps) {
 
   if (query.isLoading) {
     return (
-      <div className="flex flex-col gap-3 px-4 pb-4">
+      <div className="flex flex-col gap-3 px-4 pb-4" role="status" aria-busy="true">
         <AddTaskForm ideaId={ideaId} />
-        <div className="flex justify-center py-4">
-          <Spinner size="md" />
-        </div>
+        <span className="sr-only">{t("app.loading")}</span>
+        {Array.from({ length: 3 }, (_, index) => (
+          <div key={index} className="flex items-center gap-3">
+            <Skeleton className="size-4 rounded-sm" />
+            <Skeleton className="h-4 w-2/3" />
+          </div>
+        ))}
       </div>
     );
   }

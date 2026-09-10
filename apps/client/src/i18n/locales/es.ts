@@ -2,7 +2,10 @@ import type { LocaleMessages } from "./en";
 
 export const es: LocaleMessages = {
   app: {
-    name: "Aplicación",
+    name: "App",
+    skipToContent: "Saltar al contenido",
+    loading: "Cargando…",
+    language: "Idioma",
     nav: {
       home: "Inicio",
       ideas: "Ideas",
@@ -11,6 +14,11 @@ export const es: LocaleMessages = {
       logout: "Cerrar sesión",
       notifications: "Notificaciones",
       shared: "Compartidos",
+      menu: "Abrir menú",
+      settings: "Ajustes",
+    },
+    theme: {
+      toggle: "Cambiar tema",
     },
   },
   home: {
@@ -101,6 +109,7 @@ export const es: LocaleMessages = {
       priority: "Prioridad",
       tag: "Etiqueta",
       sort: "Ordenar",
+      status: "Filtrar por estado",
     },
     status: {
       ALL: "Todas",
@@ -117,6 +126,7 @@ export const es: LocaleMessages = {
       MEDIUM: "Media",
       HIGH: "Alta",
       CRITICAL: "Crítica",
+      label: "Prioridad: {{priority}}",
     },
     sort: {
       recent: "Más recientes",
@@ -286,6 +296,14 @@ export const es: LocaleMessages = {
     readError: "Algo salió mal al actualizar la notificación.",
     markedAll: "Todo marcado como leído",
   },
+  shortcuts: {
+    title: "Atajos de teclado",
+    search: "Buscar ideas",
+    create: "Crear nueva idea",
+    save: "Guardar formulario",
+    close: "Cerrar / descartar",
+    help: "Mostrar atajos",
+  },
   tags: {
     title: "Etiquetas",
     subtitle: "Organiza tus ideas con etiquetas de color.",
@@ -309,5 +327,48 @@ export const es: LocaleMessages = {
     deleteError: "Algo salió mal al eliminar la etiqueta.",
     emptyTitle: "No hay etiquetas aún",
     emptyDescription: "Crea tu primera etiqueta para empezar a organizar las ideas.",
+  },
+  settings: {
+    title: "Ajustes",
+    subtitle: "Administra tu perfil, apariencia y cuenta.",
+    profile: {
+      title: "Perfil",
+      name: "Nombre completo",
+      avatarUrl: "URL del avatar",
+      avatarUrlPlaceholder: "https://example.com/avatar.png",
+      save: "Guardar cambios",
+      saved: "Perfil actualizado",
+      saveError: "No se pudo actualizar el perfil.",
+    },
+    theme: {
+      title: "Tema",
+      light: "Claro",
+      dark: "Oscuro",
+      system: "Sistema",
+    },
+    danger: {
+      title: "Zona de peligro",
+      description:
+        "Elimina permanentemente tu cuenta y todos los datos asociados. Esta acción no se puede deshacer.",
+      delete: "Eliminar cuenta",
+      confirmTitle: "¿Estás seguro?",
+      confirmPrompt: "Introduce tu contraseña para confirmar la eliminación.",
+      password: "Contraseña",
+      passwordPlaceholder: "Tu contraseña actual",
+      cancel: "Cancelar",
+      deleteForever: "Eliminar mi cuenta",
+      deleting: "Eliminando…",
+      deleted: "Cuenta eliminada",
+      deleteError: "No se pudo eliminar la cuenta. Inténtalo de nuevo.",
+      wrongPassword: "Contraseña incorrecta.",
+    },
+  },
+  errors: {
+    boundary: {
+      title: "Algo salió mal",
+      description: "Ocurrió un error inesperado al renderizar esta vista.",
+      retry: "Reintentar",
+      reload: "Recargar página",
+    },
   },
 };

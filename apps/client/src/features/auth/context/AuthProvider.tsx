@@ -1,8 +1,20 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 
 import { setAccessToken as setAxiosToken } from "@/axios";
-import { loginRequest, logoutRequest, meRequest, registerRequest } from "../api/auth";
-import type { LoginInput, RegisterInput, User } from "../types";
+import {
+  deleteAccountRequest,
+  loginRequest,
+  logoutRequest,
+  meRequest,
+  registerRequest,
+  updateProfileRequest,
+} from "../api/auth";
+import type {
+  LoginInput,
+  RegisterInput,
+  UpdateProfileInput,
+  User,
+} from "../types";
 import { AuthContext, type AuthContextValue } from "./AuthContext";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -60,6 +72,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const updateProfile = useCallback(async (input: UpdateProfileInput) => {
+    const updated = await updateProfileRequest(input);
+    setUser(updated);
+  }, []);
+
+  const deleteAccount = useCallback(async (password: string) => {
+    await deleteAccountRequest(password);
+    setAxiosToken(null);
+    setUser(null);
+  }, []);
+
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
@@ -68,9 +91,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       login,
       register,
       logout,
+      updateProfile,
+      deleteAccount,
       setAccessToken,
     }),
-    [user, isLoading, login, register, logout, setAccessToken],
+    [user, isLoading, login, register, logout, updateProfile, deleteAccount, setAccessToken],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

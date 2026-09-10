@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Tag } from "@repo/shared";
-import { Button, Spinner, EmptyState, toast } from "@repo/ui";
+import { Button, Skeleton, EmptyState, toast } from "@repo/ui";
 
 import { TagBadge } from "@features/ideas/components/TagBadge";
 import { useCreateTag } from "../hooks/useCreateTag";
@@ -85,9 +85,18 @@ export function TagManager() {
       ) : null}
 
       {tagsQuery.isLoading ? (
-        <div className="flex justify-center py-10">
-          <Spinner size="lg" />
-        </div>
+        <ul className="flex flex-col gap-2" role="status" aria-busy="true">
+          <span className="sr-only">{t("app.loading")}</span>
+          {Array.from({ length: 5 }, (_, index) => (
+            <li
+              key={index}
+              className="flex items-center justify-between gap-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-4 py-3"
+            >
+              <Skeleton className="h-5 w-24 rounded-full" />
+              <Skeleton className="h-5 w-14 rounded-md" />
+            </li>
+          ))}
+        </ul>
       ) : tags.length === 0 ? (
         <EmptyState
           title={t("tags.emptyTitle")}

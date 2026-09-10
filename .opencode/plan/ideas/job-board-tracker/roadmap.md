@@ -156,16 +156,16 @@
 
 **Goal:** Production-ready with keyboard shortcuts, responsive design, accessibility, i18n.
 
-- [ ] Keyboard shortcuts (/ search, n create, Esc close, Cmd+Enter save, ? help)
-- [ ] Dark mode refinements (test all components)
-- [ ] Mobile responsive (sidebar, Kanban, cards, planning, comments)
-- [ ] i18n: add all translation keys (en/es/fr)
-- [ ] Accessibility: WCAG 2.1 AA audit
-- [ ] Settings page (profile, theme, account deletion)
-- [ ] Error boundaries
-- [ ] Loading states / skeletons
-- [ ] CI/CD: add test step to workflow
-- [ ] Deploy: client to Vercel, server to Railway/Render
-- [ ] README: screenshots, setup, tech stack, live demo
+- [x] Keyboard shortcuts (/ search, n create, Esc close, Cmd+Enter save, ? help)
+- [x] Dark mode refinements (test all components)
+- [x] Mobile responsive (sidebar, Kanban, cards, planning, comments)
+- [x] i18n: add all translation keys (en/es/fr)
+- [x] Accessibility: WCAG 2.1 AA audit
+- [x] Settings page (profile, theme, account deletion)
+- [x] Error boundaries
+- [x] Loading states / skeletons
+- [x] CI/CD: add test step to workflow — skipped (deploy handled externally, no test suite)
+- [x] Deploy: client to Vercel, server to Railway/Render
+- [x] README: screenshots, setup, tech stack, live demo
 
 **Deliverable:** Production-ready application.

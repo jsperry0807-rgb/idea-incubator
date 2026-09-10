@@ -1,11 +1,12 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Card, Spinner } from "@repo/ui";
+import { Card } from "@repo/ui";
 import type { ActivityItem } from "@repo/shared";
 
 import { ideaDetailPath } from "@config/routes";
 import { useActivity } from "../hooks/useActivity";
+import { ActivityFeedSkeleton } from "./skeletons";
 
 const DOT_CLASSES: Record<ActivityItem["type"], string> = {
   IDEA_CREATED: "bg-emerald-500",
@@ -65,13 +66,7 @@ export function ActivityFeed() {
   );
 
   if (query.isLoading) {
-    return (
-      <Card className="p-4">
-        <div className="flex justify-center py-6">
-          <Spinner size="md" />
-        </div>
-      </Card>
-    );
+    return <ActivityFeedSkeleton />;
   }
 
   if (query.isError) {

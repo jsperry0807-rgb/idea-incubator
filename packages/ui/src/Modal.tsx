@@ -15,6 +15,8 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
   useEffect(() => {
     if (!open) return undefined;
 
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
@@ -26,6 +28,7 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
     return () => {
       window.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = "";
+      previouslyFocused?.focus();
     };
   }, [open, onClose]);
 

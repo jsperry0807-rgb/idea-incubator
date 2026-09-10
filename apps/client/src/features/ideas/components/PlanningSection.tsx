@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { PlanningSectionName } from "@repo/shared";
-import { Button, Spinner, toast } from "@repo/ui";
+import { Button, Skeleton, toast } from "@repo/ui";
 
 import { usePlanningSection } from "../hooks/usePlanningSection";
 import { useCreatePlanningSection } from "../hooks/useCreatePlanningSection";
@@ -27,8 +27,11 @@ export function PlanningSection({ ideaId, section }: PlanningSectionProps) {
 
   if (query.isLoading) {
     return (
-      <div className="flex justify-center px-4 pb-4">
-        <Spinner size="md" />
+      <div className="flex flex-col gap-2 px-4 pb-4" role="status" aria-busy="true">
+        <span className="sr-only">{t("app.loading")}</span>
+        <Skeleton className="h-3 w-full" />
+        <Skeleton className="h-3 w-5/6" />
+        <Skeleton className="h-3 w-2/3" />
       </div>
     );
   }
@@ -108,7 +111,7 @@ export function PlanningSection({ ideaId, section }: PlanningSectionProps) {
             onChange={setDraft}
             autoFocus
           />
-          <div className="flex items-center justify-end gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
             <Button
               variant="ghost"
               size="sm"

@@ -10,14 +10,15 @@ const LOCALE_LABELS: Record<Locale, string> = {
 };
 
 export function LanguageSwitcher() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const current = i18n.resolvedLanguage ?? "en";
 
   return (
     <select
-      aria-label="Language"
+      aria-label={t("app.language")}
       value={current}
       onChange={(event) => void i18n.changeLanguage(event.target.value)}
+      className="rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
       style={{
         background: "var(--color-bg)",
         color: "var(--color-fg)",

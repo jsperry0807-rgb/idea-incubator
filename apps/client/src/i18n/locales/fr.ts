@@ -2,7 +2,10 @@ import type { LocaleMessages } from "./en";
 
 export const fr: LocaleMessages = {
   app: {
-    name: "Application",
+    name: "App",
+    skipToContent: "Aller au contenu",
+    loading: "Chargement…",
+    language: "Langue",
     nav: {
       home: "Accueil",
       ideas: "Idées",
@@ -11,6 +14,11 @@ export const fr: LocaleMessages = {
       logout: "Se déconnecter",
       notifications: "Notifications",
       shared: "Partagés",
+      menu: "Ouvrir le menu",
+      settings: "Paramètres",
+    },
+    theme: {
+      toggle: "Changer de thème",
     },
   },
   home: {
@@ -101,6 +109,7 @@ export const fr: LocaleMessages = {
       priority: "Priorité",
       tag: "Étiquette",
       sort: "Trier",
+      status: "Filtrer par statut",
     },
     status: {
       ALL: "Toutes",
@@ -117,6 +126,7 @@ export const fr: LocaleMessages = {
       MEDIUM: "Moyenne",
       HIGH: "Haute",
       CRITICAL: "Critique",
+      label: "Priorité : {{priority}}",
     },
     sort: {
       recent: "Plus récentes",
@@ -286,6 +296,14 @@ export const fr: LocaleMessages = {
     readError: "Une erreur est survenue lors de la mise à jour de la notification.",
     markedAll: "Tout a été marqué comme lu",
   },
+  shortcuts: {
+    title: "Raccourcis clavier",
+    search: "Rechercher des idées",
+    create: "Créer une nouvelle idée",
+    save: "Enregistrer le formulaire",
+    close: "Fermer / ignorer",
+    help: "Afficher les raccourcis",
+  },
   tags: {
     title: "Étiquettes",
     subtitle: "Organisez vos idées avec des étiquettes colorées.",
@@ -309,5 +327,48 @@ export const fr: LocaleMessages = {
     deleteError: "Une erreur est survenue lors de la suppression de l'étiquette.",
     emptyTitle: "Aucune étiquette pour le moment",
     emptyDescription: "Créez votre première étiquette pour commencer à organiser vos idées.",
+  },
+  settings: {
+    title: "Paramètres",
+    subtitle: "Gérez votre profil, l'apparence et votre compte.",
+    profile: {
+      title: "Profil",
+      name: "Nom complet",
+      avatarUrl: "URL de l'avatar",
+      avatarUrlPlaceholder: "https://example.com/avatar.png",
+      save: "Enregistrer les modifications",
+      saved: "Profil mis à jour",
+      saveError: "Impossible de mettre à jour le profil.",
+    },
+    theme: {
+      title: "Thème",
+      light: "Clair",
+      dark: "Sombre",
+      system: "Système",
+    },
+    danger: {
+      title: "Zone de danger",
+      description:
+        "Supprimez définitivement votre compte et toutes les données associées. Cette action est irréversible.",
+      delete: "Supprimer le compte",
+      confirmTitle: "Êtes-vous sûr ?",
+      confirmPrompt: "Saisissez votre mot de passe pour confirmer la suppression.",
+      password: "Mot de passe",
+      passwordPlaceholder: "Votre mot de passe actuel",
+      cancel: "Annuler",
+      deleteForever: "Supprimer mon compte",
+      deleting: "Suppression…",
+      deleted: "Compte supprimé",
+      deleteError: "Impossible de supprimer le compte. Réessayez.",
+      wrongPassword: "Mot de passe incorrect.",
+    },
+  },
+  errors: {
+    boundary: {
+      title: "Une erreur est survenue",
+      description: "Une erreur inattendue s'est produite lors du rendu de cette vue.",
+      retry: "Réessayer",
+      reload: "Recharger la page",
+    },
   },
 };

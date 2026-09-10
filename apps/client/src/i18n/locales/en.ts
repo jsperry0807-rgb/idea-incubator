@@ -1,6 +1,9 @@
 export const en = {
   app: {
     name: "App",
+    skipToContent: "Skip to content",
+    loading: "Loading…",
+    language: "Language",
     nav: {
       home: "Home",
       ideas: "Ideas",
@@ -9,6 +12,11 @@ export const en = {
       logout: "Log out",
       notifications: "Notifications",
       shared: "Shared",
+      menu: "Open menu",
+      settings: "Settings",
+    },
+    theme: {
+      toggle: "Toggle theme",
     },
   },
   home: {
@@ -99,6 +107,7 @@ export const en = {
       priority: "Priority",
       tag: "Tag",
       sort: "Sort",
+      status: "Filter by status",
     },
     status: {
       ALL: "All",
@@ -115,6 +124,7 @@ export const en = {
       MEDIUM: "Medium",
       HIGH: "High",
       CRITICAL: "Critical",
+      label: "Priority: {{priority}}",
     },
     sort: {
       recent: "Most recent",
@@ -284,6 +294,14 @@ export const en = {
     readError: "Something went wrong updating the notification.",
     markedAll: "Marked all as read",
   },
+  shortcuts: {
+    title: "Keyboard shortcuts",
+    search: "Search ideas",
+    create: "Create new idea",
+    save: "Save form",
+    close: "Close / dismiss",
+    help: "Show shortcuts",
+  },
   tags: {
     title: "Tags",
     subtitle: "Organize your ideas with colored tags.",
@@ -307,6 +325,49 @@ export const en = {
     deleteError: "Something went wrong deleting the tag.",
     emptyTitle: "No tags yet",
     emptyDescription: "Create your first tag to start organizing ideas.",
+  },
+  settings: {
+    title: "Settings",
+    subtitle: "Manage your profile, appearance, and account.",
+    profile: {
+      title: "Profile",
+      name: "Full name",
+      avatarUrl: "Avatar URL",
+      avatarUrlPlaceholder: "https://example.com/avatar.png",
+      save: "Save changes",
+      saved: "Profile updated",
+      saveError: "Could not update profile.",
+    },
+    theme: {
+      title: "Theme",
+      light: "Light",
+      dark: "Dark",
+      system: "System",
+    },
+    danger: {
+      title: "Danger zone",
+      description:
+        "Permanently delete your account and all associated data. This cannot be undone.",
+      delete: "Delete account",
+      confirmTitle: "Are you sure?",
+      confirmPrompt: "Enter your password to confirm deletion.",
+      password: "Password",
+      passwordPlaceholder: "Your current password",
+      cancel: "Cancel",
+      deleteForever: "Delete my account",
+      deleting: "Deleting…",
+      deleted: "Account deleted",
+      deleteError: "Could not delete account. Try again.",
+      wrongPassword: "Incorrect password.",
+    },
+  },
+  errors: {
+    boundary: {
+      title: "Something went wrong",
+      description: "An unexpected error occurred while rendering this view.",
+      retry: "Try again",
+      reload: "Reload page",
+    },
   },
 } as const;
 

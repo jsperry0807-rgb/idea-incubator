@@ -13,9 +13,9 @@ export function IdeaListRow({ idea }: { idea: Idea }) {
     <Card className="transition-shadow hover:shadow-md">
       <Link
         to={ideaDetailPath(idea.id)}
-        className="flex items-center gap-4 p-4"
+        className="flex items-center gap-4 rounded-md p-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
       >
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
           <PriorityDot priority={idea.priority} />
           <StatusBadge status={idea.status} />
         </div>

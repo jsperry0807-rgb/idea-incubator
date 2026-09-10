@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Spinner, toast } from "@repo/ui";
+import { Skeleton, toast } from "@repo/ui";
 import type { Share, ShareRole } from "@repo/shared";
 
 import { useShareMutations } from "../../hooks/useShareMutations";
@@ -119,9 +119,19 @@ export function ShareList({ ideaId }: ShareListProps) {
 
   if (query.isLoading) {
     return (
-      <div className="flex justify-center py-6">
-        <Spinner size="md" />
-      </div>
+      <ul className="flex flex-col gap-3" role="status" aria-busy="true">
+        <span className="sr-only">{t("app.loading")}</span>
+        {Array.from({ length: 3 }, (_, index) => (
+          <li key={index} className="flex items-center gap-3 py-2">
+            <Skeleton className="size-9 shrink-0 rounded-full" />
+            <div className="min-w-0 flex-1 space-y-1.5">
+              <Skeleton className="h-3.5 w-32" />
+              <Skeleton className="h-3 w-44" />
+            </div>
+            <Skeleton className="h-6 w-20 rounded-md" />
+          </li>
+        ))}
+      </ul>
     );
   }
 

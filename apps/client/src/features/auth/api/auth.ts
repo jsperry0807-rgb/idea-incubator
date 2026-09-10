@@ -4,6 +4,7 @@ import type {
   LoginInput,
   RefreshResponse,
   RegisterInput,
+  UpdateProfileInput,
   User,
 } from "../types";
 
@@ -29,4 +30,13 @@ export async function meRequest(): Promise<User> {
 
 export async function logoutRequest(): Promise<void> {
   await client.post("/auth/logout");
+}
+
+export async function updateProfileRequest(input: UpdateProfileInput): Promise<User> {
+  const { data } = await client.patch<{ data: User }>("/auth/me", input);
+  return data.data;
+}
+
+export async function deleteAccountRequest(password: string): Promise<void> {
+  await client.delete("/auth/me", { data: { password } });
 }

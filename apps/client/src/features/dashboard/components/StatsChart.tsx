@@ -8,23 +8,18 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { Card, Spinner } from "@repo/ui";
+import { Card } from "@repo/ui";
 import { IDEA_STATUS_VALUES } from "@repo/shared";
 
 import { useDashboardStats } from "../hooks/useDashboardStats";
+import { StatsChartSkeleton } from "./skeletons";
 
 export function StatsChart() {
   const { t } = useTranslation();
   const query = useDashboardStats();
 
   if (query.isLoading) {
-    return (
-      <Card className="p-4">
-        <div className="flex justify-center py-8">
-          <Spinner size="md" />
-        </div>
-      </Card>
-    );
+    return <StatsChartSkeleton />;
   }
 
   if (query.isError) {

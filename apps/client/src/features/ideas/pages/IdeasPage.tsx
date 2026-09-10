@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { Button, Spinner } from "@repo/ui";
+import { Button } from "@repo/ui";
 
 import { ROUTES } from "@config/routes";
 import { useTags } from "@features/tags/hooks/useTags";
@@ -11,6 +11,7 @@ import { IdeaGrid } from "../components/IdeaGrid";
 import { IdeaList } from "../components/IdeaListRow";
 import { IdeaFilters } from "../components/IdeaFilters";
 import { IdeaSearch } from "../components/IdeaSearch";
+import { IdeaGridSkeleton, IdeaListSkeleton } from "../components/skeletons";
 import type { IdeaFilters as IdeaFiltersState } from "../types";
 
 const DEFAULT_FILTERS: IdeaFiltersState = {
@@ -36,7 +37,7 @@ export default function IdeasPage() {
 
   return (
     <section className="flex flex-col gap-5">
-      <header className="flex items-center justify-between gap-4">
+      <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-extrabold">{t("ideas.title")}</h1>
           <p className="text-sm text-[var(--color-muted)]">{t("ideas.subtitle")}</p>
@@ -51,11 +52,11 @@ export default function IdeasPage() {
           <button
             type="button"
             onClick={toggleViewMode}
-            className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm text-[var(--color-fg)] transition-colors hover:bg-[var(--color-muted)]/10"
+            className="rounded-md border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm text-[var(--color-fg)] transition-colors hover:bg-[var(--color-muted)]/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
             aria-label={viewMode === "grid" ? t("ideas.viewList") : t("ideas.viewGrid")}
             title={viewMode === "grid" ? t("ideas.viewList") : t("ideas.viewGrid")}
           >
-            {viewMode === "grid" ? "≡ List" : "▦ Grid"}
+            {viewMode === "grid" ? `≡ ${t("ideas.viewList")}` : `▦ ${t("ideas.viewGrid")}`}
           </button>
         </div>
       </header>
@@ -63,17 +64,20 @@ export default function IdeasPage() {
       <IdeaSearch
         value={filters.search ?? ""}
         placeholder={t("ideas.searchPlaceholder")}
+        aria-label={t("ideas.searchPlaceholder")}
         onDebouncedChange={(search) => patchFilters({ search: search || undefined })}
       />
 
       <IdeaFilters filters={filters} tags={tagsQuery.data ?? []} onChange={patchFilters} />
 
       {isLoading ? (
-        <div className="flex justify-center py-12">
-          <Spinner size="lg" />
-        </div>
+        viewMode === "grid" ? (
+          <IdeaGridSkeleton />
+        ) : (
+          <IdeaListSkeleton />
+        )
       ) : error ? (
-        <p className="text-sm text-red-600">{t("ideas.loadError")}</p>
+        <p className="text-sm text-red-600 dark:text-red-400">{t("ideas.loadError")}</p>
       ) : viewMode === "grid" ? (
         <IdeaGrid ideas={ideasQuery.data?.items ?? []} />
       ) : (

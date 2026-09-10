@@ -132,6 +132,44 @@ export async function me(userId: string) {
   return toPublicUser(user);
 }
 
+export async function updateProfile(
+  userId: string,
+  input: { name?: string; avatarUrl?: string | null },
+) {
+  const existing = await prisma.user.findUnique({ where: { id: userId } });
+  if (!existing) {
+    throw new NotFoundError("User not found");
+  }
+
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      ...(input.name !== undefined ? { name: input.name } : {}),
+      ...(input.avatarUrl !== undefined ? { avatarUrl: input.avatarUrl } : {}),
+    },
+  });
+
+  return toPublicUser(user);
+}
+
+export async function deleteAccount(userId: string, password: string) {
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+
+  if (!user.passwordHash) {
+    throw new UnauthorizedError("Password is required to delete this account");
+  }
+
+  const valid = await bcrypt.compare(password, user.passwordHash);
+  if (!valid) {
+    throw new UnauthorizedError("Incorrect password");
+  }
+
+  await prisma.user.delete({ where: { id: userId } });
+}
+
 export async function logout(refreshToken: string | undefined) {
   if (refreshToken) {
     await prisma.refreshToken

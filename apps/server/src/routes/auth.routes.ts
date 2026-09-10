@@ -1,15 +1,22 @@
 import { Router, type Router as RouterType, type Response } from "express";
-import { loginSchema, registerSchema } from "@repo/shared";
+import {
+  deleteAccountSchema,
+  loginSchema,
+  registerSchema,
+  updateProfileSchema,
+} from "@repo/shared";
 
 import { validate } from "../middleware/validate";
 import { authenticate } from "../middleware/auth";
 import { authRateLimit } from "../middleware/rateLimit";
 import {
+  deleteAccount,
   login,
   logout,
   me,
   refresh,
   register,
+  updateProfile,
   getRefreshTokenCookieName,
 } from "../services/auth.service";
 import { env } from "../config/env";
@@ -92,6 +99,24 @@ router.post("/logout", async (req, res, next) => {
 router.get("/me", authenticate, async (req, res, next) => {
   try {
     res.json({ data: await me(req.userId!) });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.patch("/me", authenticate, validate(updateProfileSchema), async (req, res, next) => {
+  try {
+    res.json({ data: await updateProfile(req.userId!, req.body) });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete("/me", authenticate, validate(deleteAccountSchema), async (req, res, next) => {
+  try {
+    await deleteAccount(req.userId!, req.body.password);
+    clearRefreshCookie(res);
+    res.status(204).send();
   } catch (err) {
     next(err);
   }

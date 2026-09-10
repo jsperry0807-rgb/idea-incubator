@@ -19,7 +19,6 @@ export function IdeaSearch({
 }: IdeaSearchProps) {
   const [inputValue, setInputValue] = useState(value);
   const [prevValue, setPrevValue] = useState(value);
-  const inputRef = useRef<HTMLInputElement>(null);
   const timerRef = useRef<number | null>(null);
 
   if (prevValue !== value) {
@@ -28,23 +27,10 @@ export function IdeaSearch({
   }
 
   useEffect(() => {
-    if (!shortcut) return undefined;
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement | null;
-      const isTyping = target?.tagName === "INPUT" || target?.tagName === "TEXTAREA";
-      if (e.key === "/" && !isTyping) {
-        e.preventDefault();
-        inputRef.current?.focus();
-      }
-    };
-
-    window.addEventListener("keydown", onKeyDown);
     return () => {
-      window.removeEventListener("keydown", onKeyDown);
       if (timerRef.current !== null) window.clearTimeout(timerRef.current);
     };
-  }, [shortcut]);
+  }, []);
 
   const handleChange = (next: string) => {
     setInputValue(next);
@@ -60,8 +46,8 @@ export function IdeaSearch({
         ⌕
       </span>
       <input
-        ref={inputRef}
         type="search"
+        data-shortcut={shortcut ? "search" : undefined}
         value={inputValue}
         onChange={(e) => handleChange(e.target.value)}
         placeholder={placeholder}
