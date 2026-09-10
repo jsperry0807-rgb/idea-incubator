@@ -11,6 +11,7 @@ export const fr: LocaleMessages = {
       logout: "Se déconnecter",
       notifications: "Notifications",
       shared: "Partagés",
+      menu: "Ouvrir le menu",
     },
     theme: {
       toggle: "Changer de thème",

@@ -158,7 +158,7 @@
 
 - [x] Keyboard shortcuts (/ search, n create, Esc close, Cmd+Enter save, ? help)
 - [x] Dark mode refinements (test all components)
-- [ ] Mobile responsive (sidebar, Kanban, cards, planning, comments)
+- [x] Mobile responsive (sidebar, Kanban, cards, planning, comments)
 - [ ] i18n: add all translation keys (en/es/fr)
 - [ ] Accessibility: WCAG 2.1 AA audit
 - [ ] Settings page (profile, theme, account deletion)

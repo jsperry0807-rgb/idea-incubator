@@ -36,7 +36,7 @@ export default function IdeasPage() {
 
   return (
     <section className="flex flex-col gap-5">
-      <header className="flex items-center justify-between gap-4">
+      <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-extrabold">{t("ideas.title")}</h1>
           <p className="text-sm text-[var(--color-muted)]">{t("ideas.subtitle")}</p>

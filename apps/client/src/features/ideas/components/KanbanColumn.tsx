@@ -49,7 +49,7 @@ export function KanbanColumn({ status, ideas }: KanbanColumnProps) {
       ref={setNodeRef}
       aria-label={t(`ideas.status.${status}`)}
       className={[
-        "flex w-64 shrink-0 flex-col gap-2 p-2 transition-colors",
+        "flex w-64 shrink-0 snap-start flex-col gap-2 p-2 transition-colors",
         isOver
           ? "rounded-[var(--radius)] bg-[var(--color-accent)]/5 ring-2 ring-[var(--color-accent)]/40"
           : "",

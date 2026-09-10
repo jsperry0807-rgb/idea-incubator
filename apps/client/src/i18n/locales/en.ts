@@ -9,6 +9,7 @@ export const en = {
       logout: "Log out",
       notifications: "Notifications",
       shared: "Shared",
+      menu: "Open menu",
     },
     theme: {
       toggle: "Toggle theme",

@@ -15,7 +15,7 @@ export function IdeaListRow({ idea }: { idea: Idea }) {
         to={ideaDetailPath(idea.id)}
         className="flex items-center gap-4 p-4"
       >
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
           <PriorityDot priority={idea.priority} />
           <StatusBadge status={idea.status} />
         </div>

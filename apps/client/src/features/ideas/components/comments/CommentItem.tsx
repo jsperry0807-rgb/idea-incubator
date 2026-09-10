@@ -126,7 +126,7 @@ export function CommentItem({
         )}
 
         {!editing && (canEdit || canDelete) ? (
-          <div className="mt-1 flex items-center gap-3">
+          <div className="mt-1 flex flex-wrap items-center gap-3">
             {canEdit ? (
               <button
                 type="button"
