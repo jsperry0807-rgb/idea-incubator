@@ -135,7 +135,7 @@
 
 **Goal:** Users can share ideas, leave comments, and receive notifications.
 
-- [ ] Server: Share management routes (add, change role, remove, list)
+- [x] Server: Share management routes (add, change role, remove, list)
 - [ ] Server: Shared-with-me endpoint
 - [ ] Server: Comments CRUD routes
 - [ ] Server: Notification routes (list, mark read, mark all read)
