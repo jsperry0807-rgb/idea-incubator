@@ -105,6 +105,14 @@ export interface Share {
   user?: Pick<User, "id" | "name" | "avatarUrl" | "email">;
 }
 
+export interface SharedIdea {
+  idea: Pick<Idea, "id" | "title" | "slug" | "description" | "status" | "priority" | "updatedAt"> & {
+    tags: IdeaTag[];
+  };
+  sharedBy: Pick<User, "id" | "name" | "avatarUrl">;
+  role: ShareRole;
+}
+
 export interface Notification {
   id: string;
   userId: string;

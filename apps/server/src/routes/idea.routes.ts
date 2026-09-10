@@ -18,7 +18,10 @@ import {
   listIdeas,
   updateIdea,
 } from "../services/idea.service";
+import { getSharedWithMe } from "../services/share.service";
+import commentRoutes from "./comment.routes";
 import planningRoutes from "./planning.routes";
+import shareRoutes from "./share.routes";
 import taskRoutes from "./task.routes";
 
 const router: RouterType = Router();
@@ -37,6 +40,14 @@ router.get("/", validate({ query: ideaListQuerySchema }), async (req, res, next)
 router.get("/pipeline", async (req, res, next) => {
   try {
     res.json({ data: await getPipeline(req.userId!) });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/shared", async (req, res, next) => {
+  try {
+    res.json({ data: await getSharedWithMe(req.userId!) });
   } catch (err) {
     next(err);
   }
@@ -84,7 +95,9 @@ router.delete("/:id", validate({ params: idParamSchema }), async (req, res, next
   }
 });
 
+router.use("/:id/comments", commentRoutes);
 router.use("/:id/planning", planningRoutes);
+router.use("/:id/shares", shareRoutes);
 router.use("/:id/tasks", taskRoutes);
 
 export default router;

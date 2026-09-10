@@ -135,18 +135,18 @@
 
 **Goal:** Users can share ideas, leave comments, and receive notifications.
 
-- [ ] Server: Share management routes (add, change role, remove, list)
-- [ ] Server: Shared-with-me endpoint
-- [ ] Server: Comments CRUD routes
-- [ ] Server: Notification routes (list, mark read, mark all read)
-- [ ] Server: Auto-create notifications on share/comment
-- [ ] Client: ShareModal (email invite + access list)
-- [ ] Client: ShareList, InviteForm, AccessRoleSelect
-- [ ] Client: CommentThread, CommentForm
-- [ ] Client: NotificationBell (header bell with badge)
-- [ ] Client: NotificationPanel (dropdown with list)
-- [ ] Client: "Shared with me" page
-- [ ] Client: Wire comments into IdeaDetailPage
+- [x] Server: Share management routes (add, change role, remove, list)
+- [x] Server: Shared-with-me endpoint
+- [x] Server: Comments CRUD routes
+- [x] Server: Notification routes (list, mark read, mark all read)
+- [x] Server: Auto-create notifications on share/comment
+- [x] Client: ShareModal (email invite + access list)
+- [x] Client: ShareList, InviteForm, AccessRoleSelect
+- [x] Client: CommentThread, CommentForm
+- [x] Client: NotificationBell (header bell with badge)
+- [x] Client: NotificationPanel (dropdown with list)
+- [x] Client: "Shared with me" page
+- [x] Client: Wire comments into IdeaDetailPage
 
 **Deliverable:** Full collaboration with sharing, comments, notifications.
 
