@@ -359,4 +359,12 @@ export const es: LocaleMessages = {
       wrongPassword: "Contraseña incorrecta.",
     },
   },
+  errors: {
+    boundary: {
+      title: "Algo salió mal",
+      description: "Ocurrió un error inesperado al renderizar esta vista.",
+      retry: "Reintentar",
+      reload: "Recargar página",
+    },
+  },
 };

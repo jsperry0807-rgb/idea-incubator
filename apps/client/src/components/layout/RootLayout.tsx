@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { ErrorBoundary } from "@components/error/ErrorBoundary";
 import { NotificationBell } from "@features/notifications/components/NotificationBell";
 import { NotificationPanel } from "@features/notifications/components/NotificationPanel";
 import { ROUTES } from "@config/routes";
@@ -231,7 +232,9 @@ export default function RootLayout() {
       {isAuthenticated ? <GlobalShortcuts /> : null}
 
       <main id="main-content" className="mx-auto w-full max-w-[var(--max-width)] flex-1 p-4 sm:p-6 lg:p-8">
-        <Outlet />
+        <ErrorBoundary resetKey={location.pathname}>
+          <Outlet />
+        </ErrorBoundary>
       </main>
 
       <footer className="border-t border-[var(--color-border)] px-4 py-4 text-center text-sm text-[var(--color-muted)] sm:px-6 lg:px-8">

@@ -357,6 +357,14 @@ export const en = {
       wrongPassword: "Incorrect password.",
     },
   },
+  errors: {
+    boundary: {
+      title: "Something went wrong",
+      description: "An unexpected error occurred while rendering this view.",
+      retry: "Try again",
+      reload: "Reload page",
+    },
+  },
 } as const;
 
 type DeepString<T> = {

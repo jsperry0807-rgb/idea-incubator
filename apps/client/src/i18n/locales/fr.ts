@@ -359,4 +359,12 @@ export const fr: LocaleMessages = {
       wrongPassword: "Mot de passe incorrect.",
     },
   },
+  errors: {
+    boundary: {
+      title: "Une erreur est survenue",
+      description: "Une erreur inattendue s'est produite lors du rendu de cette vue.",
+      retry: "Réessayer",
+      reload: "Recharger la page",
+    },
+  },
 };

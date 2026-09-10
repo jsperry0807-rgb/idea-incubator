@@ -162,7 +162,7 @@
 - [ ] i18n: add all translation keys (en/es/fr)
 - [x] Accessibility: WCAG 2.1 AA audit
 - [x] Settings page (profile, theme, account deletion)
-- [ ] Error boundaries
+- [x] Error boundaries
 - [ ] Loading states / skeletons
 - [ ] CI/CD: add test step to workflow
 - [ ] Deploy: client to Vercel, server to Railway/Render

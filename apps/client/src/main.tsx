@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { Toaster } from "@repo/ui";
 
+import { ErrorBoundary } from "@components/error/ErrorBoundary";
 import '@i18n';
 import '@assets/styles/global.css';
 
@@ -30,13 +31,15 @@ const queryClient = new QueryClient({
 
 createRoot(rootEl).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Suspense fallback={null}>
-          <App />
-        </Suspense>
-      </BrowserRouter>
-      <Toaster />
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <Suspense fallback={null}>
+            <App />
+          </Suspense>
+        </BrowserRouter>
+        <Toaster />
+      </QueryClientProvider>
+    </ErrorBoundary>
   </StrictMode>,
 );
