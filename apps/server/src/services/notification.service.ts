@@ -1,6 +1,19 @@
 import prisma from "../lib/prisma";
 import { NotFoundError } from "../lib/errors";
-import type { Notification, NotificationListQuery } from "@repo/shared";
+import type {
+  Notification,
+  NotificationListQuery,
+  NotificationType,
+} from "@repo/shared";
+
+export async function createNotification(input: {
+  userId: string;
+  type: NotificationType;
+  message: string;
+  ideaId: string | null;
+}): Promise<void> {
+  await prisma.notification.create({ data: input });
+}
 
 export async function listNotifications(
   userId: string,

@@ -1,6 +1,7 @@
 import prisma from "../lib/prisma";
 import { ForbiddenError, NotFoundError } from "../lib/errors";
 import { assertIdeaAccess } from "./idea.service";
+import { createNotification } from "./notification.service";
 import type {
   Comment,
   CreateCommentInput,
@@ -29,7 +30,25 @@ export async function createComment(
   ideaId: string,
   input: CreateCommentInput,
 ): Promise<Comment> {
-  await assertIdeaAccess(userId, ideaId);
+  const idea = await prisma.idea.findFirst({
+    where: { id: ideaId },
+    select: { id: true, userId: true, title: true },
+  });
+
+  if (!idea) {
+    throw new NotFoundError("Idea not found");
+  }
+
+  if (idea.userId !== userId) {
+    const share = await prisma.share.findUnique({
+      where: { ideaId_userId: { ideaId, userId } },
+      select: { id: true },
+    });
+
+    if (!share) {
+      throw new NotFoundError("Idea not found");
+    }
+  }
 
   const comment = await prisma.comment.create({
     data: {
@@ -41,6 +60,20 @@ export async function createComment(
       user: { select: { id: true, name: true, avatarUrl: true } },
     },
   });
+
+  if (idea.userId !== userId) {
+    const commenter = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { name: true },
+    });
+
+    await createNotification({
+      userId: idea.userId,
+      type: "COMMENT",
+      message: `${commenter?.name} commented on "${idea.title}"`,
+      ideaId: idea.id,
+    });
+  }
 
   return toCommentDto(comment);
 }

@@ -139,7 +139,7 @@
 - [x] Server: Shared-with-me endpoint
 - [x] Server: Comments CRUD routes
 - [x] Server: Notification routes (list, mark read, mark all read)
-- [ ] Server: Auto-create notifications on share/comment
+- [x] Server: Auto-create notifications on share/comment
 - [ ] Client: ShareModal (email invite + access list)
 - [ ] Client: ShareList, InviteForm, AccessRoleSelect
 - [ ] Client: CommentThread, CommentForm

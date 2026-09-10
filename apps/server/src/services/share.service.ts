@@ -1,6 +1,7 @@
 import prisma from "../lib/prisma";
 import { ConflictError, NotFoundError } from "../lib/errors";
 import { assertIdeaOwnership, toIdeaTags } from "./idea.service";
+import { createNotification } from "./notification.service";
 import type {
   CreateShareInput,
   SharedIdea,
@@ -64,7 +65,18 @@ export async function createShare(
   ideaId: string,
   input: CreateShareInput,
 ): Promise<Share> {
-  await assertIdeaOwnership(userId, ideaId);
+  const idea = await prisma.idea.findFirst({
+    where: { id: ideaId, userId },
+    select: {
+      id: true,
+      title: true,
+      user: { select: { name: true } },
+    },
+  });
+
+  if (!idea) {
+    throw new NotFoundError("Idea not found");
+  }
 
   const target = await prisma.user.findUnique({
     where: { email: input.email },
@@ -97,6 +109,13 @@ export async function createShare(
     include: {
       user: { select: { id: true, name: true, email: true, avatarUrl: true } },
     },
+  });
+
+  await createNotification({
+    userId: target.id,
+    type: "SHARE",
+    message: `${idea.user.name} shared "${idea.title}" with you`,
+    ideaId: idea.id,
   });
 
   return toShareDto(share);
