@@ -4,87 +4,357 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-:root {
-  color-scheme: light dark;
-  --color-bg: #ffffff;
-  --color-fg: #111111;
-  --color-muted: #737373;
-  --color-border: #e5e5e5;
-  --color-accent: #2563eb;
+/* ============================================================
+   THEME TOKENS — Idea Incubator ("Modern Flat" · teal identity)
+   Light values are the default; dark overrides follow below.
+   ============================================================ */
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  /* Brand */
+  --color-primary: #0f766e;
+  --color-primary-fg: #ffffff;
+  --color-primary-hover: #0d9488;
+  --color-primary-soft: #ccfbf1;
+  --color-secondary: #115e59;
+  --color-secondary-fg: #ffffff;
+  --color-accent: #0f766e;
+  --color-accent-fg: #ffffff;
+  --color-accent-hover: #0d9488;
+  --color-accent-cta: #ea580c;
+  --color-accent-cta-hover: #c2410c;
+  --color-accent-cta-fg: #ffffff;
+
+  /* Surfaces */
+  --color-bg: #f4faf8;
+  --color-fg: #173b35;
+  --color-card: #ffffff;
+  --color-card-fg: #173b35;
+  --color-muted: #5b6b68;
+  --color-muted-fg: #5e6e6b;
+  --color-border: #dce8e4;
+  --color-border-strong: #c3d6d0;
+  --color-ring: #0f766e;
+
+  /* Status */
   --color-danger: #dc2626;
-  --max-width: 1200px;
-  --radius: 8px;
+  --color-danger-fg: #ffffff;
+  --color-success: #059669;
+  --color-warning: #d97706;
+  --color-info: #0284c7;
+
+  /* Typography */
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --leading-tight: 1.25;
+  --leading-normal: 1.6;
+  --leading-relaxed: 1.75;
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.02em;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Spacing (4/8 rhythm) */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(16, 24, 40, 0.05);
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.1);
+  --shadow-md: 0 2px 4px rgba(16, 24, 40, 0.05), 0 4px 8px rgba(16, 24, 40, 0.06);
+  --shadow-lg: 0 4px 6px rgba(16, 24, 40, 0.05), 0 12px 20px rgba(16, 24, 40, 0.08);
+  --shadow-xl: 0 8px 12px rgba(16, 24, 40, 0.06), 0 24px 32px rgba(16, 24, 40, 0.1);
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  /* Motion */
+  --motion-fast: 150ms;
+  --motion-normal: 200ms;
+  --motion-slow: 300ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --color-bg: #0b0b0c;
-    --color-fg: #f2f2f2;
-    --color-muted: #a3a3a3;
-    --color-border: #262626;
-    --color-accent: #60a5fa;
-    --color-danger: #f87171;
+/* Theme-independent content container width (defined on :root only so
+   the light/dark overrides never raise its specificity and block the
+   wide-screen media queries below). */
+:root {
+  --max-width: 1280px;
+}
+
+/* Widen the content container on large / ultrawide monitors so the
+   layout stays centered without leaving excessive gutters. */
+@media (min-width: 2000px) {
+  :root {
+    --max-width: 1440px;
   }
 }
 
+@media (min-width: 3000px) {
+  :root {
+    --max-width: 1600px;
+  }
+}
+
+/* Auto (system) dark mode — before JS attaches an explicit theme */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --color-primary: #2dd4bf;
+    --color-primary-fg: #042f2e;
+    --color-primary-hover: #5eead4;
+    --color-primary-soft: #134e4a;
+    --color-secondary: #14b8a6;
+    --color-secondary-fg: #042f2e;
+    --color-accent: #2dd4bf;
+    --color-accent-fg: #042f2e;
+    --color-accent-hover: #5eead4;
+    --color-accent-cta: #fb923c;
+    --color-accent-cta-hover: #fdba74;
+    --color-accent-cta-fg: #1c0a00;
+
+    --color-bg: #0b1211;
+    --color-fg: #e7f1ee;
+    --color-card: #131c1a;
+    --color-card-fg: #e7f1ee;
+    --color-muted: #9fb4ae;
+    --color-muted-fg: #93a9a3;
+    --color-border: #24312e;
+    --color-border-strong: #374a45;
+    --color-ring: #2dd4bf;
+
+    --color-danger: #f87171;
+    --color-danger-fg: #1c0505;
+    --color-success: #34d399;
+    --color-warning: #fbbf24;
+    --color-info: #38bdf8;
+
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.4), 0 12px 20px rgba(0, 0, 0, 0.6);
+    --shadow-xl: 0 8px 12px rgba(0, 0, 0, 0.45), 0 24px 32px rgba(0, 0, 0, 0.7);
+  }
+}
+
+/* Explicit dark theme */
 :root[data-theme="dark"],
 :root.dark {
   color-scheme: dark;
-  --color-bg: #0b0b0c;
-  --color-fg: #f2f2f2;
-  --color-muted: #a3a3a3;
-  --color-border: #262626;
-  --color-accent: #60a5fa;
+
+  --color-primary: #2dd4bf;
+  --color-primary-fg: #042f2e;
+  --color-primary-hover: #5eead4;
+  --color-primary-soft: #134e4a;
+  --color-secondary: #14b8a6;
+  --color-secondary-fg: #042f2e;
+  --color-accent: #2dd4bf;
+  --color-accent-fg: #042f2e;
+  --color-accent-hover: #5eead4;
+  --color-accent-cta: #fb923c;
+  --color-accent-cta-hover: #fdba74;
+  --color-accent-cta-fg: #1c0a00;
+
+  --color-bg: #0b1211;
+  --color-fg: #e7f1ee;
+  --color-card: #131c1a;
+  --color-card-fg: #e7f1ee;
+  --color-muted: #9fb4ae;
+  --color-muted-fg: #93a9a3;
+  --color-border: #24312e;
+  --color-border-strong: #374a45;
+  --color-ring: #2dd4bf;
+
   --color-danger: #f87171;
+  --color-danger-fg: #1c0505;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-info: #38bdf8;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.4), 0 12px 20px rgba(0, 0, 0, 0.6);
+  --shadow-xl: 0 8px 12px rgba(0, 0, 0, 0.45), 0 24px 32px rgba(0, 0, 0, 0.7);
 }
 
-:root[data-theme="light"] {
-  color-scheme: light;
+/* ============================================================
+   BASE — lives in @layer base so Tailwind utilities can override
+   element defaults (unlayered author CSS would win the cascade).
+   ============================================================ */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100vh;
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    text-wrap: balance;
+  }
+
+  #root {
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  img,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-accent-fg);
+  }
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* Standard page container: centers content at the max content width.
+   Pages that should span the full width (e.g. the roadmap) omit this. */
+.page-container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
 }
 
-html {
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
+/* While a card is being dragged, hide the card list's scrollbar so the
+   dragged card's transform can't make one appear. */
+.kanban-cards:has(> .dragging-original) {
+  scrollbar-width: none;
+}
+.kanban-cards:has(> .dragging-original)::-webkit-scrollbar {
+  display: none;
 }
 
-body {
-  min-height: 100vh;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
-    sans-serif;
-  background-color: var(--color-bg);
-  color: var(--color-fg);
-  -webkit-font-smoothing: antialiased;
-  line-height: 1.6;
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-#root {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-a {
-  color: var(--color-accent);
-  text-decoration: none;
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
-a:hover {
-  text-decoration: underline;
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-img,
-svg {
-  display: block;
-  max-width: 100%;
+@keyframes sidebar-in {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

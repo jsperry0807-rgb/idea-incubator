@@ -46,10 +46,9 @@ export function KanbanCard({
       {...dragAttributes}
       {...dragListeners}
       className={[
-        "flex select-none flex-col gap-2 rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-bg)] p-3 shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]",
+        "flex select-none flex-col gap-2 rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-card)] p-3 text-[var(--color-card-fg)] shadow-[var(--shadow-xs)] transition-[border-color,box-shadow,opacity,transform] duration-[var(--motion-fast)] hover:border-[var(--color-border-strong)] hover:shadow-[var(--shadow-sm)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]",
         draggable ? "cursor-grab touch-none" : "",
-        isDragging ? "opacity-40" : "",
-        isDragging ? "z-10" : "",
+        isDragging ? "z-10 opacity-40 dragging-original" : "",
         className,
       ]
         .filter(Boolean)

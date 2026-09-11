@@ -47,7 +47,7 @@ export function NotificationBell({ onClick }: NotificationBellProps) {
             padding: "0 4px",
             borderRadius: 9999,
             backgroundColor: "var(--color-danger)",
-            color: "#fff",
+            color: "var(--color-danger-fg)",
             fontSize: 10,
             fontWeight: 600,
             lineHeight: "16px",

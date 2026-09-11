@@ -3,15 +3,15 @@ import { createPortal } from "react-dom";
 import { dismissToast, useToasts } from "./toast-store";
 
 const toneClasses: Record<string, string> = {
-  success: "border-emerald-500/40 text-emerald-700",
-  error: "border-red-500/40 text-red-700",
-  info: "border-sky-500/40 text-sky-700",
+  success: "border-[var(--color-success)]/40 text-[var(--color-success)]",
+  error: "border-[var(--color-danger)]/40 text-[var(--color-danger)]",
+  info: "border-[var(--color-info)]/40 text-[var(--color-info)]",
 };
 
 const dotClasses: Record<string, string> = {
-  success: "bg-emerald-500",
-  error: "bg-red-500",
-  info: "bg-sky-500",
+  success: "bg-[var(--color-success)]",
+  error: "bg-[var(--color-danger)]",
+  info: "bg-[var(--color-info)]",
 };
 
 export function Toaster() {
@@ -28,7 +28,7 @@ export function Toaster() {
         <div
           key={t.id}
           className={[
-            "pointer-events-auto flex items-center gap-2 rounded-md border bg-white px-4 py-3 text-sm shadow-lg",
+            "pointer-events-auto flex items-center gap-2 rounded-md border bg-[var(--color-card)] px-4 py-3 text-sm text-[var(--color-card-fg)] shadow-[var(--shadow-lg)] animate-[toast-in_var(--motion-normal)_var(--ease-out)]",
             toneClasses[t.tone],
           ].join(" ")}
           role="status"

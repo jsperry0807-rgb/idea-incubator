@@ -18,19 +18,12 @@ export default function LoginPage() {
   }
 
   return (
-    <section
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "70vh",
-        gap: "0.5rem",
-      }}
-    >
-      <h1 style={{ fontSize: "1.75rem", fontWeight: 800, margin: 0 }}>{t("auth.login.title")}</h1>
-      <p style={{ color: "var(--color-muted)", margin: "0 0 1.5rem" }}>{t("auth.login.subtitle")}</p>
-      <div style={{ width: "100%", maxWidth: "24rem" }}>
+    <section className="page-container flex min-h-[70vh] flex-col items-center justify-center gap-2">
+      <h1 className="m-0 text-[1.75rem] font-extrabold text-[var(--color-fg)]">
+        {t("auth.login.title")}
+      </h1>
+      <p className="mb-6 m-0 text-[var(--color-muted)]">{t("auth.login.subtitle")}</p>
+      <div className="w-full max-w-sm">
         <LoginForm />
       </div>
     </section>

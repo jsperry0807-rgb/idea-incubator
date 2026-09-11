@@ -5,8 +5,6 @@ import { ErrorBoundary } from "@components/error/ErrorBoundary";
 import { NotificationBell } from "@features/notifications/components/NotificationBell";
 import { NotificationPanel } from "@features/notifications/components/NotificationPanel";
 import { ROUTES } from "@config/routes";
-import { LanguageSwitcher } from "@components/layout/LanguageSwitcher";
-import { ThemeToggle } from "@components/layout/ThemeToggle";
 import { GlobalShortcuts } from "@components/shortcuts/GlobalShortcuts";
 import { useAuth } from "@features/auth/hooks/useAuth";
 import { useUIStore } from "@stores/ui.store";
@@ -61,10 +59,10 @@ export default function RootLayout() {
 
   const navLinkClasses = (active: boolean) =>
     [
-      "rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]",
+      "rounded-full px-3 py-1.5 text-sm transition-colors duration-[var(--motion-fast)] ease-[var(--ease-out)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]",
       active
-        ? "text-[var(--color-fg)] font-semibold"
-        : "text-[var(--color-muted)] hover:text-[var(--color-fg)]",
+        ? "bg-[var(--color-accent)]/10 font-semibold text-[var(--color-accent)]"
+        : "text-[var(--color-muted)] hover:bg-[var(--color-muted)]/10 hover:text-[var(--color-fg)]",
     ].join(" ");
 
   const authLinks = isAuthenticated
@@ -105,8 +103,9 @@ export default function RootLayout() {
       >
         {t("app.skipToContent")}
       </a>
-      <header className="flex items-center justify-between gap-4 border-b border-[var(--color-border)] px-4 py-3 sm:px-6 lg:px-8">
-        <div className="flex min-w-0 items-center gap-2">
+      <header className="sticky top-0 z-30 border-b border-[var(--color-border)] bg-[var(--color-bg)]/85 backdrop-blur-md supports-[backdrop-filter]:bg-[var(--color-bg)]/70">
+        <div className="mx-auto flex w-full max-w-[var(--max-width)] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+          <div className="flex min-w-0 items-center gap-2">
           <button
             type="button"
             aria-label={t("app.nav.menu")}
@@ -168,21 +167,20 @@ export default function RootLayout() {
               anchorRef={notificationAnchorRef}
             />
           </span>
-          <ThemeToggle />
-          <LanguageSwitcher />
+        </div>
         </div>
       </header>
 
       {sidebarOpen ? (
         <>
           <div
-            className="fixed inset-0 z-40 bg-black/50 md:hidden"
+            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-[2px] md:hidden motion-safe:animate-[fade-in_150ms_var(--ease-out)]"
             onClick={() => setSidebarOpen(false)}
             aria-hidden="true"
           />
           <aside
             aria-label={t("app.nav.menu")}
-            className="fixed inset-y-0 left-0 z-50 flex w-72 flex-col gap-1 overflow-y-auto border-r border-[var(--color-border)] bg-[var(--color-bg)] p-4 md:hidden"
+            className="fixed inset-y-0 left-0 z-50 flex w-72 flex-col gap-1 overflow-y-auto border-r border-[var(--color-border)] bg-[var(--color-card)] p-4 shadow-[var(--shadow-lg)] md:hidden motion-safe:animate-[sidebar-in_250ms_var(--ease-out)]"
           >
             <Link
               to={ROUTES.HOME}
@@ -231,14 +229,21 @@ export default function RootLayout() {
 
       {isAuthenticated ? <GlobalShortcuts /> : null}
 
-      <main id="main-content" className="mx-auto w-full max-w-[var(--max-width)] flex-1 p-4 sm:p-6 lg:p-8">
+      <main id="main-content" className="w-full min-h-0 flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
         <ErrorBoundary resetKey={location.pathname}>
-          <Outlet />
+          <div key={location.pathname} className="motion-safe:animate-[page-in_250ms_var(--ease-out)]">
+            <Outlet />
+          </div>
         </ErrorBoundary>
       </main>
 
-      <footer className="border-t border-[var(--color-border)] px-4 py-4 text-center text-sm text-[var(--color-muted)] sm:px-6 lg:px-8">
-        &copy; {new Date().getFullYear()} {t("app.name")}
+      <footer className="border-t border-[var(--color-border)]">
+        <div className="mx-auto flex w-full max-w-[var(--max-width)] flex-col items-center gap-1 px-4 py-6 text-center text-sm text-[var(--color-muted)] sm:px-6 lg:px-8">
+          <p>
+            &copy; {new Date().getFullYear()} {t("app.name")} ·{" "}
+            <span className="text-[var(--color-muted-fg)]">{t("app.tagline")}</span>
+          </p>
+        </div>
       </footer>
     </div>
   );

@@ -32,9 +32,7 @@ export function useUpdateIdeaStatus() {
   return useMutation({
     mutationFn: ({ ideaId, status }: UpdateIdeaStatusInput) =>
       updateIdeaStatus(ideaId, status),
-    onMutate: async ({ ideaId, status }) => {
-      await queryClient.cancelQueries({ queryKey: PIPELINE_QUERY_KEY });
-
+    onMutate: ({ ideaId, status }) => {
       const previous = queryClient.getQueryData<IdeaPipeline>(
         PIPELINE_QUERY_KEY,
       );
@@ -66,6 +64,8 @@ export function useUpdateIdeaStatus() {
           return next;
         },
       );
+
+      void queryClient.cancelQueries({ queryKey: PIPELINE_QUERY_KEY });
 
       return { previous };
     },

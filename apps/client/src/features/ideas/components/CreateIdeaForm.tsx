@@ -116,7 +116,7 @@ export function CreateIdeaForm() {
           required
         />
         <p className="text-xs text-[var(--color-muted)]">
-          {t("ideas.create.titleHint", { folder: `📁 ${folderName}/` })}
+          {t("ideas.create.titleHint", { folder: `${folderName}/` })}
         </p>
       </div>
 
@@ -213,13 +213,42 @@ export function CreateIdeaForm() {
       <fieldset className="flex flex-col gap-2">
         <legend className="mb-2 text-sm font-medium">{t("ideas.create.folder")}</legend>
         <Card className="flex flex-col gap-1 bg-[var(--color-muted)]/10 p-4 font-mono text-xs leading-6">
-          <span className="font-semibold text-[var(--color-fg)]">📁 {folderName}/</span>
+          <span className="flex items-center gap-1.5 font-semibold text-[var(--color-fg)]">
+            <svg
+              aria-hidden="true"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+            </svg>
+            {folderName}/
+          </span>
           {PLANNING_FILES.map((file) => (
             <span
               key={file.name}
-              className={`pl-4 ${file.onDemand ? "text-[var(--color-muted)]/60" : "text-[var(--color-muted)]"}`}
+              className={`flex items-center gap-1.5 pl-6 ${file.onDemand ? "text-[var(--color-muted)]/60" : "text-[var(--color-muted)]"}`}
             >
-              📄 {file.name}
+              <svg
+                aria-hidden="true"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z" />
+                <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+              </svg>
+              {file.name}
               {file.onDemand ? ` ${t("ideas.create.folderOnDemand")}` : ""}
             </span>
           ))}
@@ -238,8 +267,8 @@ export function CreateIdeaForm() {
         >
           {t("ideas.create.cancel")}
         </Button>
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "…" : t("ideas.create.submit")}
+        <Button type="submit" isLoading={isSubmitting}>
+          {t("ideas.create.submit")}
         </Button>
       </div>
     </form>

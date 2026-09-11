@@ -10,12 +10,12 @@ import { StatusBadge } from "../StatusBadge";
 import { TagBadge } from "../TagBadge";
 
 const AVATAR_COLORS = [
-  "bg-emerald-500",
-  "bg-sky-500",
-  "bg-violet-500",
-  "bg-amber-500",
-  "bg-rose-500",
-  "bg-teal-500",
+  "bg-[var(--color-accent)]/15 text-[var(--color-accent)]",
+  "bg-[var(--color-info)]/15 text-[var(--color-info)]",
+  "bg-[var(--color-success)]/15 text-[var(--color-success)]",
+  "bg-[var(--color-warning)]/15 text-[var(--color-warning)]",
+  "bg-[var(--color-danger)]/15 text-[var(--color-danger)]",
+  "bg-[var(--color-accent-cta)]/15 text-[var(--color-accent-cta)]",
 ];
 
 function roleLabel(role: ShareRole) {
@@ -46,7 +46,7 @@ export function SharedIdeaCard({ item }: { item: SharedIdea }) {
 
   return (
     <Card className="flex flex-col gap-3 p-4 transition-shadow hover:shadow-md">
-      <Link to={ideaDetailPath(idea.id)} className="flex h-full flex-col gap-3">
+      <Link to={ideaDetailPath(idea.id)} className="flex h-full flex-col gap-3 hover:no-underline">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <PriorityDot priority={idea.priority} />
@@ -85,7 +85,7 @@ export function SharedIdeaCard({ item }: { item: SharedIdea }) {
           ) : (
             <span
               aria-hidden="true"
-              className={`flex size-6 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold text-white ${avatarColor}`}
+              className={`flex size-6 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold ${avatarColor}`}
             >
               {initials(initialsName)}
             </span>

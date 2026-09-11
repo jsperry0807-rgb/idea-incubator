@@ -9,10 +9,10 @@ import { useActivity } from "../hooks/useActivity";
 import { ActivityFeedSkeleton } from "./skeletons";
 
 const DOT_CLASSES: Record<ActivityItem["type"], string> = {
-  IDEA_CREATED: "bg-emerald-500",
-  IDEA_UPDATED: "bg-sky-500",
-  COMMENT: "bg-amber-500",
-  SHARE: "bg-purple-500",
+  IDEA_CREATED: "bg-[var(--color-success)]",
+  IDEA_UPDATED: "bg-[var(--color-info)]",
+  COMMENT: "bg-[var(--color-warning)]",
+  SHARE: "bg-[var(--color-accent)]",
 };
 
 interface ActivityRowProps {

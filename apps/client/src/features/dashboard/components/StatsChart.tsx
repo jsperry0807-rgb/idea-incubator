@@ -65,11 +65,12 @@ export function StatsChart() {
             <Tooltip
               cursor={{ fill: "var(--color-muted)", opacity: 0.12 }}
               contentStyle={{
-                background: "var(--color-bg)",
+                background: "var(--color-card)",
                 border: "1px solid var(--color-border)",
-                borderRadius: "var(--radius)",
+                borderRadius: "var(--radius-sm)",
+                boxShadow: "var(--shadow-md)",
                 fontSize: "0.875rem",
-                color: "var(--color-fg)",
+                color: "var(--color-card-fg)",
               }}
             />
             <Bar

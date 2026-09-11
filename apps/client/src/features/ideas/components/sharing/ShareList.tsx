@@ -7,12 +7,12 @@ import { useShares } from "../../hooks/useShares";
 import { AccessRoleSelect } from "./AccessRoleSelect";
 
 const AVATAR_COLORS = [
-  "bg-emerald-500",
-  "bg-sky-500",
-  "bg-violet-500",
-  "bg-amber-500",
-  "bg-rose-500",
-  "bg-teal-500",
+  "bg-[var(--color-accent)]/15 text-[var(--color-accent)]",
+  "bg-[var(--color-info)]/15 text-[var(--color-info)]",
+  "bg-[var(--color-success)]/15 text-[var(--color-success)]",
+  "bg-[var(--color-warning)]/15 text-[var(--color-warning)]",
+  "bg-[var(--color-danger)]/15 text-[var(--color-danger)]",
+  "bg-[var(--color-accent-cta)]/15 text-[var(--color-accent-cta)]",
 ];
 
 function initials(name: string): string {
@@ -45,7 +45,7 @@ function shareAvatar(share: Share) {
   return (
     <span
       aria-hidden="true"
-      className={`flex size-9 shrink-0 items-center justify-center rounded-full text-xs font-semibold text-white ${color}`}
+      className={`flex size-9 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${color}`}
     >
       {initials(name)}
     </span>

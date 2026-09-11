@@ -42,17 +42,17 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
       aria-label={title}
     >
       <div
-        className="absolute inset-0 bg-black/50"
+        className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"
         onClick={onClose}
         aria-hidden="true"
       />
       <div
         ref={panelRef}
         tabIndex={-1}
-        className="relative flex w-full max-w-md flex-col gap-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] p-6 shadow-xl outline-none"
+        className="relative flex w-full max-w-md flex-col rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-card)] p-6 text-[var(--color-card-fg)] shadow-[var(--shadow-xl)] outline-none motion-safe:animate-[modal-in_200ms_var(--ease-out)]"
       >
         {title ? (
-          <h2 className="text-lg font-semibold text-[var(--color-fg)]">{title}</h2>
+          <h2 className="pr-8 text-lg font-semibold text-[var(--color-fg)]">{title}</h2>
         ) : null}
 
         <button

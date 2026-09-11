@@ -13,10 +13,10 @@ import {
 import { useNotifications } from "../hooks/useNotifications";
 
 const DOT_CLASSES: Record<NotificationType, string> = {
-  SHARE: "bg-purple-500",
-  COMMENT: "bg-amber-500",
-  MENTION: "bg-sky-500",
-  TASK_COMPLETED: "bg-emerald-500",
+  SHARE: "bg-[var(--color-info)]",
+  COMMENT: "bg-[var(--color-warning)]",
+  MENTION: "bg-[var(--color-accent)]",
+  TASK_COMPLETED: "bg-[var(--color-success)]",
 };
 
 export interface NotificationPanelProps {

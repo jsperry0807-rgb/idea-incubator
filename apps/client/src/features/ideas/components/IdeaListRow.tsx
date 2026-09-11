@@ -10,10 +10,10 @@ import { TagBadge } from "./TagBadge";
 
 export function IdeaListRow({ idea }: { idea: Idea }) {
   return (
-    <Card className="transition-shadow hover:shadow-md">
+    <Card interactive className="p-0">
       <Link
         to={ideaDetailPath(idea.id)}
-        className="flex items-center gap-4 rounded-md p-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+        className="flex items-center gap-4 rounded-md p-4 hover:no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
       >
         <div className="flex shrink-0 flex-wrap items-center gap-2">
           <PriorityDot priority={idea.priority} />
