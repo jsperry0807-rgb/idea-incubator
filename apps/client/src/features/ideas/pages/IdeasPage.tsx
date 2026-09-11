@@ -36,7 +36,7 @@ export default function IdeasPage() {
   const error = ideasQuery.error;
 
   return (
-    <section className="flex flex-col gap-5">
+    <section className="page-container flex flex-col gap-5">
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-extrabold">{t("ideas.title")}</h1>
@@ -77,7 +77,7 @@ export default function IdeasPage() {
           <IdeaListSkeleton />
         )
       ) : error ? (
-        <p className="text-sm text-red-600 dark:text-red-400">{t("ideas.loadError")}</p>
+        <p className="text-sm text-[var(--color-danger)]">{t("ideas.loadError")}</p>
       ) : viewMode === "grid" ? (
         <IdeaGrid ideas={ideasQuery.data?.items ?? []} />
       ) : (

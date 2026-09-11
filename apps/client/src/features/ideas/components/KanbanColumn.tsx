@@ -49,7 +49,7 @@ export function KanbanColumn({ status, ideas }: KanbanColumnProps) {
       ref={setNodeRef}
       aria-label={t(`ideas.status.${status}`)}
       className={[
-        "flex w-64 shrink-0 snap-start flex-col gap-2 p-2 transition-colors",
+        "flex h-full min-h-0 min-w-64 flex-1 snap-start flex-col gap-2 p-2 transition-colors",
         isOver
           ? "rounded-[var(--radius)] bg-[var(--color-accent)]/5 ring-2 ring-[var(--color-accent)]/40"
           : "",
@@ -57,21 +57,21 @@ export function KanbanColumn({ status, ideas }: KanbanColumnProps) {
         .filter(Boolean)
         .join(" ")}
     >
-      <header className="flex items-center justify-between">
+      <header className="flex shrink-0 items-center justify-between px-1">
         <h3 className="text-sm font-semibold text-[var(--color-fg)]">
           {t(`ideas.status.${status}`)}
         </h3>
-        <span className="rounded-full border border-[var(--color-border)] px-2 py-0.5 text-xs text-[var(--color-muted)]">
+        <span className="rounded-full bg-[var(--color-muted)]/10 px-2 py-0.5 text-xs font-medium text-[var(--color-muted)]">
           {ideas.length}
         </span>
       </header>
 
       {ideas.length === 0 ? (
-        <p className="rounded-[var(--radius)] border border-dashed border-[var(--color-border)] p-3 text-xs text-[var(--color-muted)]">
+        <p className="rounded-[var(--radius)] border border-dashed border-[var(--color-border-strong)] bg-[var(--color-card)]/50 p-3 text-xs text-[var(--color-muted)]">
           {t("ideas.pipeline.emptyColumn")}
         </p>
       ) : (
-        <ul className="flex flex-col gap-2">
+        <ul className="kanban-cards flex min-h-0 flex-1 flex-col gap-2 overflow-x-clip overflow-y-auto">
           {ideas.map((idea) => (
             <DraggableKanbanCard key={idea.id} idea={idea} />
           ))}

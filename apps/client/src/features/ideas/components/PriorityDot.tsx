@@ -3,10 +3,10 @@ import type { IdeaPriority } from "@repo/shared";
 
 const DOT_CLASSES: Record<IdeaPriority, string> = {
   NONE: "bg-transparent border border-[var(--color-border)]",
-  LOW: "bg-zinc-400",
-  MEDIUM: "bg-amber-400",
-  HIGH: "bg-orange-500",
-  CRITICAL: "bg-red-500",
+  LOW: "bg-[var(--color-muted)]/70",
+  MEDIUM: "bg-[var(--color-warning)]",
+  HIGH: "bg-[var(--color-accent-cta)]",
+  CRITICAL: "bg-[var(--color-danger)]",
 };
 
 export function PriorityDot({ priority }: { priority: IdeaPriority }) {

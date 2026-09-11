@@ -2,7 +2,8 @@ import type { LocaleMessages } from "./en";
 
 export const es: LocaleMessages = {
   app: {
-    name: "App",
+    name: "Idea Incubator",
+    tagline: "Convierte chispas en ideas concretadas",
     skipToContent: "Saltar al contenido",
     loading: "Cargando…",
     language: "Idioma",
@@ -22,9 +23,37 @@ export const es: LocaleMessages = {
     },
   },
   home: {
-    welcome: "Bienvenido",
-    subtitle: "Empieza editando tu aplicación.",
+    badge: "Idea Incubator",
+    welcome: "Convierte chispas en ideas concretadas",
+    subtitle:
+      "Planifica, organiza y entrega cada idea. Roadmap Kanban, documentos de planificación estructurados, tareas y colaboración en un solo lugar.",
+    primaryCta: "Empezar",
+    secondaryCta: "Iniciar sesión",
     docs: "Documentación",
+    greetingTitle: "Bienvenido de nuevo, {{name}}",
+    greetingSubtitle: "Retoma donde lo dejaste.",
+    ctaDashboard: "Panel",
+    ctaDashboardDesc: "Estadísticas y actividad reciente, de un vistazo.",
+    ctaNewIdea: "Nueva idea",
+    ctaNewIdeaDesc: "Captura la siguiente chispa antes de que se escape.",
+    ctaRoadmap: "Hoja de ruta",
+    ctaRoadmapDesc: "Arrastra ideas por tu flujo de trabajo.",
+    ctaSharedTitle: "Compartidas conmigo",
+    ctaSharedDesc: "Ideas que otros están construyendo contigo.",
+    mockupTitle: "Tu flujo",
+    ctaBandTitle: "Empieza a incubar hoy",
+    ctaBandText: "Tu próxima gran idea está a unos clics de distancia.",
+    features: {
+      captureTitle: "Captura rápido",
+      captureText:
+        "Guarda una idea con título, prioridad y etiquetas en segundos.",
+      planTitle: "Planifica el flujo",
+      planText:
+        "Arrastra ideas de IDEA a PLANIFICADA y hasta COMPLETADA.",
+      shareTitle: "Colabora",
+      shareText:
+        "Comparte ideas con roles y comentarios para no perder nada.",
+    },
   },
   auth: {
     login: {
@@ -165,6 +194,10 @@ export const es: LocaleMessages = {
       createdAt: "Creada",
       updatedAt: "Actualizada",
       tags: "Etiquetas",
+      tagsHint: "Haz clic en una etiqueta para añadirla o quitarla.",
+      tagsEmpty: "Sin etiquetas: créalas en la página de etiquetas.",
+      tagsUpdated: "Etiquetas actualizadas",
+      tagsError: "Algo salió mal al actualizar las etiquetas.",
       planningTitle: "Planificación",
       tasksTitle: "Tareas",
       commentsTitle: "Comentarios",
@@ -345,6 +378,9 @@ export const es: LocaleMessages = {
       light: "Claro",
       dark: "Oscuro",
       system: "Sistema",
+    },
+    language: {
+      title: "Idioma",
     },
     danger: {
       title: "Zona de peligro",

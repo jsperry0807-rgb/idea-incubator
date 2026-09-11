@@ -1,6 +1,7 @@
 export const en = {
   app: {
-    name: "App",
+    name: "Idea Incubator",
+    tagline: "Turn sparks into shipped ideas",
     skipToContent: "Skip to content",
     loading: "Loading…",
     language: "Language",
@@ -20,9 +21,37 @@ export const en = {
     },
   },
   home: {
-    welcome: "Welcome",
-    subtitle: "Get started by editing your application.",
+    badge: "Idea Incubator",
+    welcome: "Turn sparks into shipped ideas",
+    subtitle:
+      "Plan, organize, and ship every idea. Kanban roadmap, structured planning docs, tasks, and collaboration in one place.",
+    primaryCta: "Start incubating",
+    secondaryCta: "Log in",
     docs: "Documentation",
+    greetingTitle: "Welcome back, {{name}}",
+    greetingSubtitle: "Pick up where you left off.",
+    ctaDashboard: "Dashboard",
+    ctaDashboardDesc: "Stats and recent activity, at a glance.",
+    ctaNewIdea: "New idea",
+    ctaNewIdeaDesc: "Capture the next spark before it slips away.",
+    ctaRoadmap: "Roadmap",
+    ctaRoadmapDesc: "Drag ideas across your pipeline.",
+    ctaSharedTitle: "Shared with me",
+    ctaSharedDesc: "Ideas others are building with you.",
+    mockupTitle: "Your pipeline",
+    ctaBandTitle: "Start incubating today",
+    ctaBandText: "Your next big idea is a few clicks away.",
+    features: {
+      captureTitle: "Capture fast",
+      captureText:
+        "Save an idea with a title, priority, and tags in seconds.",
+      planTitle: "Plan the pipeline",
+      planText:
+        "Drag ideas from IDEA through PLANNING, PLANNED, and IN_PROGRESS to DONE.",
+      shareTitle: "Collaborate",
+      shareText:
+        "Share ideas with roles and comments so nothing gets lost.",
+    },
   },
   auth: {
     login: {
@@ -163,6 +192,10 @@ export const en = {
       createdAt: "Created",
       updatedAt: "Updated",
       tags: "Tags",
+      tagsHint: "Click a tag to add or remove it.",
+      tagsEmpty: "No tags yet — create them on the Tags page.",
+      tagsUpdated: "Tags updated",
+      tagsError: "Something went wrong updating tags.",
       planningTitle: "Planning",
       tasksTitle: "Tasks",
       commentsTitle: "Comments",
@@ -343,6 +376,9 @@ export const en = {
       light: "Light",
       dark: "Dark",
       system: "System",
+    },
+    language: {
+      title: "Language",
     },
     danger: {
       title: "Danger zone",

@@ -2,7 +2,8 @@ import type { LocaleMessages } from "./en";
 
 export const fr: LocaleMessages = {
   app: {
-    name: "App",
+    name: "Idea Incubator",
+    tagline: "Transformez vos étincelles en idées concrètes",
     skipToContent: "Aller au contenu",
     loading: "Chargement…",
     language: "Langue",
@@ -22,9 +23,37 @@ export const fr: LocaleMessages = {
     },
   },
   home: {
-    welcome: "Bienvenue",
-    subtitle: "Commencez en modifiant votre application.",
+    badge: "Idea Incubator",
+    welcome: "Transformez vos étincelles en idées concrètes",
+    subtitle:
+      "Planifiez, organisez et concrétisez chaque idée. Roadmap Kanban, fiches de planification structurées, tâches et collaboration en un seul endroit.",
+    primaryCta: "Commencer",
+    secondaryCta: "Se connecter",
     docs: "Documentation",
+    greetingTitle: "Bon retour, {{name}}",
+    greetingSubtitle: "Reprenez là où vous vous êtes arrêté.",
+    ctaDashboard: "Tableau de bord",
+    ctaDashboardDesc: "Statistiques et activités récentes, en un coup d'œil.",
+    ctaNewIdea: "Nouvelle idée",
+    ctaNewIdeaDesc: "Capturez la prochaine étincelle avant qu'elle ne s'échappe.",
+    ctaRoadmap: "Feuille de route",
+    ctaRoadmapDesc: "Faites glisser les idées dans votre pipeline.",
+    ctaSharedTitle: "Partagées avec moi",
+    ctaSharedDesc: "Des idées que d'autres construisent avec vous.",
+    mockupTitle: "Votre pipeline",
+    ctaBandTitle: "Commencez à incuber aujourd'hui",
+    ctaBandText: "Votre prochaine grande idée n'est qu'à quelques clics.",
+    features: {
+      captureTitle: "Capturez vite",
+      captureText:
+        "Notez une idée avec un titre, une priorité et des étiquettes en quelques secondes.",
+      planTitle: "Planifiez le pipeline",
+      planText:
+        "Faites glisser les idées de IDÉE vers PLANIFIÉ puis EN COURS jusqu'au résultat.",
+      shareTitle: "Collaborez",
+      shareText:
+        "Partagez des idées avec des rôles et des commentaires pour ne rien perdre.",
+    },
   },
   auth: {
     login: {
@@ -165,6 +194,10 @@ export const fr: LocaleMessages = {
       createdAt: "Créée",
       updatedAt: "Mise à jour",
       tags: "Étiquettes",
+      tagsHint: "Cliquez sur une étiquette pour l'ajouter ou la retirer.",
+      tagsEmpty: "Aucune étiquette — créez-en sur la page Étiquettes.",
+      tagsUpdated: "Étiquettes mises à jour",
+      tagsError: "Une erreur est survenue lors de la mise à jour des étiquettes.",
       planningTitle: "Planification",
       tasksTitle: "Tâches",
       commentsTitle: "Commentaires",
@@ -345,6 +378,9 @@ export const fr: LocaleMessages = {
       light: "Clair",
       dark: "Sombre",
       system: "Système",
+    },
+    language: {
+      title: "Langue",
     },
     danger: {
       title: "Zone de danger",

@@ -102,7 +102,7 @@ export function KanbanBoard() {
   }
 
   return (
-    <>
+    <div className="flex min-h-0 flex-1 flex-col gap-4">
       <PipelineFilterBar
         tags={tagsQuery.data ?? []}
         tagId={tagFilter}
@@ -118,7 +118,7 @@ export function KanbanBoard() {
         onDragEnd={handleDragEnd}
         onDragCancel={handleDragCancel}
       >
-        <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4">
+        <div className="flex min-h-0 flex-1 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-clip pt-1 pb-2">
           {IDEA_STATUS_VALUES.map((status) => (
             <KanbanColumn
               key={status}
@@ -129,6 +129,6 @@ export function KanbanBoard() {
         </div>
         <DragOverlay active={activeIdea} />
       </DndContext>
-    </>
+    </div>
   );
 }

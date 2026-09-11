@@ -9,10 +9,10 @@ import { TagBadge } from "./TagBadge";
 
 export function IdeaCard({ idea }: { idea: Idea }) {
   return (
-    <Card className="flex flex-col gap-3 p-4 transition-shadow hover:shadow-md">
+    <Card interactive className="flex flex-col gap-3 p-4">
       <Link
         to={ideaDetailPath(idea.id)}
-        className="flex h-full flex-col gap-3 rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+        className="flex h-full flex-col gap-3 rounded-md hover:no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
       >
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2">

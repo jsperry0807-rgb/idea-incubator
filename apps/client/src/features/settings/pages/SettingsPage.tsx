@@ -6,10 +6,18 @@ import { Button, Card, Input, toast } from "@repo/ui";
 import { ROUTES } from "@config/routes";
 import { useAuth } from "@features/auth/hooks/useAuth";
 import { useUIStore } from "@stores/ui.store";
+import { LOCALES } from "@i18n";
+import type { Locale } from "@i18n";
 
 type ThemeOption = "light" | "dark" | "system";
 
 const THEME_OPTIONS: ThemeOption[] = ["light", "dark", "system"];
+
+const LOCALE_LABELS: Record<Locale, string> = {
+  en: "English",
+  es: "Español",
+  fr: "Français",
+};
 
 function getDeleteError(
   status: number | undefined,
@@ -20,11 +28,12 @@ function getDeleteError(
 }
 
 export default function SettingsPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { user, updateProfile, deleteAccount } = useAuth();
   const theme = useUIStore((s) => s.theme);
   const setTheme = useUIStore((s) => s.setTheme);
+  const currentLocale = i18n.resolvedLanguage ?? "en";
 
   const [name, setName] = useState(user?.name ?? "");
   const [avatarUrl, setAvatarUrl] = useState(user?.avatarUrl ?? "");
@@ -107,8 +116,8 @@ export default function SettingsPage() {
             onChange={(event) => setAvatarUrl(event.target.value)}
           />
           <div className="flex justify-end">
-            <Button type="submit" disabled={saving || !name.trim()}>
-              {saving ? "…" : t("settings.profile.save")}
+            <Button type="submit" disabled={!name.trim()} isLoading={saving}>
+              {t("settings.profile.save")}
             </Button>
           </div>
         </form>
@@ -134,7 +143,31 @@ export default function SettingsPage() {
         </div>
       </Card>
 
-      <Card className="flex flex-col gap-4 border-red-600/30 p-4">
+      <Card className="flex flex-col gap-4 p-4">
+        <h2 className="text-sm font-semibold text-[var(--color-fg)]">
+          {t("settings.language.title")}
+        </h2>
+        <div
+          className="flex flex-wrap gap-2"
+          role="radiogroup"
+          aria-label={t("settings.language.title")}
+        >
+          {LOCALES.map((locale) => (
+            <button
+              key={locale}
+              type="button"
+              role="radio"
+              aria-checked={currentLocale === locale}
+              onClick={() => void i18n.changeLanguage(locale)}
+              className={pillClasses(currentLocale === locale)}
+            >
+              {LOCALE_LABELS[locale]}
+            </button>
+          ))}
+        </div>
+      </Card>
+
+      <Card className="flex flex-col gap-4 border-[var(--color-danger)]/30 p-4">
         <h2 className="text-sm font-semibold text-[var(--color-danger)]">
           {t("settings.danger.title")}
         </h2>
@@ -175,9 +208,10 @@ export default function SettingsPage() {
               <Button
                 type="submit"
                 variant="danger"
-                disabled={deleting || !password.trim()}
+                disabled={!password.trim()}
+                isLoading={deleting}
               >
-                {deleting ? t("settings.danger.deleting") : t("settings.danger.deleteForever")}
+                {t("settings.danger.deleteForever")}
               </Button>
             </div>
           </form>

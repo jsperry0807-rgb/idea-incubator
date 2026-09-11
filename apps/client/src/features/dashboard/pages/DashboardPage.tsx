@@ -23,7 +23,7 @@ export default function DashboardPage() {
   const inProgress = pipelineQuery.data?.IN_PROGRESS ?? [];
 
   return (
-    <section className="flex flex-col gap-6">
+    <section className="page-container flex flex-col gap-6">
       <header>
         <h1 className="text-2xl font-extrabold text-[var(--color-fg)]">
           {user ? t("dashboard.greeting", { name: user.name }) : t("dashboard.title")}

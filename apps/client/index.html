@@ -48,8 +48,15 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Preconnects (adjust/remove as needed, e.g. for API, fonts, analytics) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <!-- Preconnects -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Typography: Plus Jakarta Sans (300-700) -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    />
 
     <!-- Apply persisted theme before first paint (prevents theme flash) -->
     <script>
@@ -65,32 +72,71 @@
           root.dataset.theme = isDark ? "dark" : "light";
           root.classList.toggle("dark", isDark);
           var meta = document.querySelector('meta[name="theme-color"]');
-          if (meta) meta.setAttribute("content", isDark ? "#0b0b0c" : "#ffffff");
+          if (meta) meta.setAttribute("content", isDark ? "#0b1211" : "#f4faf8");
         } catch (err) {
           /* storage unavailable — fall back to system theme */
         }
       })();
     </script>
 
-    <!-- Minimal critical CSS: prevents FOUC / layout shift before your bundle loads -->
+    <!-- Minimal critical CSS: prevents FOUC / layout shift before bundle loads -->
     <style>
       :root {
-        color-scheme: light dark;
-        --color-bg: #ffffff;
-        --color-fg: #111111;
+        color-scheme: light;
+        --color-bg: #f4faf8;
+        --color-fg: #173b35;
+        --color-card: #ffffff;
+        --color-card-fg: #173b35;
+        --color-muted: #5b6b68;
+        --color-border: #dce8e4;
+        --color-accent: #0f766e;
+        --color-accent-fg: #ffffff;
+        --color-accent-hover: #0d9488;
+        --color-danger: #dc2626;
+        --color-danger-fg: #ffffff;
+        --color-success: #059669;
+        --color-warning: #d97706;
+        --color-info: #0284c7;
+        --color-ring: #0f766e;
       }
       @media (prefers-color-scheme: dark) {
         :root:not([data-theme="light"]) {
           color-scheme: dark;
-          --color-bg: #0b0b0c;
-          --color-fg: #f2f2f2;
+          --color-bg: #0b1211;
+          --color-fg: #e7f1ee;
+          --color-card: #131c1a;
+          --color-card-fg: #e7f1ee;
+          --color-muted: #9fb4ae;
+          --color-border: #24312e;
+          --color-accent: #2dd4bf;
+          --color-accent-fg: #042f2e;
+          --color-accent-hover: #5eead4;
+          --color-danger: #f87171;
+          --color-danger-fg: #1c0505;
+          --color-success: #34d399;
+          --color-warning: #fbbf24;
+          --color-info: #38bdf8;
+          --color-ring: #2dd4bf;
         }
       }
       :root[data-theme="dark"],
       :root.dark {
         color-scheme: dark;
-        --color-bg: #0b0b0c;
-        --color-fg: #f2f2f2;
+        --color-bg: #0b1211;
+        --color-fg: #e7f1ee;
+        --color-card: #131c1a;
+        --color-card-fg: #e7f1ee;
+        --color-muted: #9fb4ae;
+        --color-border: #24312e;
+        --color-accent: #2dd4bf;
+        --color-accent-fg: #042f2e;
+        --color-accent-hover: #5eead4;
+        --color-danger: #f87171;
+        --color-danger-fg: #1c0505;
+        --color-success: #34d399;
+        --color-warning: #fbbf24;
+        --color-info: #38bdf8;
+        --color-ring: #2dd4bf;
       }
       :root[data-theme="light"] {
         color-scheme: light;
@@ -108,6 +154,8 @@
         margin: 0;
         min-height: 100vh;
         font-family:
+          "Plus Jakarta Sans",
+          ui-sans-serif,
           system-ui,
           -apple-system,
           "Segoe UI",

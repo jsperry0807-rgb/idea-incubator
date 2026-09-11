@@ -30,9 +30,13 @@ export function Input({ label, error, icon, id, className, ...props }: InputProp
         <input
           id={inputId}
           className={[
-            "w-full rounded-[var(--radius)] border bg-[var(--color-bg)] text-[var(--color-fg)] text-base outline-none transition-[border-color,box-shadow] duration-150 focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/40",
+            "w-full rounded-[var(--radius-sm)] border bg-[var(--color-bg)] text-[var(--color-fg)] text-base outline-none transition-[border-color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-out)]",
+            "placeholder:text-[var(--color-muted-fg)]",
+            "hover:border-[var(--color-border-strong)]",
+            "focus-visible:border-[var(--color-accent)] focus-visible:ring-4 focus-visible:ring-[var(--color-accent)]/20",
+            "disabled:cursor-not-allowed disabled:bg-[var(--color-muted)]/5 disabled:opacity-60",
             icon ? "py-2.5 pl-10 pr-3" : "px-3 py-2.5",
-            error ? "border-[var(--color-danger)]" : "border-[var(--color-border)]",
+            error ? "border-[var(--color-danger)] focus-visible:ring-[var(--color-danger)]/20" : "",
             className,
           ]
             .filter(Boolean)

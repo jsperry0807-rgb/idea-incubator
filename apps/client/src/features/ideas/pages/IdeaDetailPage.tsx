@@ -14,6 +14,7 @@ import { ShareModal } from "../components/sharing/ShareModal";
 import { StatusBadge } from "../components/StatusBadge";
 import { TagBadge } from "../components/TagBadge";
 import { TaskList } from "../components/TaskList";
+import { IdeaTagEditor } from "../components/IdeaTagEditor";
 import { IdeaDetailSkeleton } from "../components/skeletons";
 
 export default function IdeaDetailPage() {
@@ -125,7 +126,17 @@ export default function IdeaDetailPage() {
             </dl>
           </Card>
 
-          {ideaQuery.data.tags.length > 0 ? (
+          {isOwner ? (
+            <section
+              className="flex flex-col gap-2"
+              aria-labelledby="idea-tags-heading"
+            >
+              <h2 id="idea-tags-heading" className="text-sm font-medium">
+                {t("ideas.detail.tags")}
+              </h2>
+              <IdeaTagEditor idea={ideaQuery.data} />
+            </section>
+          ) : ideaQuery.data.tags.length > 0 ? (
             <div className="flex flex-col gap-2">
               <h2 className="text-sm font-medium">{t("ideas.detail.tags")}</h2>
               <div className="flex flex-wrap gap-1.5">

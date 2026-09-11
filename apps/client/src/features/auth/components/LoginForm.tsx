@@ -35,10 +35,7 @@ export function LoginForm() {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{ display: "flex", flexDirection: "column", gap: "1rem", width: "100%" }}
-    >
+    <form className="flex w-full flex-col gap-4" onSubmit={handleSubmit}>
       <Input
         name="email"
         type="email"
@@ -61,22 +58,16 @@ export function LoginForm() {
       />
 
       {error ? (
-        <p style={{ color: "var(--color-danger)", fontSize: "0.875rem", margin: 0 }}>{error}</p>
+        <p className="m-0 text-sm text-[var(--color-danger)]">{error}</p>
       ) : null}
 
-      <Button
-        type="submit"
-        disabled={isSubmitting}
-        style={{ backgroundColor: "var(--color-accent)", color: "#fff", borderColor: "var(--color-accent)" }}
-      >
-        {isSubmitting ? "…" : t("auth.login.submit")}
+      <Button type="submit" isLoading={isSubmitting}>
+        {t("auth.login.submit")}
       </Button>
 
-      <p style={{ fontSize: "0.875rem", color: "var(--color-muted)", textAlign: "center", margin: 0 }}>
+      <p className="m-0 text-center text-sm text-[var(--color-muted)]">
         {t("auth.login.noAccount")}{" "}
-        <Link to={ROUTES.REGISTER} style={{ color: "var(--color-accent)" }}>
-          {t("auth.login.registerLink")}
-        </Link>
+        <Link to={ROUTES.REGISTER}>{t("auth.login.registerLink")}</Link>
       </p>
     </form>
   );

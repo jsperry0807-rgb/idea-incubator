@@ -64,7 +64,7 @@ export function KanbanBoardSkeleton() {
       </div>
       <div className="flex gap-4 overflow-x-auto pb-4">
         {IDEA_STATUS_VALUES.map((status) => (
-          <div key={status} className="flex w-64 shrink-0 flex-col gap-2 p-2">
+          <div key={status} className="flex min-w-64 flex-1 flex-col gap-2 p-2">
             <div className="flex items-center justify-between">
               <Skeleton className="h-4 w-24" />
               <Skeleton className="h-5 w-8 rounded-full" />

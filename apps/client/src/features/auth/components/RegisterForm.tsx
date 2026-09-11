@@ -57,10 +57,7 @@ export function RegisterForm() {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{ display: "flex", flexDirection: "column", gap: "1rem", width: "100%" }}
-    >
+    <form className="flex w-full flex-col gap-4" onSubmit={handleSubmit}>
       <Input
         name="name"
         type="text"
@@ -93,22 +90,16 @@ export function RegisterForm() {
       />
 
       {error ? (
-        <p style={{ color: "var(--color-danger)", fontSize: "0.875rem", margin: 0 }}>{error}</p>
+        <p className="m-0 text-sm text-[var(--color-danger)]">{error}</p>
       ) : null}
 
-      <Button
-        type="submit"
-        disabled={isSubmitting}
-        style={{ backgroundColor: "var(--color-accent)", color: "#fff", borderColor: "var(--color-accent)" }}
-      >
-        {isSubmitting ? "…" : t("auth.register.submit")}
+      <Button type="submit" isLoading={isSubmitting}>
+        {t("auth.register.submit")}
       </Button>
 
-      <p style={{ fontSize: "0.875rem", color: "var(--color-muted)", textAlign: "center", margin: 0 }}>
+      <p className="m-0 text-center text-sm text-[var(--color-muted)]">
         {t("auth.register.hasAccount")}{" "}
-        <Link to={ROUTES.LOGIN} style={{ color: "var(--color-accent)" }}>
-          {t("auth.register.loginLink")}
-        </Link>
+        <Link to={ROUTES.LOGIN}>{t("auth.register.loginLink")}</Link>
       </p>
     </form>
   );

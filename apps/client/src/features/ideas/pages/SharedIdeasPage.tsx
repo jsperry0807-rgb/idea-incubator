@@ -10,7 +10,7 @@ export default function SharedIdeasPage() {
   const query = useSharedWithMe();
 
   return (
-    <section className="flex flex-col gap-5">
+    <section className="page-container flex flex-col gap-5">
       <header>
         <h1 className="text-2xl font-extrabold">{t("ideas.shared.title")}</h1>
         <p className="text-sm text-[var(--color-muted)]">
