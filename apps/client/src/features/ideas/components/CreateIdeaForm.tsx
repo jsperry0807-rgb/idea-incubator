@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
   IdeaPriority,
+  IdeaProjectType,
   IdeaStatus,
 } from "@repo/shared";
 import { Button, Card, Input, Spinner, Textarea, toast } from "@repo/ui";
@@ -35,13 +36,43 @@ const PRIORITY_OPTIONS: Array<{
   { value: IdeaPriority.CRITICAL, labelKey: "ideas.priority.CRITICAL" },
 ];
 
-const PLANNING_FILES = [
-  { name: "overview.md", onDemand: false },
-  { name: "tech-stack.md", onDemand: false },
-  { name: "features.md", onDemand: false },
-  { name: "timeline.md", onDemand: false },
-  { name: "risks.md", onDemand: true },
+const PROJECT_TYPE_OPTIONS: Array<{
+  value: IdeaProjectType;
+  labelKey: `ideas.projectType.${IdeaProjectType}`;
+}> = [
+  { value: IdeaProjectType.SOFTWARE, labelKey: "ideas.projectType.SOFTWARE" },
+  { value: IdeaProjectType.GAME, labelKey: "ideas.projectType.GAME" },
+  { value: IdeaProjectType.WEBSITE, labelKey: "ideas.projectType.WEBSITE" },
 ];
+
+const PLANNING_FILES_BY_TYPE: Record<IdeaProjectType, Array<{ name: string; onDemand: boolean }>> = {
+  [IdeaProjectType.SOFTWARE]: [
+    { name: "overview.md", onDemand: false },
+    { name: "tech-stack.md", onDemand: false },
+    { name: "features.md", onDemand: false },
+    { name: "timeline.md", onDemand: false },
+    { name: "risks.md", onDemand: true },
+  ],
+  [IdeaProjectType.WEBSITE]: [
+    { name: "overview.md", onDemand: false },
+    { name: "pages.md", onDemand: false },
+    { name: "content.md", onDemand: false },
+    { name: "tech-stack.md", onDemand: false },
+    { name: "timeline.md", onDemand: false },
+    { name: "risks.md", onDemand: true },
+    { name: "seo.md", onDemand: true },
+  ],
+  [IdeaProjectType.GAME]: [
+    { name: "overview.md", onDemand: false },
+    { name: "mechanics.md", onDemand: false },
+    { name: "progression.md", onDemand: false },
+    { name: "art-audio.md", onDemand: false },
+    { name: "tech-stack.md", onDemand: false },
+    { name: "timeline.md", onDemand: false },
+    { name: "risks.md", onDemand: true },
+    { name: "playtest.md", onDemand: true },
+  ],
+};
 
 function slugify(input: string): string {
   const slug = input
@@ -63,6 +94,9 @@ export function CreateIdeaForm() {
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState<IdeaStatus>(IdeaStatus.IDEA);
   const [priority, setPriority] = useState<IdeaPriority>(IdeaPriority.NONE);
+  const [projectType, setProjectType] = useState<IdeaProjectType>(
+    IdeaProjectType.SOFTWARE,
+  );
   const [tagIds, setTagIds] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -90,6 +124,7 @@ export function CreateIdeaForm() {
         description: description.trim() || null,
         status,
         priority,
+        projectType,
         tagIds: tagIds.length > 0 ? tagIds : undefined,
       });
       toast.success(t("ideas.create.success"));
@@ -177,6 +212,29 @@ export function CreateIdeaForm() {
       </fieldset>
 
       <fieldset className="flex flex-col gap-2">
+        <legend className="mb-2 text-sm font-medium">{t("ideas.create.projectType")}</legend>
+        <div className="flex flex-wrap gap-2" role="radiogroup">
+          {PROJECT_TYPE_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              role="radio"
+              aria-checked={projectType === opt.value}
+              onClick={() => setProjectType(opt.value)}
+              className={[
+                "rounded-md border px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]",
+                projectType === opt.value
+                  ? "border-[var(--color-accent)] bg-[var(--color-accent)]/10 text-[var(--color-fg)]"
+                  : "border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-muted)] hover:bg-[var(--color-muted)]/10",
+              ].join(" ")}
+            >
+              {t(opt.labelKey)}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset className="flex flex-col gap-2">
         <legend className="mb-2 text-sm font-medium">{t("ideas.create.tags")}</legend>
 
         {tagsQuery.isLoading ? (
@@ -229,7 +287,7 @@ export function CreateIdeaForm() {
             </svg>
             {folderName}/
           </span>
-          {PLANNING_FILES.map((file) => (
+          {PLANNING_FILES_BY_TYPE[projectType].map((file) => (
             <span
               key={file.name}
               className={`flex items-center gap-1.5 pl-6 ${file.onDemand ? "text-[var(--color-muted)]/60" : "text-[var(--color-muted)]"}`}
@@ -252,6 +310,24 @@ export function CreateIdeaForm() {
               {file.onDemand ? ` ${t("ideas.create.folderOnDemand")}` : ""}
             </span>
           ))}
+          <span className="flex items-center gap-1.5 pl-6 text-[var(--color-muted)]/60">
+            <svg
+              aria-hidden="true"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <path d="M3 9h18" />
+            </svg>
+            wireframes/
+            {" "}
+            {t("ideas.create.wireframesHint")}
+          </span>
         </Card>
       </fieldset>
 

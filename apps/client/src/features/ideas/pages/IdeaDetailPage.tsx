@@ -15,6 +15,7 @@ import { StatusBadge } from "../components/StatusBadge";
 import { TagBadge } from "../components/TagBadge";
 import { TaskList } from "../components/TaskList";
 import { IdeaTagEditor } from "../components/IdeaTagEditor";
+import { WireframesSection } from "../components/wireframes/WireframesSection";
 import { IdeaDetailSkeleton } from "../components/skeletons";
 
 export default function IdeaDetailPage() {
@@ -145,6 +146,10 @@ export default function IdeaDetailPage() {
                 ))}
               </div>
             </div>
+          ) : null}
+
+          {isOwner ? (
+            <WireframesSection ideaId={id} />
           ) : null}
 
           <section
