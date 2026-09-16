@@ -31,6 +31,12 @@ enum IdeaPriority {
   CRITICAL
 }
 
+enum IdeaProjectType {
+  SOFTWARE
+  GAME
+  WEBSITE
+}
+
 enum ShareRole {
   OWNER
   EDIT
@@ -75,6 +81,7 @@ model Idea {
   description String?
   status      IdeaStatus   @default(IDEA)
   priority    IdeaPriority @default(NONE)
+  projectType IdeaProjectType @default(SOFTWARE)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 

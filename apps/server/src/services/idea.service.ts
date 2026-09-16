@@ -7,6 +7,7 @@ import type {
   CreateIdeaInput,
   IdeaPipeline,
   IdeaPriority,
+  IdeaProjectType,
   IdeaStatus,
   PipelineIdea,
   Tag,
@@ -32,15 +33,17 @@ const IDEA_INCLUDE = {
 export async function assertIdeaOwnership(
   userId: string,
   ideaId: string,
-): Promise<void> {
+): Promise<IdeaProjectType> {
   const idea = await prisma.idea.findFirst({
     where: { id: ideaId, userId },
-    select: { id: true },
+    select: { id: true, projectType: true },
   });
 
   if (!idea) {
     throw new NotFoundError("Idea not found");
   }
+
+  return idea.projectType;
 }
 
 export async function assertIdeaAccess(
@@ -171,6 +174,7 @@ export async function getPipeline(userId: string): Promise<IdeaPipeline> {
 
 export async function createIdea(userId: string, input: CreateIdeaInput) {
   const slug = await generateUniqueSlug(userId, input.title);
+  const projectType = input.projectType ?? "SOFTWARE";
 
   const idea = await prisma.idea.create({
     data: {
@@ -180,6 +184,7 @@ export async function createIdea(userId: string, input: CreateIdeaInput) {
       description: input.description ?? null,
       status: input.status ?? "IDEA",
       priority: input.priority ?? "NONE",
+      projectType,
       tags: input.tagIds?.length
         ? {
             create: input.tagIds.map((tagId) => ({ tagId })),
@@ -190,7 +195,7 @@ export async function createIdea(userId: string, input: CreateIdeaInput) {
   });
 
   try {
-    await storage.createIdeaFolder(userId, idea.id);
+    await storage.createIdeaFolder(userId, idea.id, projectType);
   } catch (err) {
     await prisma.idea.delete({ where: { id: idea.id } }).catch(() => {});
     throw err;
@@ -300,6 +305,7 @@ function toIdeaDto(idea: {
   description: string | null;
   status: IdeaStatus;
   priority: IdeaPriority;
+  projectType: IdeaProjectType;
   createdAt: Date;
   updatedAt: Date;
   tags: { tagId: string; tag: Tag }[];
@@ -312,6 +318,7 @@ function toIdeaDto(idea: {
     description: idea.description,
     status: idea.status,
     priority: idea.priority,
+    projectType: idea.projectType,
     createdAt: idea.createdAt.toISOString(),
     updatedAt: idea.updatedAt.toISOString(),
     tags: toIdeaTags(idea.tags),

@@ -1,19 +1,17 @@
 import { NotFoundError } from "../lib/errors";
-import {
-  PLANNING_SECTIONS,
-  RISKS_SECTION,
-} from "../lib/planningTemplates";
+import { sectionsForType, type PlanningSection } from "../lib/planningTemplates";
 import { storage } from "./storage.service";
-import { assertIdeaOwnership } from "./idea.service";
-
-const ALL_SECTIONS = [...PLANNING_SECTIONS, RISKS_SECTION];
+import {
+  assertIdeaOwnership,
+} from "./idea.service";
 
 export async function listPlanningSections(userId: string, ideaId: string) {
-  await assertIdeaOwnership(userId, ideaId);
+  const projectType = await assertIdeaOwnership(userId, ideaId);
 
   const existing = await storage.listIdeaSections(userId, ideaId);
+  const { created, onDemand } = sectionsForType(projectType);
 
-  const sections = ALL_SECTIONS.map((section) => ({
+  const sections = [...created, ...onDemand].map((section: PlanningSection) => ({
     section,
     filename: `${section}.md`,
     exists: existing.includes(`${section}.md`),
@@ -21,6 +19,7 @@ export async function listPlanningSections(userId: string, ideaId: string) {
 
   return {
     ideaId,
+    projectType,
     sections,
   };
 }
@@ -56,13 +55,14 @@ export async function createPlanningSection(
   ideaId: string,
   section: string,
 ) {
-  await assertIdeaOwnership(userId, ideaId);
+  const projectType = await assertIdeaOwnership(userId, ideaId);
 
   const filename = `${section}.md`;
   const created = await storage.createIdeaSectionIfMissing(
     userId,
     ideaId,
     filename,
+    projectType,
   );
   const content = await storage.readIdeaSection(userId, ideaId, filename);
 
