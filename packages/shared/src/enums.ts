@@ -23,6 +23,13 @@ export const IdeaPriority = {
 } as const;
 export type IdeaPriority = (typeof IdeaPriority)[keyof typeof IdeaPriority];
 
+export const IdeaProjectType = {
+  SOFTWARE: "SOFTWARE",
+  GAME: "GAME",
+  WEBSITE: "WEBSITE",
+} as const;
+export type IdeaProjectType = (typeof IdeaProjectType)[keyof typeof IdeaProjectType];
+
 export const ShareRole = {
   OWNER: "OWNER",
   EDIT: "EDIT",
@@ -48,6 +55,7 @@ export type ActivityType = (typeof ActivityType)[keyof typeof ActivityType];
 
 export const IDEA_STATUS_VALUES = Object.values(IdeaStatus);
 export const IDEA_PRIORITY_VALUES = Object.values(IdeaPriority);
+export const IDEA_PROJECT_TYPE_VALUES = Object.values(IdeaProjectType);
 export const SHARE_ROLE_VALUES = Object.values(ShareRole);
 export const NOTIFICATION_TYPE_VALUES = Object.values(NotificationType);
 export const ACTIVITY_TYPE_VALUES = Object.values(ActivityType);

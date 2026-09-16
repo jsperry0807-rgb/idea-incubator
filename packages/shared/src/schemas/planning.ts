@@ -6,6 +6,13 @@ export const PLANNING_SECTION_NAMES = [
   "features",
   "timeline",
   "risks",
+  "pages",
+  "content",
+  "seo",
+  "mechanics",
+  "progression",
+  "art-audio",
+  "playtest",
 ] as const;
 
 const planningSectionSchema = z.enum(PLANNING_SECTION_NAMES);

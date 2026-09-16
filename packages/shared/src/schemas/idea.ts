@@ -1,6 +1,13 @@
 import { z } from "zod";
 
-import { IdeaPriority, IdeaStatus, IDEA_PRIORITY_VALUES, IDEA_STATUS_VALUES } from "../enums";
+import {
+  IdeaPriority,
+  IdeaProjectType,
+  IdeaStatus,
+  IDEA_PRIORITY_VALUES,
+  IDEA_PROJECT_TYPE_VALUES,
+  IDEA_STATUS_VALUES,
+} from "../enums";
 
 export const ideaTitleSchema = z.string().trim().min(1).max(200);
 
@@ -8,12 +15,16 @@ const statusEnum = z.enum(IDEA_STATUS_VALUES as [IdeaStatus, ...IdeaStatus[]]);
 const priorityEnum = z.enum(
   IDEA_PRIORITY_VALUES as [IdeaPriority, ...IdeaPriority[]],
 );
+const projectTypeEnum = z.enum(
+  IDEA_PROJECT_TYPE_VALUES as [IdeaProjectType, ...IdeaProjectType[]],
+);
 
 export const createIdeaSchema = z.object({
   title: ideaTitleSchema,
   description: z.string().trim().max(5000).optional().nullable(),
   status: statusEnum.optional(),
   priority: priorityEnum.optional(),
+  projectType: projectTypeEnum.default("SOFTWARE"),
   tagIds: z.array(z.string().trim().min(1)).max(20).optional(),
 });
 

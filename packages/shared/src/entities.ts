@@ -2,6 +2,7 @@ import type {
   ActivityType,
   AuthProvider,
   IdeaPriority,
+  IdeaProjectType,
   IdeaStatus,
   NotificationType,
   ShareRole,
@@ -35,6 +36,7 @@ export interface Idea {
   description: string | null;
   status: IdeaStatus;
   priority: IdeaPriority;
+  projectType: IdeaProjectType;
   createdAt: string;
   updatedAt: string;
   tags: IdeaTag[];
