@@ -13,5 +13,12 @@ export function usePlanningSection(
     queryFn: ({ signal }) => getPlanningSection(ideaId, section, signal),
     enabled: enabled && Boolean(ideaId),
     staleTime: 30_000,
+    retry: (failureCount, error) => {
+      const status = (
+        error as { response?: { status?: number } } | undefined
+      )?.response?.status;
+      if (status === 404) return false;
+      return failureCount < 3;
+    },
   });
 }
