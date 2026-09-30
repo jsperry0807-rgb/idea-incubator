@@ -17,3 +17,14 @@ export const authRateLimit = rateLimit({
   standardHeaders: "draft-7",
   legacyHeaders: false,
 });
+
+/**
+ * Interview actions are model calls: 60 per user per hour. The reducer's
+ * `MAX_TURNS` (40) is the harder per-interview cap and is enforced in code.
+ */
+export const interviewRateLimit = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: isDev ? 600 : 60,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+});

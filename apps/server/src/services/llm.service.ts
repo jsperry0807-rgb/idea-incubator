@@ -1,3 +1,6 @@
+import { zodToJsonSchema } from "zod-to-json-schema";
+import type { z } from "zod";
+
 import { env } from "../config/env";
 
 export interface LlmMessage {
@@ -12,6 +15,12 @@ export interface LlmCompleteOptions {
 
 export interface LlmClient {
   complete(messages: LlmMessage[], options?: LlmCompleteOptions): Promise<string>;
+  /** Returns `null` when the model text cannot be parsed/validated after retries. */
+  completeStructured<T>(
+    schema: z.ZodType<T>,
+    messages: LlmMessage[],
+    options?: LlmCompleteOptions,
+  ): Promise<T>;
 }
 
 export interface LlmClientConfig {
@@ -65,6 +74,67 @@ export class OpenAICompatibleClient implements LlmClient {
 
     return content;
   }
+
+  async completeStructured<T>(
+    schema: z.ZodType<T>,
+    messages: LlmMessage[],
+    options: LlmCompleteOptions = {},
+  ): Promise<T> {
+    // zod-to-json-schema's d.ts still targets the Zod-3 `ZodSchema<any>`
+    // alias; Zod 4 schemas convert fine at runtime, so the cast is
+    // type-only.
+    const jsonSchema = zodToJsonSchema(
+      schema as unknown as Parameters<typeof zodToJsonSchema>[0],
+      { name: "response" },
+    );
+    const schemaNote: LlmMessage = {
+      role: "system",
+      content:
+        "Return JSON only, conforming exactly to the provided JSON schema. " +
+        `Do not wrap it in markdown. Schema: ${JSON.stringify(jsonSchema)}`,
+    };
+
+    let lastError = "";
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const chatMessages =
+        attempt === 0
+          ? [...messages, schemaNote]
+          : [
+              ...messages,
+              schemaNote,
+              {
+                role: "user" as const,
+                content: `Your previous response failed validation: ${lastError}\nReturn corrected JSON conforming to the schema — JSON only.`,
+              },
+            ];
+
+      const text = await this.complete(chatMessages, { ...options, temperature: 0 });
+      const parsed = extractJson(text);
+      if (parsed === null) {
+        lastError = "response was not valid JSON";
+        continue;
+      }
+
+      const result = schema.safeParse(parsed);
+      if (result.success) {
+        return result.data;
+      }
+      lastError = result.error.message;
+    }
+
+    throw new Error(`LLM structured output failed validation: ${lastError}`);
+  }
+}
+
+/** Extracts a JSON value from model text, tolerating code fences. */
+export function extractJson(text: string): unknown {
+  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+  const candidate = fenced ? fenced[1] : text;
+  try {
+    return JSON.parse(candidate.trim());
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -79,6 +149,11 @@ export function createLlmClient(): LlmClient {
   if (!apiKey) {
     return {
       async complete() {
+        throw new Error(
+          "LLM_API_KEY is not configured. Set it in apps/server/.env to use the AI interview.",
+        );
+      },
+      async completeStructured() {
         throw new Error(
           "LLM_API_KEY is not configured. Set it in apps/server/.env to use the AI interview.",
         );

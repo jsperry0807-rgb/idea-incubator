@@ -9,6 +9,7 @@
     "start": "node --import tsx src/index.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
+    "test": "vitest run",
     "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\""
   },
   "dependencies": {
@@ -24,9 +25,11 @@
     "helmet": "^8.3.0",
     "jose": "^6.2.10",
     "pg": "^8.23.0",
-    "zod": "^4.5.4"
+    "zod": "^4.5.4",
+    "zod-to-json-schema": "^3.25.2"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@repo/config": "workspace:*",
     "@types/bcryptjs": "^3.0.0",
     "@types/cookie-parser": "^1.4.10",
@@ -34,9 +37,13 @@
     "@types/express": "^5.0.0",
     "@types/node": "^24.13.3",
     "@types/pg": "^8.23.1",
+    "eslint": "^10.9.0",
+    "globals": "^17.11.0",
     "nodemon": "^3.1.14",
     "prisma": "7.10.0",
     "tsx": "^4.19.0",
-    "typescript": "~6.0.2"
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.67.0",
+    "vitest": "^5.0.2"
   }
 }
