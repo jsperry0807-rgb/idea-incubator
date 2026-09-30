@@ -11,6 +11,8 @@ export interface LlmMessage {
 export interface LlmCompleteOptions {
   temperature?: number;
   maxTokens?: number;
+  /** Per-call model override (e.g. route synthesis to a stronger model). */
+  model?: string;
 }
 
 export interface LlmClient {
@@ -50,7 +52,7 @@ export class OpenAICompatibleClient implements LlmClient {
         authorization: `Bearer ${this.config.apiKey}`,
       },
       body: JSON.stringify({
-        model: this.config.model,
+        model: options.model ?? this.config.model,
         messages,
         temperature: options.temperature ?? 0.7,
         ...(options.maxTokens !== undefined ? { max_tokens: options.maxTokens } : {}),

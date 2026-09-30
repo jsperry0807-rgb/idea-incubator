@@ -28,3 +28,14 @@ export const interviewRateLimit = rateLimit({
   standardHeaders: "draft-7",
   legacyHeaders: false,
 });
+
+/**
+ * Synthesis is the most expensive call in the app (stronger model, longer
+ * prompt), so it gets its own tighter budget: 10 per user per hour.
+ */
+export const synthesisRateLimit = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: isDev ? 100 : 10,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+});

@@ -3,19 +3,22 @@ import {
   answerInterviewSchema,
   deferInterviewSchema,
   idParamSchema,
+  synthesisRequestSchema,
   type AnswerInterviewInput,
   type DeferInterviewInput,
+  type SynthesisRequestInput,
 } from "@repo/shared";
 
 import { validate } from "../middleware/validate";
 import { authenticate } from "../middleware/auth";
-import { interviewRateLimit } from "../middleware/rateLimit";
+import { interviewRateLimit, synthesisRateLimit } from "../middleware/rateLimit";
 import {
   deferQuestion,
   getInterviewState,
   skipQuestion,
   startOrResumeInterview,
   submitAnswer,
+  synthesizeInterview,
 } from "../services/interview.service";
 
 const router: RouterType = Router({ mergeParams: true });
@@ -103,6 +106,25 @@ router.post(
         String(req.params.id),
         body.pointId,
         body.reason,
+        localeOf(req),
+      );
+      res.json({ data });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+router.post(
+  "/synthesis",
+  validate({ params: idParamSchema, body: synthesisRequestSchema }),
+  synthesisRateLimit,
+  async (req, res, next) => {
+    try {
+      const data = await synthesizeInterview(
+        req.userId!,
+        String(req.params.id),
+        req.body as SynthesisRequestInput,
         localeOf(req),
       );
       res.json({ data });

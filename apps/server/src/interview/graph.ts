@@ -20,6 +20,11 @@ import {
   normalizeReevaluateOutput,
   reevaluateOutputSchema,
 } from "./prompts/reevaluate";
+import {
+  buildSynthesisMessages,
+  normalizeSynthesisOutput,
+  synthesisOutputSchema,
+} from "./prompts/synthesis";
 
 /**
  * Resolves reducer directives into the model results the reducer consumes.
@@ -28,10 +33,16 @@ import {
  * pure and testable. Each resolver is a thin layer: build prompt -> structured
  * LLM call -> validate/normalize -> event.
  */
+export interface InterviewAgentOptions {
+  /** Stronger model used for synthesis verdicts only (model routing). */
+  synthesisModel?: string;
+}
+
 export class InterviewAgent {
   constructor(
     private readonly llm: LlmClient,
     private readonly locale: string,
+    private readonly options: InterviewAgentOptions = {},
   ) {}
 
   static pointId(label: string, projectType: string): string {
@@ -49,7 +60,7 @@ export class InterviewAgent {
 
   /**
    * Resolves a directive to the next event. Returns null for directives that
-   * need no model call (synthesis is Phase 3) or cannot be satisfied.
+   * need no model call or cannot be satisfied.
    */
   async resolve(
     state: InterviewState,
@@ -63,6 +74,7 @@ export class InterviewAgent {
       case "reevaluate":
         return this.reevaluate(state, directive);
       case "synthesize":
+        return this.synthesize(state, directive);
       case "complete":
         return null;
       default:
@@ -127,6 +139,29 @@ export class InterviewAgent {
       opened,
       closed: normalized.closed,
       invalidated: normalized.invalidated,
+    };
+  }
+
+  private async synthesize(
+    state: InterviewState,
+    directive: Extract<InterviewDirective, { type: "synthesize" }>,
+  ): Promise<InterviewEvent> {
+    const out = await this.llm.completeStructured(
+      synthesisOutputSchema,
+      buildSynthesisMessages(state, directive.pointId, this.locale),
+      {
+        temperature: 0.3,
+        maxTokens: 700,
+        ...(this.options.synthesisModel
+          ? { model: this.options.synthesisModel }
+          : {}),
+      },
+    );
+
+    return {
+      type: "SYNTHESIZED",
+      forPointId: directive.pointId,
+      synthesis: normalizeSynthesisOutput(out, directive.pointId),
     };
   }
 }

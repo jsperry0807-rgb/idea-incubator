@@ -3,16 +3,14 @@ import prisma from "../lib/prisma";
 import { ConflictError, NotFoundError } from "../lib/errors";
 import { assertIdeaOwnership } from "./idea.service";
 import { llm } from "./llm.service";
+import { storage } from "./storage.service";
+import { env } from "../config/env";
 import { InterviewAgent } from "../interview/graph";
-import {
-  advance,
-  type Answer,
-  type InterviewEvent,
-} from "../interview/reducer";
+import { appendAssumption } from "../interview/assumptions";
+import { runLoop, type LoopTerminal } from "../interview/loop";
+import type { Answer, InterviewEvent } from "../interview/reducer";
 import { emptyCoverage, type InterviewState } from "../interview/state";
-import type { AnswerInterviewInput } from "@repo/shared";
-
-const MAX_PUMP_STEPS = 100;
+import type { AnswerInterviewInput, SynthesisRequestInput } from "@repo/shared";
 
 type JsonState = Prisma.InputJsonValue;
 
@@ -20,7 +18,7 @@ export interface InterviewResult {
   interviewId: string;
   created: boolean;
   state: InterviewState;
-  terminal: "none" | "ready" | "turn-cap" | "needs-synthesis";
+  terminal: LoopTerminal;
 }
 
 function createInitialState(
@@ -62,44 +60,23 @@ async function loadInterview(userId: string, ideaId: string) {
 }
 
 /**
- * Runs the reducer until it settles (no more directives needing a model call)
- * and returns the final state. Terminal directives (synthesize, complete) stop
- * the loop and are surfaced via `terminal`.
+ * Builds the agent for a request. Synthesis routes to the stronger model when
+ * one is configured; question prose and classification stay on the cheap model.
  */
+function createAgent(locale: string): InterviewAgent {
+  return new InterviewAgent(llm, locale, {
+    ...(env.LLM_SYNTHESIS_MODEL ? { synthesisModel: env.LLM_SYNTHESIS_MODEL } : {}),
+  });
+}
+
+/** Runs the reducer until it settles (no more directives needing a model call). */
 async function pump(
   agent: InterviewAgent,
   state: InterviewState,
   initialEvents: InterviewEvent[],
-): Promise<{ state: InterviewState; terminal: InterviewResult["terminal"] }> {
-  let s = state;
-  const queue: InterviewEvent[] = [...initialEvents];
-  let steps = 0;
-  let terminal: InterviewResult["terminal"] = "none";
-
-  while (queue.length > 0 && steps < MAX_PUMP_STEPS) {
-    const event = queue.shift()!;
-    const result = advance(s, event);
-    s = result.state;
-
-    for (const directive of result.directives) {
-      if (directive.type === "complete") {
-        terminal = directive.reason === "turn-cap" ? "turn-cap" : "ready";
-        continue;
-      }
-      if (directive.type === "synthesize") {
-        terminal = "needs-synthesis";
-        continue;
-      }
-
-      const resolved = await agent.resolve(s, directive);
-      if (resolved) {
-        queue.push(resolved);
-      }
-    }
-    steps++;
-  }
-
-  return { state: s, terminal };
+): Promise<{ state: InterviewState; terminal: LoopTerminal }> {
+  const { state: next, terminal } = await runLoop(agent, state, initialEvents);
+  return { state: next, terminal };
 }
 
 /**
@@ -129,7 +106,7 @@ export async function startOrResumeInterview(
     const state = existing.state as unknown as InterviewState;
     // Crash-safe resume: finish a START that never classified.
     if (state.phase === "CLASSIFY" && state.turn === 0 && state.open.length === 0) {
-      const agent = new InterviewAgent(llm, locale);
+      const agent = createAgent(locale);
       const result = await pump(agent, state, [{ type: "START" }]);
       const interview = await persist(ideaId, userId, result.state);
       return {
@@ -149,7 +126,7 @@ export async function startOrResumeInterview(
     projectType,
   );
 
-  const agent = new InterviewAgent(llm, locale);
+  const agent = createAgent(locale);
   const result = await pump(agent, initialState, [{ type: "START" }]);
 
   const interview = await prisma.interview.create({
@@ -203,7 +180,7 @@ export async function submitAnswer(
   await assertIdeaOwnership(userId, ideaId);
   const state = await loadInterview(userId, ideaId);
 
-  if (state.phase !== "ASK") {
+  if (state.phase !== "ASK" && state.phase !== "SYNTHESIZE") {
     throw new ConflictError(
       state.phase === "READY" || state.phase === "DONE"
         ? "Interview already complete."
@@ -224,7 +201,7 @@ export async function submitAnswer(
     freeText: input.freeText ?? null,
   };
 
-  const agent = new InterviewAgent(llm, locale);
+  const agent = createAgent(locale);
   const result = await pump(agent, state, [{ type: "ANSWERED", answer }]);
   const interview = await persist(ideaId, userId, result.state);
 
@@ -244,11 +221,11 @@ export async function skipQuestion(
   await assertIdeaOwnership(userId, ideaId);
   const state = await loadInterview(userId, ideaId);
 
-  if (state.phase !== "ASK" || !state.current) {
+  if ((state.phase !== "ASK" && state.phase !== "SYNTHESIZE") || !state.current) {
     throw new ConflictError("No question to skip.");
   }
 
-  const agent = new InterviewAgent(llm, locale);
+  const agent = createAgent(locale);
   const result = await pump(agent, state, [
     { type: "SKIPPED", pointId: state.current.point.id },
   ]);
@@ -279,11 +256,17 @@ export async function deferQuestion(
     throw new ConflictError("Defer does not match the current question.");
   }
 
-  const agent = new InterviewAgent(llm, locale);
+  const agent = createAgent(locale);
   const result = await pump(agent, state, [
     { type: "DEFERRED", pointId, reason },
   ]);
   const interview = await persist(ideaId, userId, result.state);
+
+  const point = result.state.decisions[pointId];
+  if (point?.deferred) {
+    const title = state.open.find((p) => p.id === pointId)?.title ?? pointId;
+    await recordDeferral(ideaId, userId, title, reason);
+  }
 
   return {
     interviewId: interview.id,
@@ -291,6 +274,56 @@ export async function deferQuestion(
     state: result.state,
     terminal: result.terminal,
   };
+}
+
+/**
+ * Records a deferral in the idea's `## Assumptions` list in `overview.md`.
+ *
+ * Deferring is a real planning outcome, not a dismissal: the assumption travels
+ * with the idea. Other hand-edited content in the file is preserved.
+ */
+async function recordDeferral(
+  ideaId: string,
+  userId: string,
+  pointTitle: string,
+  reason: string | undefined,
+): Promise<void> {
+  const existing = await storage.readIdeaSection(userId, ideaId, "overview.md");
+  const next = appendAssumption(existing, pointTitle, reason);
+  await storage.writeIdeaSection(userId, ideaId, "overview.md", next);
+}
+
+/**
+ * Manual "I'm stuck" override: asks the model for a verdict on one open point
+ * without waiting for the skip counter to trip.
+ */
+export async function synthesizeInterview(
+  userId: string,
+  ideaId: string,
+  input: SynthesisRequestInput,
+  locale: string,
+): Promise<InterviewResult> {
+  await assertIdeaOwnership(userId, ideaId);
+  const state = await loadInterview(userId, ideaId);
+
+  if (state.phase === "READY" || state.phase === "DONE") {
+    throw new ConflictError("Interview already complete.");
+  }
+  if (!state.open.some((p) => p.id === input.pointId)) {
+    throw new NotFoundError("Decision point is not open.");
+  }
+
+  const agent = createAgent(locale);
+  const event = await agent.resolve(state, {
+    type: "synthesize",
+    pointId: input.pointId,
+  });
+  if (!event) throw new Error("Synthesis could not be produced.");
+
+  const { state: next, terminal } = await runLoop(agent, state, [event]);
+  const interview = await persist(ideaId, userId, next);
+
+  return { interviewId: interview.id, created: false, state: next, terminal };
 }
 
 async function persist(

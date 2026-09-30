@@ -1,5 +1,5 @@
 import { PLANNING_SECTION_NAMES } from "@repo/shared";
-import type { DecisionPoint, Question } from "@repo/shared";
+import type { DecisionPoint, Question, Synthesis } from "@repo/shared";
 
 import { sectionsForType } from "../lib/planningTemplates";
 import { assertValidFrontier } from "./validate";
@@ -21,7 +21,8 @@ export type InterviewEvent =
   | { type: "ANSWERED"; answer: Answer }
   | { type: "REEVALUATED"; opened: DecisionPoint[]; closed: string[]; invalidated: string[]; answer: Answer }
   | { type: "SKIPPED"; pointId: string }
-  | { type: "DEFERRED"; pointId: string; reason?: string };
+  | { type: "DEFERRED"; pointId: string; reason?: string }
+  | { type: "SYNTHESIZED"; forPointId: string; synthesis: Synthesis };
 
 export type InterviewDirective =
   | { type: "classify" }
@@ -63,6 +64,8 @@ export function advance(
       return onSkipped(state, event);
     case "DEFERRED":
       return onDeferred(state, event);
+    case "SYNTHESIZED":
+      return onSynthesized(state, event);
     default:
       return { state, directives: [] };
   }
@@ -120,7 +123,9 @@ function onAnswered(
   state: InterviewState,
   event: Extract<InterviewEvent, { type: "ANSWERED" }>,
 ): ReduceResult {
-  if (state.phase !== "ASK") {
+  // An answer is legal either in normal dialog (ASK) or when resolving a
+  // stuck point after synthesis (SYNTHESIZE).
+  if (state.phase !== "ASK" && state.phase !== "SYNTHESIZE") {
     return { state, directives: [] };
   }
   return {
@@ -165,12 +170,16 @@ function onReevaluated(
   };
 
   const turn = state.turn + 1;
+  const resolvesStuck =
+    state.phase === "SYNTHESIZE" && state.stuck?.pointId === answer.pointId;
   const next: InterviewState = {
     ...state,
+    // Resolving the stuck point after synthesis returns to normal dialog.
+    phase: resolvesStuck ? "ASK" : state.phase,
     decisions: { ...state.decisions, [answer.pointId]: decision },
     open: [...kept, ...openedClean],
     current: null,
-    stuck: state.stuck?.pointId === answer.pointId ? null : state.stuck,
+    stuck: resolvesStuck ? null : state.stuck,
     turn,
     coverage: computeCoverage([...kept, ...openedClean]),
   };
@@ -185,23 +194,27 @@ function onSkipped(
   const attempts =
     state.stuck?.pointId === event.pointId ? state.stuck.attempts + 1 : 1;
 
+  const asked = state.asked.includes(event.pointId)
+    ? state.asked
+    : [...state.asked, event.pointId];
+
   if (attempts >= STUCK_ATTEMPTS) {
     return {
-      state: {
-        ...state,
-        phase: "SYNTHESIZE",
-        asked: state.asked.includes(event.pointId)
-          ? state.asked
-          : [...state.asked, event.pointId],
-        stuck: { pointId: event.pointId, attempts },
-      },
+      state: { ...state, asked, stuck: { pointId: event.pointId, attempts }, phase: "SYNTHESIZE" },
       directives: [{ type: "synthesize", pointId: event.pointId }],
     };
   }
 
-  const asked = state.asked.includes(event.pointId)
-    ? state.asked
-    : [...state.asked, event.pointId];
+  // First skip: ask the SAME point again rather than moving on, so a user who
+  // hesitates twice on one point reaches the synthesis trigger. The point stays
+  // in `asked` (skipping is not deciding), so this deliberately bypasses
+  // selectPoint's never-re-ask rule.
+  if (state.open.some((p) => p.id === event.pointId)) {
+    return {
+      state: { ...state, asked, stuck: { pointId: event.pointId, attempts } },
+      directives: [{ type: "ask", pointId: event.pointId }],
+    };
+  }
 
   const selected = selectPoint({ open: state.open, asked });
 
@@ -217,13 +230,7 @@ function onSkipped(
   }
 
   return {
-    state: {
-      ...state,
-      asked: state.asked.includes(event.pointId)
-        ? state.asked
-        : [...state.asked, event.pointId],
-      stuck: { pointId: event.pointId, attempts },
-    },
+    state: { ...state, asked, stuck: { pointId: event.pointId, attempts } },
     directives: [{ type: "ask", pointId: selected.id }],
   };
 }
@@ -249,16 +256,36 @@ function onDeferred(
   };
 
   const kept = state.open.filter((p) => p.id !== point.id);
+  const resolvesStuck =
+    state.phase === "SYNTHESIZE" && state.stuck?.pointId === point.id;
   const next: InterviewState = {
     ...state,
+    // Deferring the stuck point after synthesis also returns to dialog.
+    phase: resolvesStuck ? "ASK" : state.phase,
     decisions: { ...state.decisions, [point.id]: decision },
     open: kept,
     current: null,
-    stuck: state.stuck?.pointId === point.id ? null : state.stuck,
+    stuck: resolvesStuck ? null : state.stuck,
     coverage: computeCoverage(kept),
   };
 
   return afterResolution(next);
+}
+
+function onSynthesized(
+  state: InterviewState,
+  event: Extract<InterviewEvent, { type: "SYNTHESIZED" }>,
+): ReduceResult {
+  if (state.phase === "READY" || state.phase === "DONE") {
+    return { state, directives: [] };
+  }
+  // Park the interview in SYNTHESIZE so the verdict is the current view. The
+  // user resolves the stuck point by answering or deferring it, which flips
+  // the phase back to ASK.
+  return {
+    state: { ...state, phase: "SYNTHESIZE", synthesis: event.synthesis },
+    directives: [],
+  };
 }
 
 function afterResolution(state: InterviewState): ReduceResult {

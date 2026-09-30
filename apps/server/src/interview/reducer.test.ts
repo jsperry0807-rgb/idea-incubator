@@ -296,7 +296,7 @@ describe("reevaluation & invalidation", () => {
 });
 
 describe("stuck handling", () => {
-  it("records stuck attempts on skip", () => {
+  it("re-asks the same point after one skip so a second skip can trip synthesis", () => {
     const state = makeState({
       phase: "ASK",
       open: [CORE_LOOP, ART_STYLE],
@@ -305,7 +305,22 @@ describe("stuck handling", () => {
     });
     const result = advance(state, { type: "SKIPPED", pointId: "core-loop" });
     expect(result.state.stuck).toEqual({ pointId: "core-loop", attempts: 1 });
-    expect(result.directives).toEqual([{ type: "ask", pointId: "art-style" }]);
+    expect(result.directives).toEqual([{ type: "ask", pointId: "core-loop" }]);
+    // Still open: skipping is not deciding.
+    expect(result.state.open.map((p) => p.id)).toEqual(["core-loop", "art-style"]);
+  });
+
+  it("moves to the next point when the skipped one is no longer open", () => {
+    const state = makeState({
+      phase: "ASK",
+      open: [ART_STYLE, MONETIZATION],
+      asked: ["core-loop", "art-style"],
+      current: makeQuestion(ART_STYLE),
+      stuck: { pointId: "core-loop", attempts: 1 },
+    });
+    const result = advance(state, { type: "SKIPPED", pointId: "core-loop" });
+    expect(result.state.stuck).toEqual({ pointId: "core-loop", attempts: 2 });
+    expect(result.state.phase).toBe("SYNTHESIZE");
   });
 
   it(`synthesizes after ${STUCK_ATTEMPTS} non-committal attempts on one point`, () => {
@@ -318,7 +333,7 @@ describe("stuck handling", () => {
     const first = advance(state, { type: "SKIPPED", pointId: "core-loop" });
     const rendered = advance(first.state, {
       type: "QUESTION_RENDERED",
-      question: makeQuestion(ART_STYLE),
+      question: makeQuestion(CORE_LOOP),
     });
     const result = advance(rendered.state, {
       type: "SKIPPED",
@@ -332,17 +347,18 @@ describe("stuck handling", () => {
     ]);
   });
 
-  it("synthesizes when the frontier has nothing left to ask", () => {
+  it("synthesizes when a closed point is skipped and nothing is left to ask", () => {
     const state = makeState({
       phase: "ASK",
       open: [ART_STYLE],
-      asked: ["art-style"],
+      asked: ["art-style", "core-loop"],
       current: makeQuestion(ART_STYLE),
+      stuck: { pointId: "core-loop", attempts: 1 },
     });
-    const result = advance(state, { type: "SKIPPED", pointId: "art-style" });
+    const result = advance(state, { type: "SKIPPED", pointId: "core-loop" });
     expect(result.state.phase).toBe("SYNTHESIZE");
     expect(result.directives).toEqual([
-      { type: "synthesize", pointId: "art-style" },
+      { type: "synthesize", pointId: "core-loop" },
     ]);
   });
 });

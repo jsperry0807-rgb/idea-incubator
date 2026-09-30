@@ -116,3 +116,56 @@ describe("OpenAICompatibleClient.completeStructured", () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 });
+
+describe("OpenAICompatibleClient model routing", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  function modelOf(call: unknown): string | undefined {
+    return (call as [string, { body: string }])[1].body
+      ? (JSON.parse((call as [string, { body: string }])[1].body) as { model: string })
+          .model
+      : undefined;
+  }
+
+  it("uses the configured default model when no override is given", async () => {
+    const fetchMock = okFetch('{"decision":"ship","score":1}');
+    vi.stubGlobal("fetch", fetchMock);
+
+    await client().completeStructured(schema, [{ role: "user", content: "hi" }]);
+
+    expect(modelOf(fetchMock.mock.calls[0])).toBe("test-model");
+  });
+
+  it("uses the per-call override when one is given, and keeps it on retry", async () => {
+    const fetchMock = okFetch('{"decision":"ship","score":1}');
+    vi.stubGlobal("fetch", fetchMock);
+
+    await client().completeStructured(schema, [{ role: "user", content: "hi" }], {
+      model: "strong-model",
+    });
+
+    expect(modelOf(fetchMock.mock.calls[0])).toBe("strong-model");
+  });
+
+  it("still retries on the override model rather than falling back", async () => {
+    const bad = JSON.stringify({ choices: [{ message: { content: "nope" } }] });
+    const good = JSON.stringify({
+      choices: [{ message: { content: '{"decision":"ship","score":1}' } }],
+    });
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(new Response(bad, { status: 200 }))
+      .mockResolvedValueOnce(new Response(good, { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await client().completeStructured(schema, [{ role: "user", content: "hi" }], {
+      model: "strong-model",
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock.mock.calls.map(modelOf)).toEqual([
+      "strong-model",
+      "strong-model",
+    ]);
+  });
+});
