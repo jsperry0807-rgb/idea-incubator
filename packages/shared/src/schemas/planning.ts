@@ -13,9 +13,11 @@ export const PLANNING_SECTION_NAMES = [
   "progression",
   "art-audio",
   "playtest",
+  "supply-chain",
+  "unit-economics",
 ] as const;
 
-const planningSectionSchema = z.enum(PLANNING_SECTION_NAMES);
+export const planningSectionSchema = z.enum(PLANNING_SECTION_NAMES);
 
 export const planningSectionParamsSchema = z.object({
   section: planningSectionSchema,

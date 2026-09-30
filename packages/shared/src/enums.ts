@@ -27,6 +27,8 @@ export const IdeaProjectType = {
   SOFTWARE: "SOFTWARE",
   GAME: "GAME",
   WEBSITE: "WEBSITE",
+  SAAS: "SAAS",
+  PHYSICAL: "PHYSICAL",
 } as const;
 export type IdeaProjectType = (typeof IdeaProjectType)[keyof typeof IdeaProjectType];
 

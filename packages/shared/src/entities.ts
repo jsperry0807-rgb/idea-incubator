@@ -133,3 +133,11 @@ export interface AuthUser {
   authProvider: AuthProvider;
   createdAt: string;
 }
+
+export interface Interview {
+  id: string;
+  ideaId: string;
+  userId: string;
+  phase: string;
+  state: unknown;
+}

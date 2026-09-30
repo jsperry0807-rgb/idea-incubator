@@ -34,6 +34,7 @@ export const updateIdeaSchema = z
     description: z.string().trim().max(5000).optional().nullable(),
     status: statusEnum.optional(),
     priority: priorityEnum.optional(),
+    projectType: projectTypeEnum.optional(),
     tagIds: z.array(z.string().trim().min(1)).max(20).optional(),
   })
   .refine((data) => Object.keys(data).length > 0, {

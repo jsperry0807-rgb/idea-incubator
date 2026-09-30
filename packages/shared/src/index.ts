@@ -32,6 +32,7 @@ export type {
   Idea,
   IdeaPipeline,
   IdeaTag,
+  Interview,
   Notification,
   PipelineIdea,
   Share,
