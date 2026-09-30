@@ -52,6 +52,12 @@ enum NotificationType {
   TASK_COMPLETED
 }
 
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
 // ─── Models ──────────────────────────────────────────────
 
 model User {
@@ -140,16 +146,18 @@ model IdeaTag {
 }
 
 model Task {
-  id        String   @id @default(cuid())
+  id        String     @id @default(cuid())
   ideaId    String
   title     String
-  completed Boolean  @default(false)
+  completed Boolean    @default(false)
+  status    TaskStatus @default(TODO)
   milestone String?
-  sortOrder Int      @default(0)
-  createdAt DateTime @default(now())
+  sortOrder Int        @default(0)
+  createdAt DateTime   @default(now())
 
   idea Idea @relation(fields: [ideaId], references: [id], onDelete: Cascade)
 
+  @@index([ideaId, status, sortOrder])
   @@index([ideaId, sortOrder])
   @@map("tasks")
 }

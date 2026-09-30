@@ -47,6 +47,15 @@ export const NotificationType = {
 } as const;
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType];
 
+export const TaskStatus = {
+  TODO: "TODO",
+  IN_PROGRESS: "IN_PROGRESS",
+  DONE: "DONE",
+} as const;
+export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus];
+
+export const TASK_STATUS_VALUES = Object.values(TaskStatus);
+
 export const ActivityType = {
   IDEA_CREATED: "IDEA_CREATED",
   IDEA_UPDATED: "IDEA_UPDATED",

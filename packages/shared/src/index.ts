@@ -6,6 +6,7 @@ export {
   ShareRole,
   NotificationType,
   ActivityType,
+  TaskStatus,
   IDEA_STATUS_VALUES,
   IDEA_PRIORITY_VALUES,
   IDEA_PROJECT_TYPE_VALUES,
@@ -13,6 +14,7 @@ export {
   NOTIFICATION_TYPE_VALUES,
   ACTIVITY_TYPE_VALUES,
   AUTH_PROVIDER_VALUES,
+  TASK_STATUS_VALUES,
 } from "./enums";
 export type {
   AuthProvider as AuthProviderType,
@@ -22,6 +24,7 @@ export type {
   ShareRole as ShareRoleType,
   NotificationType as NotificationTypeType,
   ActivityType as ActivityTypeType,
+  TaskStatus as TaskStatusType,
 } from "./enums";
 
 export type {

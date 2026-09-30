@@ -6,6 +6,7 @@ import type {
   IdeaStatus,
   NotificationType,
   ShareRole,
+  TaskStatus,
 } from "./enums";
 
 export interface User {
@@ -83,6 +84,7 @@ export interface Task {
   ideaId: string;
   title: string;
   completed: boolean;
+  status: TaskStatus;
   milestone: string | null;
   sortOrder: number;
   createdAt: string;

@@ -3,6 +3,7 @@ import { NotFoundError } from "../lib/errors";
 import type {
   CreateTaskInput,
   Task,
+  TaskStatus,
   UpdateTaskInput,
 } from "@repo/shared";
 import { assertIdeaOwnership } from "./idea.service";
@@ -40,6 +41,8 @@ export async function createTask(
       ideaId,
       title: input.title,
       milestone: input.milestone ?? null,
+      status: input.status ?? "TODO",
+      completed: input.status === "DONE",
       sortOrder,
     },
   });
@@ -68,9 +71,18 @@ export async function updateTask(
     where: { id: taskId },
     data: {
       ...(input.title !== undefined ? { title: input.title } : {}),
-      ...(input.completed !== undefined ? { completed: input.completed } : {}),
       ...(input.milestone !== undefined ? { milestone: input.milestone } : {}),
       ...(input.sortOrder !== undefined ? { sortOrder: input.sortOrder } : {}),
+      // `status` is the source of truth; `completed` is kept in sync because
+      // dashboard stats and idea summaries still read it directly.
+      ...(input.status !== undefined
+        ? { status: input.status, completed: input.status === "DONE" }
+        : input.completed !== undefined
+          ? {
+              status: input.completed ? ("DONE" as const) : ("TODO" as const),
+              completed: input.completed,
+            }
+          : {}),
     },
   });
 
@@ -101,6 +113,7 @@ function toTaskDto(task: {
   ideaId: string;
   title: string;
   completed: boolean;
+  status: TaskStatus;
   milestone: string | null;
   sortOrder: number;
   createdAt: Date;
@@ -110,6 +123,7 @@ function toTaskDto(task: {
     ideaId: task.ideaId,
     title: task.title,
     completed: task.completed,
+    status: task.status,
     milestone: task.milestone,
     sortOrder: task.sortOrder,
     createdAt: task.createdAt.toISOString(),
