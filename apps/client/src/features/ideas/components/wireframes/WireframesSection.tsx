@@ -19,6 +19,11 @@ function sanitizeWireframeName(filename: string): string | null {
   return slug.length > 0 ? slug : null;
 }
 
+function isHtmlFile(file: File): boolean {
+  const lower = file.name.toLowerCase();
+  return lower.endsWith(".html") || lower.endsWith(".htm");
+}
+
 export function WireframesSection({ ideaId }: { ideaId: string }) {
   const { t } = useTranslation();
   const filesQuery = useWireframes(ideaId);
@@ -26,7 +31,9 @@ export function WireframesSection({ ideaId }: { ideaId: string }) {
   const deleteMutation = useDeleteWireframe(ideaId);
 
   const [viewing, setViewing] = useState<string | null>(null);
+  const [isUploadingFolder, setIsUploadingFolder] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const folderInputRef = useRef<HTMLInputElement>(null);
 
   const wireframeQuery = useWireframe(
     ideaId,
@@ -35,21 +42,16 @@ export function WireframesSection({ ideaId }: { ideaId: string }) {
 
   const files = filesQuery.data ?? [];
 
-  async function handleFileChosen(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    event.target.value = "";
-    if (!file) return;
-
+  async function uploadFile(file: File): Promise<boolean> {
     const name = sanitizeWireframeName(file.name);
     if (!name) {
       toast.error(t("ideas.wireframes.invalidName"));
-      return;
+      return false;
     }
-
     try {
       const html = await file.text();
       await uploadMutation.mutateAsync({ name, html });
-      toast.success(t("ideas.wireframes.uploaded"));
+      return true;
     } catch (error) {
       const status = (error as { response?: { status?: number } } | undefined)
         ?.response?.status;
@@ -60,6 +62,67 @@ export function WireframesSection({ ideaId }: { ideaId: string }) {
       } else {
         toast.error(t("ideas.wireframes.uploadError"));
       }
+      return false;
+    }
+  }
+
+  async function handleFileChosen(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    if (!isHtmlFile(file)) {
+      toast.error(t("ideas.wireframes.invalidType"));
+      return;
+    }
+
+    const success = await uploadFile(file);
+    if (success) {
+      toast.success(t("ideas.wireframes.uploaded"));
+    }
+  }
+
+  async function handleFolderChosen(event: ChangeEvent<HTMLInputElement>) {
+    const fileList = Array.from(event.target.files ?? []);
+    event.target.value = "";
+    if (fileList.length === 0) return;
+
+    const htmlFiles = fileList.filter(isHtmlFile);
+    if (htmlFiles.length === 0) {
+      toast.error(t("ideas.wireframes.folderNoHtml"));
+      return;
+    }
+
+    setIsUploadingFolder(true);
+    let uploaded = 0;
+    for (const file of htmlFiles) {
+      const relPath = "webkitRelativePath" in file && file.webkitRelativePath
+        ? file.webkitRelativePath
+        : file.name;
+      const name = sanitizeWireframeName(relPath);
+      if (!name) continue;
+      try {
+        const html = await file.text();
+        await uploadMutation.mutateAsync({ name, html });
+        uploaded += 1;
+      } catch {
+        // individual file failures are reported by the upload mutation;
+        // keep going with the rest of the folder.
+      }
+    }
+    setIsUploadingFolder(false);
+
+    if (uploaded > 0) {
+      toast.success(
+        uploaded === htmlFiles.length
+          ? t("ideas.wireframes.folderUploaded", { count: uploaded })
+          : t("ideas.wireframes.folderPartial", {
+              uploaded,
+              total: htmlFiles.length,
+            }),
+      );
+    } else {
+      toast.error(t("ideas.wireframes.folderFailed"));
     }
   }
 
@@ -88,7 +151,16 @@ export function WireframesSection({ ideaId }: { ideaId: string }) {
             type="button"
             variant="secondary"
             size="sm"
-            isLoading={uploadMutation.isPending}
+            isLoading={isUploadingFolder}
+            onClick={() => folderInputRef.current?.click()}
+          >
+            {t("ideas.wireframes.uploadFolder")}
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            isLoading={uploadMutation.isPending && !isUploadingFolder}
             onClick={() => fileInputRef.current?.click()}
           >
             {t("ideas.wireframes.upload")}
@@ -96,9 +168,18 @@ export function WireframesSection({ ideaId }: { ideaId: string }) {
           <input
             ref={fileInputRef}
             type="file"
-            accept=".html,.htm,text/html"
+            accept=".html,.htm"
             className="sr-only"
             onChange={(e) => void handleFileChosen(e)}
+          />
+          <input
+            ref={folderInputRef}
+            type="file"
+            accept=".html,.htm"
+            multiple
+            {...{ webkitdirectory: "" }}
+            className="sr-only"
+            onChange={(e) => void handleFolderChosen(e)}
           />
         </div>
       </div>
