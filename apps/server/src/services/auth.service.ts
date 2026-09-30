@@ -1,4 +1,4 @@
-import { createHash, randomUUID } from "node:crypto";
+import { createHash, randomBytes, randomUUID } from "node:crypto";
 import bcrypt from "bcryptjs";
 
 import prisma from "../lib/prisma";
@@ -8,6 +8,7 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from "../lib/errors";
+import { sendPasswordResetEmail } from "./mailer.service";
 import {
   signAccessToken,
   signRefreshToken,
@@ -180,6 +181,69 @@ export async function logout(refreshToken: string | undefined) {
 
 export function getRefreshTokenCookieName() {
   return REFRESH_TOKEN_COOKIE;
+}
+
+export async function forgotPassword(email: string) {
+  const user = await prisma.user.findUnique({
+    where: { email: email.toLowerCase() },
+  });
+
+  if (user?.passwordHash) {
+    const token = randomBytes(32).toString("hex");
+    const expiresAt = new Date(
+      Date.now() + env.RESET_TOKEN_TTL_MINUTES * 60 * 1000,
+    );
+
+    await prisma.passwordResetToken.create({
+      data: {
+        userId: user.id,
+        tokenHash: digest(token),
+        expiresAt,
+      },
+    });
+
+    const resetUrl = `${env.CLIENT_URL}/reset-password?token=${token}`;
+    await sendPasswordResetEmail({ to: user.email, resetUrl });
+  }
+
+  return { sent: true };
+}
+
+export async function resetPassword(token: string, password: string) {
+  const tokenHash = digest(token);
+  const resetToken = await prisma.passwordResetToken.findUnique({
+    where: { tokenHash },
+    include: { user: true },
+  });
+
+  const isExpired = !resetToken || resetToken.expiresAt <= new Date();
+  const isUsed = !!resetToken?.usedAt;
+  if (isExpired || isUsed) {
+    throw new UnauthorizedError("Invalid or expired reset link");
+  }
+
+  const user = resetToken.user;
+  if (!user.passwordHash) {
+    throw new UnauthorizedError(
+      "This account does not use a password. Sign in with your provider instead.",
+    );
+  }
+
+  const passwordHash = await bcrypt.hash(password, 12);
+
+  await prisma.$transaction([
+    prisma.user.update({
+      where: { id: user.id },
+      data: { passwordHash },
+    }),
+    prisma.passwordResetToken.update({
+      where: { id: resetToken.id },
+      data: { usedAt: new Date() },
+    }),
+    prisma.refreshToken.deleteMany({ where: { userId: user.id } }),
+  ]);
+
+  return { ok: true };
 }
 
 export async function validateAccessToken(token: string): Promise<AccessTokenPayload> {

@@ -1,8 +1,10 @@
 import { Router, type Router as RouterType, type Response } from "express";
 import {
   deleteAccountSchema,
+  forgotPasswordSchema,
   loginSchema,
   registerSchema,
+  resetPasswordSchema,
   updateProfileSchema,
 } from "@repo/shared";
 
@@ -11,11 +13,13 @@ import { authenticate } from "../middleware/auth";
 import { authRateLimit } from "../middleware/rateLimit";
 import {
   deleteAccount,
+  forgotPassword,
   login,
   logout,
   me,
   refresh,
   register,
+  resetPassword,
   updateProfile,
   getRefreshTokenCookieName,
 } from "../services/auth.service";
@@ -66,6 +70,24 @@ router.post("/login", authRateLimit, validate(loginSchema), async (req, res, nex
         expiresIn: result.expiresIn,
       },
     });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/forgot-password", authRateLimit, validate(forgotPasswordSchema), async (req, res, next) => {
+  try {
+    const result = await forgotPassword(req.body.email);
+    res.json({ data: result });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/reset-password", authRateLimit, validate(resetPasswordSchema), async (req, res, next) => {
+  try {
+    const result = await resetPassword(req.body.token, req.body.password);
+    res.json({ data: result });
   } catch (err) {
     next(err);
   }

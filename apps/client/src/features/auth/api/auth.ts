@@ -1,9 +1,12 @@
 import { client } from "@/axios";
 import type {
   AuthResponse,
+  ForgotPasswordInput,
+  ForgotPasswordResponse,
   LoginInput,
   RefreshResponse,
   RegisterInput,
+  ResetPasswordInput,
   UpdateProfileInput,
   User,
 } from "../types";
@@ -15,6 +18,26 @@ export async function loginRequest(input: LoginInput): Promise<AuthResponse> {
 
 export async function registerRequest(input: RegisterInput): Promise<AuthResponse> {
   const { data } = await client.post<{ data: AuthResponse }>("/auth/register", input);
+  return data.data;
+}
+
+export async function forgotPasswordRequest(
+  input: ForgotPasswordInput,
+): Promise<ForgotPasswordResponse> {
+  const { data } = await client.post<{ data: ForgotPasswordResponse }>(
+    "/auth/forgot-password",
+    input,
+  );
+  return data.data;
+}
+
+export async function resetPasswordRequest(
+  input: ResetPasswordInput,
+): Promise<{ ok: boolean }> {
+  const { data } = await client.post<{ data: { ok: boolean } }>(
+    "/auth/reset-password",
+    input,
+  );
   return data.data;
 }
 

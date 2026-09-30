@@ -9,6 +9,8 @@ import { ProtectedRoute } from "@features/auth/components/ProtectedRoute";
 const HomePage = lazy(() => import("@pages/HomePage"));
 const LoginPage = lazy(() => import("@pages/LoginPage"));
 const RegisterPage = lazy(() => import("@pages/RegisterPage"));
+const ForgotPasswordPage = lazy(() => import("@pages/ForgotPasswordPage"));
+const ResetPasswordPage = lazy(() => import("@pages/ResetPasswordPage"));
 const DashboardPage = lazy(() => import("@features/dashboard/pages/DashboardPage"));
 const IdeasPage = lazy(() => import("@features/ideas/pages/IdeasPage"));
 const CreateIdeaPage = lazy(() => import("@features/ideas/pages/CreateIdeaPage"));
@@ -28,6 +30,8 @@ export default function App() {
           <Route index element={<HomePage />} />
           <Route path={ROUTES.LOGIN} element={<LoginPage />} />
           <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+          <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
+          <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
 
           {/* -- Protected Routes -- */}
           <Route

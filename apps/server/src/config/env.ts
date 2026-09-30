@@ -9,6 +9,8 @@ const envSchema = z.object({
   REFRESH_TOKEN_SECRET: z.string().min(1),
   ACCESS_TOKEN_TTL: z.coerce.string().default("15m"),
   REFRESH_TOKEN_TTL_DAYS: z.coerce.number().int().positive().default(30),
+  RESET_TOKEN_TTL_MINUTES: z.coerce.number().int().positive().default(60),
+  CLIENT_URL: z.string().url().default("http://localhost:5173"),
   CORS_ORIGINS: z
     .string()
     .default("http://localhost:5173")

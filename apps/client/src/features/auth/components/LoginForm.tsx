@@ -61,6 +61,12 @@ export function LoginForm() {
         <p className="m-0 text-sm text-[var(--color-danger)]">{error}</p>
       ) : null}
 
+      <div className="text-right">
+        <Link to={ROUTES.FORGOT_PASSWORD} className="text-sm text-[var(--color-muted)] hover:underline">
+          {t("auth.login.forgotPassword")}
+        </Link>
+      </div>
+
       <Button type="submit" isLoading={isSubmitting}>
         {t("auth.login.submit")}
       </Button>
