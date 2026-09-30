@@ -17,6 +17,7 @@ import { TagBadge } from "../components/TagBadge";
 import { TaskList } from "../components/TaskList";
 import { IdeaTagEditor } from "../components/IdeaTagEditor";
 import { IdeaStatusSelect } from "../components/IdeaStatusSelect";
+import { ProjectTypeSelect } from "../components/ProjectTypeSelect";
 import { WireframesSection } from "../components/wireframes/WireframesSection";
 import { IdeaDetailSkeleton } from "../components/skeletons";
 
@@ -155,6 +156,18 @@ export default function IdeaDetailPage() {
                 <dd className="flex items-center gap-2">
                   <PriorityDot priority={ideaQuery.data.priority} />
                   {t(`ideas.priority.${ideaQuery.data.priority}`)}
+                </dd>
+              </div>
+              <div className="flex flex-col gap-1">
+                <dt className="text-xs font-medium uppercase tracking-wide text-[var(--color-muted)]">
+                  {t("ideas.detail.projectType")}
+                </dt>
+                <dd>
+                  {isOwner ? (
+                    <ProjectTypeSelect idea={ideaQuery.data} />
+                  ) : (
+                    t(`ideas.projectType.${ideaQuery.data.projectType}`)
+                  )}
                 </dd>
               </div>
               <div className="flex flex-col gap-1">

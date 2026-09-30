@@ -188,6 +188,8 @@ export const es: LocaleMessages = {
       SOFTWARE: "Software",
       GAME: "Juego",
       WEBSITE: "Sitio web",
+      SAAS: "SaaS",
+      PHYSICAL: "Producto físico",
     },
     wireframes: {
       title: "Wireframes",
@@ -251,6 +253,9 @@ export const es: LocaleMessages = {
       deleted: "Idea eliminada",
       deleteError: "Algo salió mal al eliminar la idea.",
       priority: "Prioridad",
+      projectType: "Tipo de proyecto",
+      projectTypeUpdated: "Tipo de proyecto actualizado",
+      projectTypeUpdateError: "Algo salió mal al actualizar el tipo de proyecto.",
       createdAt: "Creada",
       updatedAt: "Actualizada",
       tags: "Etiquetas",
@@ -304,6 +309,8 @@ export const es: LocaleMessages = {
         progression: "Progresión",
         "art-audio": "Arte y audio",
         playtest: "Playtests",
+        "supply-chain": "Cadena de suministro",
+        "unit-economics": "Economía unitaria",
       },
     },
     pipeline: {

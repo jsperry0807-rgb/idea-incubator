@@ -186,6 +186,8 @@ export const en = {
       SOFTWARE: "Software",
       GAME: "Game",
       WEBSITE: "Website",
+      SAAS: "SaaS",
+      PHYSICAL: "Physical product",
     },
     wireframes: {
       title: "Wireframes",
@@ -249,6 +251,9 @@ export const en = {
       deleted: "Idea deleted",
       deleteError: "Something went wrong deleting the idea.",
       priority: "Priority",
+      projectType: "Project type",
+      projectTypeUpdated: "Project type updated",
+      projectTypeUpdateError: "Something went wrong updating the project type.",
       createdAt: "Created",
       updatedAt: "Updated",
       tags: "Tags",
@@ -302,6 +307,8 @@ export const en = {
         progression: "Progression",
         "art-audio": "Art & Audio",
         playtest: "Playtest Notes",
+        "supply-chain": "Supply Chain",
+        "unit-economics": "Unit Economics",
       },
     },
     pipeline: {

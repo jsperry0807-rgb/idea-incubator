@@ -188,6 +188,8 @@ export const fr: LocaleMessages = {
       SOFTWARE: "Logiciel",
       GAME: "Jeu",
       WEBSITE: "Site web",
+      SAAS: "SaaS",
+      PHYSICAL: "Produit physique",
     },
     wireframes: {
       title: "Wireframes",
@@ -251,6 +253,9 @@ export const fr: LocaleMessages = {
       deleted: "Idée supprimée",
       deleteError: "Une erreur est survenue lors de la suppression de l'idée.",
       priority: "Priorité",
+      projectType: "Type de projet",
+      projectTypeUpdated: "Type de projet mis à jour",
+      projectTypeUpdateError: "Une erreur est survenue lors de la mise à jour du type de projet.",
       createdAt: "Créée",
       updatedAt: "Mise à jour",
       tags: "Étiquettes",
@@ -304,6 +309,8 @@ export const fr: LocaleMessages = {
         progression: "Progression",
         "art-audio": "Art & Audio",
         playtest: "Playtests",
+        "supply-chain": "Chaîne d'approvisionnement",
+        "unit-economics": "Économie unitaire",
       },
     },
     pipeline: {

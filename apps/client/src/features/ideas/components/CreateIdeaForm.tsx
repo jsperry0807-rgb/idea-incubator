@@ -43,10 +43,19 @@ const PROJECT_TYPE_OPTIONS: Array<{
   { value: IdeaProjectType.SOFTWARE, labelKey: "ideas.projectType.SOFTWARE" },
   { value: IdeaProjectType.GAME, labelKey: "ideas.projectType.GAME" },
   { value: IdeaProjectType.WEBSITE, labelKey: "ideas.projectType.WEBSITE" },
+  { value: IdeaProjectType.SAAS, labelKey: "ideas.projectType.SAAS" },
+  { value: IdeaProjectType.PHYSICAL, labelKey: "ideas.projectType.PHYSICAL" },
 ];
 
 const PLANNING_FILES_BY_TYPE: Record<IdeaProjectType, Array<{ name: string; onDemand: boolean }>> = {
   [IdeaProjectType.SOFTWARE]: [
+    { name: "overview.md", onDemand: false },
+    { name: "tech-stack.md", onDemand: false },
+    { name: "features.md", onDemand: false },
+    { name: "timeline.md", onDemand: false },
+    { name: "risks.md", onDemand: true },
+  ],
+  [IdeaProjectType.SAAS]: [
     { name: "overview.md", onDemand: false },
     { name: "tech-stack.md", onDemand: false },
     { name: "features.md", onDemand: false },
@@ -71,6 +80,15 @@ const PLANNING_FILES_BY_TYPE: Record<IdeaProjectType, Array<{ name: string; onDe
     { name: "timeline.md", onDemand: false },
     { name: "risks.md", onDemand: true },
     { name: "playtest.md", onDemand: true },
+  ],
+  [IdeaProjectType.PHYSICAL]: [
+    { name: "overview.md", onDemand: false },
+    { name: "supply-chain.md", onDemand: false },
+    { name: "unit-economics.md", onDemand: false },
+    { name: "tech-stack.md", onDemand: false },
+    { name: "features.md", onDemand: false },
+    { name: "timeline.md", onDemand: false },
+    { name: "risks.md", onDemand: true },
   ],
 };
 
