@@ -2,6 +2,7 @@ import type { Prisma } from "../generated/prisma/client";
 import prisma from "../lib/prisma";
 import { NotFoundError } from "../lib/errors";
 import { ensureUniqueSlug, slugify } from "../lib/slug";
+import { sectionsForType } from "../lib/planningTemplates";
 import { storage } from "./storage.service";
 import type {
   CreateIdeaInput,
@@ -211,7 +212,7 @@ export async function updateIdea(
 ) {
   const existing = await prisma.idea.findFirst({
     where: { id, userId },
-    select: { id: true, title: true },
+    select: { id: true, title: true, projectType: true },
   });
 
   if (!existing) {
@@ -231,6 +232,7 @@ export async function updateIdea(
       : {}),
     ...(input.status !== undefined ? { status: input.status } : {}),
     ...(input.priority !== undefined ? { priority: input.priority } : {}),
+    ...(input.projectType !== undefined ? { projectType: input.projectType } : {}),
   };
 
   if (input.tagIds !== undefined) {
@@ -245,6 +247,10 @@ export async function updateIdea(
     data,
     include: IDEA_INCLUDE,
   });
+
+  if (input.projectType && input.projectType !== existing.projectType) {
+    await scaffoldSectionsForType(userId, id, input.projectType).catch(() => {});
+  }
 
   return toIdeaDto(idea);
 }
@@ -261,6 +267,21 @@ export async function deleteIdea(userId: string, id: string) {
 
   await prisma.idea.delete({ where: { id } });
   await storage.deleteIdeaFolder(userId, id).catch(() => {});
+}
+
+async function scaffoldSectionsForType(
+  userId: string,
+  ideaId: string,
+  projectType: IdeaProjectType,
+) {
+  const { created } = sectionsForType(projectType);
+  if (await storage.ideaFolderExists(userId, ideaId)) {
+    await Promise.all(
+      created.map((section) =>
+        storage.createIdeaSectionIfMissing(userId, ideaId, `${section}.md`, projectType),
+      ),
+    );
+  }
 }
 
 async function generateUniqueSlug(

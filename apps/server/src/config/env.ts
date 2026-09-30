@@ -16,6 +16,10 @@ const envSchema = z.object({
     .default("http://localhost:5173")
     .transform((v) => v.split(",").map((s) => s.trim()).filter(Boolean)),
   STORAGE_PATH: z.string().default("./storage"),
+  LLM_API_KEY: z.string().optional(),
+  LLM_BASE_URL: z.string().url().optional(),
+  LLM_MODEL: z.string().optional(),
+  LLM_SYNTHESIS_MODEL: z.string().optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);

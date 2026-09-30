@@ -16,7 +16,9 @@ export type PlanningSection =
   | "mechanics"
   | "progression"
   | "art-audio"
-  | "playtest";
+  | "playtest"
+  | "supply-chain"
+  | "unit-economics";
 
 type TemplateMap = Record<PlanningSection, string>;
 
@@ -112,6 +114,35 @@ _What does the player get to be or do? Why do they keep coming back?_
 | ------ | ------- |
 | Menu | _e.g. Start, options, credits_ |
 | Gameplay | _e.g. Core session loop_ |
+
+## Design Principles
+
+- Principle 1
+- Principle 2
+`;
+
+const PHYSICAL_OVERVIEW = `# Overview
+
+<!-- What product is this, and who buys it? Physical goods have demand, sourcing, and fulfilment realities that software does not. -->
+
+## What It Is
+
+_A one-paragraph description of the product._
+
+## Who It's For
+
+- Target customer
+- Secondary audience
+
+## Core Concepts
+
+- Concept 1
+- Concept 2
+- Concept 3
+
+## Go-To-Market
+
+_Where do these buyers already hang out? How will you reach them before you have a product to ship?_
 
 ## Design Principles
 
@@ -374,10 +405,70 @@ _What are you unsure about right now? What should every playtest answer?_
 | ---- | ----- | ------ | ----- | --------- |
 `;
 
+const SUPPLY_CHAIN = `# Supply Chain
+
+<!-- How each unit gets made and moved. Physical products live and die here. -->
+
+## Sourcing
+
+| Component | Supplier | Lead Time | Cost/Unit | MOQ | Status |
+| --------- | -------- | --------- | --------- | --- | ------ |
+
+## Manufacturing
+
+| Step | Partner | Location | Capacity | Notes |
+| ---- | ------- | -------- | -------- | ----- |
+
+## Fulfilment
+
+- Storage:
+- Packing:
+- Shipping carrier:
+- Returns handling:
+
+## Inventory Risk
+
+- Shelf-life / perishability:
+- Storage cost per unit:
+- Minimum order exposure:
+`;
+
+const UNIT_ECONOMICS = `# Unit Economics
+
+<!-- The per-unit numbers that decide whether this product is viable at all. -->
+
+## Cost Breakdown
+
+| Line | Cost/Unit | Notes |
+| ---- | --------- | ----- |
+| Materials | | |
+| Manufacturing | | |
+| Packaging | | |
+| Shipping | | |
+| Platform/Channel fees | | |
+
+## Pricing
+
+| SKU | Price | Gross Margin | Contribution |
+| --- | ----- | ------------ | ------------ |
+
+## Break-Even
+
+- Fixed costs (tooling, design, marketing):
+- Units to break even:
+- Time to run-rate:
+
+## Scenarios
+
+_Sensitivity: what happens to margin if shipping doubles, or MOQ forces 3x inventory?_
+`;
+
 const OVERVIEW_BY_TYPE: Record<IdeaProjectType, string> = {
   SOFTWARE: SOFTWARE_OVERVIEW,
   WEBSITE: WEBSITE_OVERVIEW,
   GAME: GAME_OVERVIEW,
+  SAAS: SOFTWARE_OVERVIEW,
+  PHYSICAL: PHYSICAL_OVERVIEW,
 };
 
 const SECTION_TEMPLATES: Omit<TemplateMap, "overview"> = {
@@ -392,6 +483,8 @@ const SECTION_TEMPLATES: Omit<TemplateMap, "overview"> = {
   progression: PROGRESSION,
   "art-audio": ART_AUDIO,
   playtest: PLAYTEST,
+  "supply-chain": SUPPLY_CHAIN,
+  "unit-economics": UNIT_ECONOMICS,
 };
 
 /** Sections written immediately when an idea of each type is created. */
@@ -400,6 +493,7 @@ export const CREATED_SECTIONS_BY_TYPE: Record<
   readonly PlanningSection[]
 > = {
   SOFTWARE: ["overview", "tech-stack", "features", "timeline"],
+  SAAS: ["overview", "tech-stack", "features", "timeline"],
   WEBSITE: ["overview", "pages", "content", "tech-stack", "timeline"],
   GAME: [
     "overview",
@@ -409,12 +503,22 @@ export const CREATED_SECTIONS_BY_TYPE: Record<
     "tech-stack",
     "timeline",
   ],
+  PHYSICAL: [
+    "overview",
+    "supply-chain",
+    "unit-economics",
+    "tech-stack",
+    "features",
+    "timeline",
+  ],
 };
 
 export const ON_DEMAND_SECTIONS: Record<IdeaProjectType, readonly PlanningSection[]> = {
   SOFTWARE: ["risks"],
+  SAAS: ["risks"],
   WEBSITE: ["risks", "seo"],
   GAME: ["risks", "playtest"],
+  PHYSICAL: ["risks"],
 };
 
 export function sectionsForType(type: IdeaProjectType): {
