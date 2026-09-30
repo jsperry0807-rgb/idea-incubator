@@ -136,7 +136,9 @@ export class LocalFileStorage implements FileStorageService {
       filename.replace(/\.md$/, ""),
     );
     if (!template) throw new NotFoundError("Unknown planning section");
-    if (!(await this.ideaFolderExists(userId, ideaId))) return false;
+    if (!(await this.ideaFolderExists(userId, ideaId))) {
+      await this.createIdeaFolder(userId, ideaId, projectType);
+    }
 
     const rel = this.ideaSectionPath(userId, ideaId, filename);
     if (await this.store.exists(rel)) return false;

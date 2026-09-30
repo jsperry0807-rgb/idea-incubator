@@ -431,11 +431,6 @@ export function getTemplate(
   type: IdeaProjectType,
   section: string,
 ): string | undefined {
-  const { created, onDemand } = sectionsForType(type);
-  const all = [...created, ...onDemand];
-  if (!all.includes(section as PlanningSection)) {
-    return undefined;
-  }
   if (section === "overview") {
     return OVERVIEW_BY_TYPE[type];
   }
