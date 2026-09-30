@@ -19,6 +19,7 @@ const TagsPage = lazy(() => import("@features/tags/pages/TagsPage"));
 const SharedIdeasPage = lazy(() => import("@features/ideas/pages/SharedIdeasPage"));
 const SettingsPage = lazy(() => import("@features/settings/pages/SettingsPage"));
 const IdeaDetailPage = lazy(() => import("@features/ideas/pages/IdeaDetailPage"));
+const IdeaTasksPage = lazy(() => import("@features/ideas/pages/IdeaTasksPage"));
 const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
 
 export default function App() {
@@ -95,6 +96,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <IdeaDetailPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.IDEA_TASKS}
+            element={
+              <ProtectedRoute>
+                <IdeaTasksPage />
               </ProtectedRoute>
             }
           />

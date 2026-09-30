@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Button, Card, EmptyState, toast } from "@repo/ui";
 
 import { useAuth } from "@features/auth/hooks/useAuth";
-import { ROUTES } from "@config/routes";
+import { ROUTES, ideaTasksPath } from "@config/routes";
 import { useIdea } from "../hooks/useIdea";
 import { useDeleteIdea } from "../hooks/useDeleteIdea";
 import { CommentThread } from "../components/comments/CommentThread";
@@ -228,9 +228,17 @@ export default function IdeaDetailPage() {
             className="flex flex-col gap-3"
             aria-labelledby="idea-tasks-heading"
           >
-            <h2 id="idea-tasks-heading" className="text-sm font-medium">
-              {t("ideas.detail.tasksTitle")}
-            </h2>
+            <div className="flex items-center justify-between gap-2">
+              <h2 id="idea-tasks-heading" className="text-sm font-medium">
+                {t("ideas.detail.tasksTitle")}
+              </h2>
+              <Link
+                to={ideaTasksPath(id)}
+                className="rounded border border-[var(--color-border)] px-2 py-1 text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-fg)]"
+              >
+                {t("ideas.board.openBoard")}
+              </Link>
+            </div>
             <TaskList ideaId={id} />
           </section>
 

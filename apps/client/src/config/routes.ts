@@ -12,6 +12,7 @@ export const ROUTES = {
   SHARED: "/shared",
   SETTINGS: "/settings",
   IDEA_DETAIL: "/ideas/:id",
+  IDEA_TASKS: "/ideas/:id/tasks",
   NOT_FOUND: "/404",
 } as const;
 
@@ -19,4 +20,8 @@ export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];
 
 export function ideaDetailPath(id: string): string {
   return `${ROUTES.IDEAS}/${id}`;
+}
+
+export function ideaTasksPath(id: string): string {
+  return `${ideaDetailPath(id)}/tasks`;
 }
