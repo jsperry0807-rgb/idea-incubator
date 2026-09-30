@@ -18,7 +18,8 @@ export default function RootLayout() {
   const sidebarOpen = useUIStore((s) => s.sidebarOpen);
   const toggleSidebar = useUIStore((s) => s.toggleSidebar);
   const setSidebarOpen = useUIStore((s) => s.setSidebarOpen);
-  const isHome = location.pathname === ROUTES.HOME;
+  const homeTo = isAuthenticated ? ROUTES.DASHBOARD : ROUTES.HOME;
+  const isHome = location.pathname === homeTo;
   const isIdeas =
     location.pathname === ROUTES.IDEAS ||
     location.pathname.startsWith(`${ROUTES.IDEAS}/`);
@@ -129,7 +130,7 @@ export default function RootLayout() {
             </svg>
           </button>
           <Link
-            to={ROUTES.HOME}
+            to={homeTo}
             className="truncate text-lg font-bold text-[var(--color-fg)]"
           >
             {t("app.name")}
@@ -137,7 +138,7 @@ export default function RootLayout() {
         </div>
 
         <nav className="hidden items-center gap-5 md:flex">
-          <Link to={ROUTES.HOME} className={navLinkClasses(isHome)}>
+          <Link to={homeTo} className={navLinkClasses(isHome)}>
             {t("app.nav.home")}
           </Link>
           {authLinks.map((link) => (
@@ -183,14 +184,14 @@ export default function RootLayout() {
             className="fixed inset-y-0 left-0 z-50 flex w-72 flex-col gap-1 overflow-y-auto border-r border-[var(--color-border)] bg-[var(--color-card)] p-4 shadow-[var(--shadow-lg)] md:hidden motion-safe:animate-[sidebar-in_250ms_var(--ease-out)]"
           >
             <Link
-              to={ROUTES.HOME}
+              to={homeTo}
               onClick={() => setSidebarOpen(false)}
               className="rounded-md px-3 pb-3 pt-1 text-sm font-semibold text-[var(--color-fg)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
             >
               {t("app.name")}
             </Link>
             <Link
-              to={ROUTES.HOME}
+              to={homeTo}
               onClick={() => setSidebarOpen(false)}
               className="rounded-md px-3 py-2 text-sm text-[var(--color-muted)] transition-colors hover:bg-[var(--color-muted)]/10 hover:text-[var(--color-fg)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
             >
