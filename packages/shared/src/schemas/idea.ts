@@ -1,12 +1,14 @@
 import { z } from "zod";
 
 import {
-  IdeaPriority,
-  IdeaProjectType,
-  IdeaStatus,
   IDEA_PRIORITY_VALUES,
   IDEA_PROJECT_TYPE_VALUES,
   IDEA_STATUS_VALUES,
+} from "../enums";
+import type {
+  IdeaPriority,
+  IdeaProjectType,
+  IdeaStatus,
 } from "../enums";
 
 export const ideaTitleSchema = z.string().trim().min(1).max(200);

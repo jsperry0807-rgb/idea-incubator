@@ -1,4 +1,5 @@
 import { SignJWT, jwtVerify } from "jose";
+import type { JWTPayload } from "jose";
 
 import { env } from "../config/env";
 
@@ -16,9 +17,7 @@ const accessSecret = new TextEncoder().encode(env.ACCESS_TOKEN_SECRET);
 const refreshSecret = new TextEncoder().encode(env.REFRESH_TOKEN_SECRET);
 
 export async function signAccessToken(payload: AccessTokenPayload): Promise<string> {
-  return new SignJWT(
-    payload as unknown as import("jose").JWTPayload,
-  )
+  return new SignJWT(payload as unknown as JWTPayload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(env.ACCESS_TOKEN_TTL)
@@ -26,9 +25,7 @@ export async function signAccessToken(payload: AccessTokenPayload): Promise<stri
 }
 
 export async function signRefreshToken(payload: RefreshTokenPayload): Promise<string> {
-  return new SignJWT(
-    payload as unknown as import("jose").JWTPayload,
-  )
+  return new SignJWT(payload as unknown as JWTPayload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(`${env.REFRESH_TOKEN_TTL_DAYS}d`)

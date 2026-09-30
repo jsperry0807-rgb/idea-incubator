@@ -1,4 +1,4 @@
-import { z } from "zod";
+import type { z } from "zod";
 
 import { questionSchema } from "@repo/shared";
 import type { DecisionPoint } from "@repo/shared";
