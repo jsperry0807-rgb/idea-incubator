@@ -35,6 +35,8 @@ enum IdeaProjectType {
   SOFTWARE
   GAME
   WEBSITE
+  SAAS
+  PHYSICAL
 }
 
 enum ShareRole {
@@ -64,6 +66,7 @@ model User {
   updatedAt      DateTime         @updatedAt
 
   ideas         Idea[]
+  interviews    Interview[]
   comments      Comment[]
   shares        Share[]
   notifications Notification[]
@@ -91,10 +94,25 @@ model Idea {
   comments Comment[]
   tasks   Task[]
   shares  Share[]
+  interviews Interview[]
 
   @@index([userId, status])
   @@index([userId, createdAt(sort: Desc)])
   @@map("ideas")
+}
+
+model Interview {
+  id     String @id @default(cuid())
+  ideaId String
+  userId String
+  phase  String @default("CLASSIFY")
+  state  Json
+
+  idea Idea @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([ideaId])
+  @@map("interviews")
 }
 
 model Tag {
