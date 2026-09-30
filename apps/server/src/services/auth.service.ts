@@ -38,8 +38,35 @@ export interface TokenPair {
 
 const REFRESH_TOKEN_COOKIE = "refresh_token";
 
+const DEFAULT_TAGS: Array<{ name: string; color: string }> = [
+  { name: "Frontend", color: "#3b82f6" },
+  { name: "Backend", color: "#ef4444" },
+  { name: "Full-stack", color: "#8b5cf6" },
+  { name: "Mobile", color: "#10b981" },
+  { name: "API", color: "#f59e0b" },
+  { name: "Database", color: "#06b6d4" },
+  { name: "DevOps", color: "#6366f1" },
+  { name: "UI/UX", color: "#ec4899" },
+  { name: "AI", color: "#a855f7" },
+  { name: "MVP", color: "#84cc16" },
+];
+
 function digest(value: string): string {
   return createHash("sha256").update(value).digest("hex");
+}
+
+async function ensureDefaultTags(userId: string, tagService = prisma.tag) {
+  const existing = await tagService.findMany({
+    where: { userId },
+    select: { name: true },
+  });
+  const existingNames = new Set(existing.map((tag) => tag.name));
+  const missing = DEFAULT_TAGS.filter((tag) => !existingNames.has(tag.name));
+  if (missing.length > 0) {
+    await tagService.createMany({
+      data: missing.map((tag) => ({ ...tag, userId })),
+    });
+  }
 }
 
 export async function register(input: RegisterInput) {
@@ -59,7 +86,11 @@ export async function register(input: RegisterInput) {
       email: input.email.toLowerCase(),
       passwordHash,
       authProvider: "LOCAL",
+      tags: {
+        create: DEFAULT_TAGS,
+      },
     },
+    include: { tags: true },
   });
 
   const tokens = await createSession(user.id, user.email);
@@ -81,6 +112,7 @@ export async function login(input: LoginInput) {
   }
 
   const tokens = await createSession(user.id, user.email);
+  await ensureDefaultTags(user.id);
   return { user: toPublicUser(user), ...tokens };
 }
 
@@ -130,6 +162,7 @@ export async function me(userId: string) {
   if (!user) {
     throw new NotFoundError("User not found");
   }
+  await ensureDefaultTags(userId);
   return toPublicUser(user);
 }
 
