@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Button, Card, EmptyState } from "@repo/ui";
+import { Button, Card, EmptyState, toast } from "@repo/ui";
 
 import { useAuth } from "@features/auth/hooks/useAuth";
 import { ROUTES } from "@config/routes";
 import { useIdea } from "../hooks/useIdea";
+import { useDeleteIdea } from "../hooks/useDeleteIdea";
 import { CommentThread } from "../components/comments/CommentThread";
 import { PlanningAccordion } from "../components/PlanningAccordion";
 import { PriorityDot } from "../components/PriorityDot";
@@ -15,16 +16,20 @@ import { StatusBadge } from "../components/StatusBadge";
 import { TagBadge } from "../components/TagBadge";
 import { TaskList } from "../components/TaskList";
 import { IdeaTagEditor } from "../components/IdeaTagEditor";
+import { IdeaStatusSelect } from "../components/IdeaStatusSelect";
 import { WireframesSection } from "../components/wireframes/WireframesSection";
 import { IdeaDetailSkeleton } from "../components/skeletons";
 
 export default function IdeaDetailPage() {
   const { id = "" } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const [shareOpen, setShareOpen] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   const ideaQuery = useIdea(id);
+  const deleteMutation = useDeleteIdea();
   const isLoading = ideaQuery.isLoading;
   const notFound =
     (ideaQuery.error as { response?: { status?: number } } | undefined)
@@ -32,6 +37,16 @@ export default function IdeaDetailPage() {
   const isOwner = Boolean(
     user && ideaQuery.data && ideaQuery.data.userId === user.id,
   );
+
+  async function handleDelete() {
+    try {
+      await deleteMutation.mutateAsync(id);
+      toast.success(t("ideas.detail.deleted"));
+      navigate(ROUTES.IDEAS, { replace: true });
+    } catch {
+      toast.error(t("ideas.detail.deleteError"));
+    }
+  }
 
   const dateFormatter = useMemo(
     () =>
@@ -72,13 +87,43 @@ export default function IdeaDetailPage() {
                 <StatusBadge status={ideaQuery.data.status} />
               </div>
               {isOwner ? (
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => setShareOpen(true)}
-                >
-                  {t("ideas.sharing.button")}
-                </Button>
+                <div className="flex items-center gap-2">
+                  {confirmingDelete ? (
+                    <>
+                      <Button
+                        size="sm"
+                        variant="danger"
+                        isLoading={deleteMutation.isPending}
+                        onClick={() => void handleDelete()}
+                      >
+                        {t("ideas.detail.deleteConfirm")}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => setConfirmingDelete(false)}
+                        disabled={deleteMutation.isPending}
+                      >
+                        {t("ideas.detail.cancel")}
+                      </Button>
+                    </>
+                  ) : (
+                    <Button
+                      size="sm"
+                      variant="danger"
+                      onClick={() => setConfirmingDelete(true)}
+                    >
+                      {t("ideas.detail.delete")}
+                    </Button>
+                  )}
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => setShareOpen(true)}
+                  >
+                    {t("ideas.sharing.button")}
+                  </Button>
+                </div>
               ) : null}
             </div>
             <h1 className="text-2xl font-extrabold">{ideaQuery.data.title}</h1>
@@ -96,7 +141,11 @@ export default function IdeaDetailPage() {
                   {t("ideas.detail.status")}
                 </dt>
                 <dd>
-                  <StatusBadge status={ideaQuery.data.status} />
+                  {isOwner ? (
+                    <IdeaStatusSelect idea={ideaQuery.data} />
+                  ) : (
+                    <StatusBadge status={ideaQuery.data.status} />
+                  )}
                 </dd>
               </div>
               <div className="flex flex-col gap-1">

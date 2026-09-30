@@ -43,3 +43,7 @@ export async function updateIdea(id: string, input: UpdateIdeaInput): Promise<Id
   const { data } = await client.patch<{ data: Idea }>(`/ideas/${id}`, input);
   return data.data;
 }
+
+export async function deleteIdea(id: string): Promise<void> {
+  await client.delete(`/ideas/${id}`);
+}
