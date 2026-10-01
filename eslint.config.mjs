@@ -1,16 +1,9 @@
-// eslint.config.mjs
-import baseConfig from './packages/config/eslint.base.mjs';
+import { baseConfig } from './packages/config/eslint.base.js';
 import prettierConfig from 'eslint-config-prettier';
 
 export default [
-  ...baseConfig,
-  // Add any root-specific overrides here
-  {
-    rules: {
-      // Example: enforce no console logs in production code
-      'no-console': ['warn', { allow: ['warn', 'error'] }],
-    },
-  },
-  // eslint-config-prettier MUST be last to override formatting rules
+  ...baseConfig({ env: 'shared' }),
+  // Root-specific overrides go here, after the shared base and before Prettier.
+  // eslint-config-prettier MUST stay last so it can disable conflicting stylistic rules.
   prettierConfig,
 ];
