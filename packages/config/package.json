@@ -4,11 +4,11 @@
   "type": "module",
   "files": [
     "tsconfig.base.json",
-    "eslint.base.js"
+    "eslint.config.js"
   ],
   "exports": {
     "./tsconfig.base.json": "./tsconfig.base.json",
-    "./eslint.base": "./eslint.base.js"
+    "./eslint.config.js": "./eslint.config.js"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

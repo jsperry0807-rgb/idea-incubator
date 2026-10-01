@@ -1,4 +1,4 @@
-// eslint.base.js
+// eslint.config.js
 // Shared flat-config factory so every workspace lints with the same rules.
 // Workspace configs compose this and only add their environment specifics.
 import js from '@eslint/js';

@@ -1,4 +1,4 @@
-import { baseConfig } from './packages/config/eslint.base.js';
+import { baseConfig } from './packages/config/eslint.config.js';
 import prettierConfig from 'eslint-config-prettier';
 
 export default [
