@@ -1,0 +1,10 @@
+# Normalise text files to LF in the repository and in every working tree,
+# including Windows checkouts.
+#
+# Prettier defaults to endOfLine "lf", and CI runs on ubuntu where the
+# checkout is LF anyway. Without this, core.autocrlf=true rewrites files to
+# CRLF on a fresh Windows clone or branch switch, after which
+# `pnpm format:check` fails on every file until they are rewritten back.
+#
+# Binaries (icons, fonts) are detected by `text=auto` and left untouched.
+* text=auto eol=lf
