@@ -1,6 +1,6 @@
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
-import { useUIStore } from "@/stores/ui.store";
+import { useUIStore } from '@/stores/ui.store';
 
 export function ThemeToggle() {
   const { t } = useTranslation();
@@ -8,27 +8,27 @@ export function ThemeToggle() {
   const toggleTheme = useUIStore((s) => s.toggleTheme);
 
   const isDark =
-    theme === "dark" ||
-    (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    theme === 'dark' ||
+    (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   return (
     <button
       type="button"
-      aria-label={t("app.theme.toggle")}
-      title={t("app.theme.toggle")}
+      aria-label={t('app.theme.toggle')}
+      title={t('app.theme.toggle')}
       onClick={toggleTheme}
       className="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
       style={{
-        width: "2rem",
-        height: "2rem",
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "transparent",
-        border: "none",
-        borderRadius: "var(--radius)",
-        cursor: "pointer",
-        color: "var(--color-muted)",
+        width: '2rem',
+        height: '2rem',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'transparent',
+        border: 'none',
+        borderRadius: 'var(--radius)',
+        cursor: 'pointer',
+        color: 'var(--color-muted)',
       }}
     >
       {isDark ? (

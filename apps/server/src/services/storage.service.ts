@@ -1,14 +1,14 @@
-import path from "node:path";
+import path from 'node:path';
 
-import { ConflictError, NotFoundError } from "../lib/errors";
+import { ConflictError, NotFoundError } from '../lib/errors';
 import {
   CREATED_SECTIONS_BY_TYPE,
   getTemplate,
   type PlanningSection,
-} from "../lib/planningTemplates";
-import { LocalFileStore } from "./file-store.service";
-import type { FileStore } from "./file-store.service";
-import type { IdeaProjectType } from "@repo/shared";
+} from '../lib/planningTemplates';
+import { LocalFileStore } from './file-store.service';
+import type { FileStore } from './file-store.service';
+import type { IdeaProjectType } from '@repo/shared';
 
 /**
  * Planning-aware file storage for a single user's idea folders.
@@ -23,47 +23,38 @@ export interface FileStorageService {
     userId: string,
     ideaId: string,
     filename: string,
-    content: string,
+    content: string
   ): Promise<void>;
-  readIdeaSection(
-    userId: string,
-    ideaId: string,
-    filename: string,
-  ): Promise<string>;
+  readIdeaSection(userId: string, ideaId: string, filename: string): Promise<string>;
   createIdeaSectionIfMissing(
     userId: string,
     ideaId: string,
     filename: string,
-    projectType: IdeaProjectType,
+    projectType: IdeaProjectType
   ): Promise<boolean>;
   listIdeaSections(userId: string, ideaId: string): Promise<string[]>;
   deleteIdeaFolder(userId: string, ideaId: string): Promise<void>;
   ideaFolderExists(userId: string, ideaId: string): Promise<boolean>;
   listWireframes(userId: string, ideaId: string): Promise<string[]>;
-  writeWireframe(
-    userId: string,
-    ideaId: string,
-    filename: string,
-    content: string,
-  ): Promise<void>;
+  writeWireframe(userId: string, ideaId: string, filename: string, content: string): Promise<void>;
   readWireframe(userId: string, ideaId: string, filename: string): Promise<string>;
   deleteWireframe(userId: string, ideaId: string, filename: string): Promise<void>;
 }
 
-export const WIREFRAMES_DIR = "wireframes";
+export const WIREFRAMES_DIR = 'wireframes';
 
 export class LocalFileStorage implements FileStorageService {
   constructor(private readonly store: FileStore) {}
 
   private assertMarkdown(filename: string): void {
-    if (!filename.endsWith(".md")) {
-      throw new NotFoundError("Invalid filename");
+    if (!filename.endsWith('.md')) {
+      throw new NotFoundError('Invalid filename');
     }
   }
 
   private assertHtml(filename: string): void {
-    if (!filename.endsWith(".html")) {
-      throw new NotFoundError("Invalid filename");
+    if (!filename.endsWith('.html')) {
+      throw new NotFoundError('Invalid filename');
     }
   }
 
@@ -71,26 +62,18 @@ export class LocalFileStorage implements FileStorageService {
     return path.join(userId, ideaId);
   }
 
-  private ideaSectionPath(
-    userId: string,
-    ideaId: string,
-    filename: string,
-  ): string {
+  private ideaSectionPath(userId: string, ideaId: string, filename: string): string {
     return path.join(userId, ideaId, filename);
   }
 
-  private wireframePath(
-    userId: string,
-    ideaId: string,
-    filename: string,
-  ): string {
+  private wireframePath(userId: string, ideaId: string, filename: string): string {
     return path.join(userId, ideaId, WIREFRAMES_DIR, filename);
   }
 
   async createIdeaFolder(
     userId: string,
     ideaId: string,
-    projectType: IdeaProjectType,
+    projectType: IdeaProjectType
   ): Promise<void> {
     const dir = this.ideaPath(userId, ideaId);
     await this.store.mkdir(dir);
@@ -100,9 +83,9 @@ export class LocalFileStorage implements FileStorageService {
       CREATED_SECTIONS_BY_TYPE[projectType].map((section: PlanningSection) =>
         this.store.write(
           this.ideaSectionPath(userId, ideaId, `${section}.md`),
-          getTemplate(projectType, section)!,
-        ),
-      ),
+          getTemplate(projectType, section)!
+        )
+      )
     );
   }
 
@@ -110,17 +93,13 @@ export class LocalFileStorage implements FileStorageService {
     userId: string,
     ideaId: string,
     filename: string,
-    content: string,
+    content: string
   ): Promise<void> {
     this.assertMarkdown(filename);
     await this.store.write(this.ideaSectionPath(userId, ideaId, filename), content);
   }
 
-  async readIdeaSection(
-    userId: string,
-    ideaId: string,
-    filename: string,
-  ): Promise<string> {
+  async readIdeaSection(userId: string, ideaId: string, filename: string): Promise<string> {
     this.assertMarkdown(filename);
     return this.store.read(this.ideaSectionPath(userId, ideaId, filename));
   }
@@ -129,13 +108,10 @@ export class LocalFileStorage implements FileStorageService {
     userId: string,
     ideaId: string,
     filename: string,
-    projectType: IdeaProjectType,
+    projectType: IdeaProjectType
   ): Promise<boolean> {
-    const template = getTemplate(
-      projectType,
-      filename.replace(/\.md$/, ""),
-    );
-    if (!template) throw new NotFoundError("Unknown planning section");
+    const template = getTemplate(projectType, filename.replace(/\.md$/, ''));
+    if (!template) throw new NotFoundError('Unknown planning section');
     if (!(await this.ideaFolderExists(userId, ideaId))) {
       await this.createIdeaFolder(userId, ideaId, projectType);
     }
@@ -149,7 +125,7 @@ export class LocalFileStorage implements FileStorageService {
 
   async listIdeaSections(userId: string, ideaId: string): Promise<string[]> {
     const names = await this.store.list(this.ideaPath(userId, ideaId));
-    return names.filter((name) => name.endsWith(".md")).sort();
+    return names.filter((name) => name.endsWith('.md')).sort();
   }
 
   async deleteIdeaFolder(userId: string, ideaId: string): Promise<void> {
@@ -161,17 +137,15 @@ export class LocalFileStorage implements FileStorageService {
   }
 
   async listWireframes(userId: string, ideaId: string): Promise<string[]> {
-    const names = await this.store.list(
-      path.join(this.ideaPath(userId, ideaId), WIREFRAMES_DIR),
-    );
-    return names.filter((name) => name.endsWith(".html")).sort();
+    const names = await this.store.list(path.join(this.ideaPath(userId, ideaId), WIREFRAMES_DIR));
+    return names.filter((name) => name.endsWith('.html')).sort();
   }
 
   async writeWireframe(
     userId: string,
     ideaId: string,
     filename: string,
-    content: string,
+    content: string
   ): Promise<void> {
     this.assertHtml(filename);
     const dir = path.join(this.ideaPath(userId, ideaId), WIREFRAMES_DIR);
@@ -180,34 +154,24 @@ export class LocalFileStorage implements FileStorageService {
     }
     const rel = this.wireframePath(userId, ideaId, filename);
     if (await this.store.exists(rel)) {
-      throw new ConflictError("Wireframe already exists");
+      throw new ConflictError('Wireframe already exists');
     }
     await this.store.write(rel, content);
   }
 
-  async readWireframe(
-    userId: string,
-    ideaId: string,
-    filename: string,
-  ): Promise<string> {
+  async readWireframe(userId: string, ideaId: string, filename: string): Promise<string> {
     this.assertHtml(filename);
     return this.store.read(this.wireframePath(userId, ideaId, filename));
   }
 
-  async deleteWireframe(
-    userId: string,
-    ideaId: string,
-    filename: string,
-  ): Promise<void> {
+  async deleteWireframe(userId: string, ideaId: string, filename: string): Promise<void> {
     this.assertHtml(filename);
     const rel = this.wireframePath(userId, ideaId, filename);
     if (!(await this.store.exists(rel))) {
-      throw new NotFoundError("Wireframe not found");
+      throw new NotFoundError('Wireframe not found');
     }
     await this.store.deleteAll(rel);
   }
 }
 
-export const storage: FileStorageService = new LocalFileStorage(
-  new LocalFileStore(),
-);
+export const storage: FileStorageService = new LocalFileStorage(new LocalFileStore());

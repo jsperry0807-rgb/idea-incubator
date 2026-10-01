@@ -1,23 +1,23 @@
-import { createPortal } from "react-dom";
+import { createPortal } from 'react-dom';
 
-import { dismissToast, useToasts } from "./toast-store";
+import { dismissToast, useToasts } from './toast-store';
 
 const toneClasses: Record<string, string> = {
-  success: "border-[var(--color-success)]/40 text-[var(--color-success)]",
-  error: "border-[var(--color-danger)]/40 text-[var(--color-danger)]",
-  info: "border-[var(--color-info)]/40 text-[var(--color-info)]",
+  success: 'border-[var(--color-success)]/40 text-[var(--color-success)]',
+  error: 'border-[var(--color-danger)]/40 text-[var(--color-danger)]',
+  info: 'border-[var(--color-info)]/40 text-[var(--color-info)]',
 };
 
 const dotClasses: Record<string, string> = {
-  success: "bg-[var(--color-success)]",
-  error: "bg-[var(--color-danger)]",
-  info: "bg-[var(--color-info)]",
+  success: 'bg-[var(--color-success)]',
+  error: 'bg-[var(--color-danger)]',
+  info: 'bg-[var(--color-info)]',
 };
 
 export function Toaster() {
   const toasts = useToasts();
 
-  if (typeof document === "undefined") return null;
+  if (typeof document === 'undefined') return null;
 
   return createPortal(
     <div
@@ -28,12 +28,12 @@ export function Toaster() {
         <div
           key={t.id}
           className={[
-            "pointer-events-auto flex items-center gap-2 rounded-md border bg-[var(--color-card)] px-4 py-3 text-sm text-[var(--color-card-fg)] shadow-[var(--shadow-lg)] animate-[toast-in_var(--motion-normal)_var(--ease-out)]",
+            'pointer-events-auto flex items-center gap-2 rounded-md border bg-[var(--color-card)] px-4 py-3 text-sm text-[var(--color-card-fg)] shadow-[var(--shadow-lg)] animate-[toast-in_var(--motion-normal)_var(--ease-out)]',
             toneClasses[t.tone],
-          ].join(" ")}
+          ].join(' ')}
           role="status"
         >
-          <span className={["size-2 shrink-0 rounded-full", dotClasses[t.tone]].join(" ")} />
+          <span className={['size-2 shrink-0 rounded-full', dotClasses[t.tone]].join(' ')} />
           <span className="flex-1">{t.message}</span>
           <button
             type="button"
@@ -46,6 +46,6 @@ export function Toaster() {
         </div>
       ))}
     </div>,
-    document.body,
+    document.body
   );
 }

@@ -8,24 +8,22 @@ Shared between server and client via `@repo/shared`.
 
 ```ts
 // packages/shared/src/schemas.ts
-import { z } from "zod";
+import { z } from 'zod';
 
 export const cuid = z.string().cuid();
-export const email = z.string().email("Invalid email address");
+export const email = z.string().email('Invalid email address');
 export const password = z
   .string()
-  .min(8, "Password must be at least 8 characters")
-  .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-  .regex(/[0-9]/, "Password must contain at least one number");
+  .min(8, 'Password must be at least 8 characters')
+  .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+  .regex(/[0-9]/, 'Password must contain at least one number');
 
 export const pagination = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(50).default(20),
 });
 
-export const sortBy = z
-  .enum(["recent", "alpha", "priority", "status"])
-  .default("recent");
+export const sortBy = z.enum(['recent', 'alpha', 'priority', 'status']).default('recent');
 ```
 
 ---
@@ -34,14 +32,14 @@ export const sortBy = z
 
 ```ts
 export const registerSchema = z.object({
-  name: z.string().min(1, "Name is required").max(100),
+  name: z.string().min(1, 'Name is required').max(100),
   email,
   password,
 });
 
 export const loginSchema = z.object({
   email,
-  password: z.string().min(1, "Password is required"),
+  password: z.string().min(1, 'Password is required'),
 });
 ```
 
@@ -51,26 +49,20 @@ export const loginSchema = z.object({
 
 ```ts
 export const ideaStatus = z.enum([
-  "IDEA",
-  "PLANNING",
-  "PLANNED",
-  "IN_PROGRESS",
-  "DONE",
-  "ARCHIVED",
+  'IDEA',
+  'PLANNING',
+  'PLANNED',
+  'IN_PROGRESS',
+  'DONE',
+  'ARCHIVED',
 ]);
-export const ideaPriority = z.enum([
-  "NONE",
-  "LOW",
-  "MEDIUM",
-  "HIGH",
-  "CRITICAL",
-]);
+export const ideaPriority = z.enum(['NONE', 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL']);
 
 export const createIdeaSchema = z.object({
-  title: z.string().min(1, "Title is required").max(200),
+  title: z.string().min(1, 'Title is required').max(200),
   description: z.string().max(2000).optional(),
-  status: ideaStatus.default("IDEA"),
-  priority: ideaPriority.default("NONE"),
+  status: ideaStatus.default('IDEA'),
+  priority: ideaPriority.default('NONE'),
   tagIds: z.array(cuid).max(10).optional(),
 });
 
@@ -101,10 +93,10 @@ export const updateStatusSchema = z.object({
 
 ```ts
 export const createTagSchema = z.object({
-  name: z.string().min(1, "Tag name is required").max(50),
+  name: z.string().min(1, 'Tag name is required').max(50),
   color: z
     .string()
-    .regex(/^#[0-9A-Fa-f]{6}$/, "Invalid hex color")
+    .regex(/^#[0-9A-Fa-f]{6}$/, 'Invalid hex color')
     .optional(),
 });
 
@@ -123,7 +115,7 @@ export const updateTagSchema = z.object({
 
 ```ts
 export const createTaskSchema = z.object({
-  title: z.string().min(1, "Task title is required").max(200),
+  title: z.string().min(1, 'Task title is required').max(200),
   milestone: z.string().max(100).optional(),
   sortOrder: z.number().int().min(0).optional(),
 });
@@ -142,7 +134,7 @@ export const updateTaskSchema = z.object({
 
 ```ts
 export const createCommentSchema = z.object({
-  content: z.string().min(1, "Comment cannot be empty").max(5000),
+  content: z.string().min(1, 'Comment cannot be empty').max(5000),
 });
 
 export const updateCommentSchema = z.object({
@@ -155,11 +147,11 @@ export const updateCommentSchema = z.object({
 ## Share Schemas
 
 ```ts
-export const shareRole = z.enum(["OWNER", "EDIT", "VIEW"]);
+export const shareRole = z.enum(['OWNER', 'EDIT', 'VIEW']);
 
 export const createShareSchema = z.object({
   email,
-  role: shareRole.default("VIEW"),
+  role: shareRole.default('VIEW'),
 });
 
 export const updateShareSchema = z.object({
@@ -172,13 +164,7 @@ export const updateShareSchema = z.object({
 ## Planning Schemas
 
 ```ts
-export const planningSection = z.enum([
-  "overview",
-  "tech-stack",
-  "features",
-  "timeline",
-  "risks",
-]);
+export const planningSection = z.enum(['overview', 'tech-stack', 'features', 'timeline', 'risks']);
 
 export const updatePlanningSchema = z.object({
   content: z.string().max(100_000), // 100KB max for markdown
@@ -209,10 +195,10 @@ export function validate(schema: z.ZodSchema) {
     if (!result.success) {
       return res.status(422).json({
         error: {
-          code: "VALIDATION_ERROR",
-          message: "Invalid input",
+          code: 'VALIDATION_ERROR',
+          message: 'Invalid input',
           details: result.error.issues.map((i) => ({
-            field: i.path.join("."),
+            field: i.path.join('.'),
             message: i.message,
           })),
         },
@@ -224,7 +210,7 @@ export function validate(schema: z.ZodSchema) {
 }
 
 // Route usage
-router.post("/ideas", validate(createIdeaSchema), createIdea);
+router.post('/ideas', validate(createIdeaSchema), createIdea);
 ```
 
 ---
@@ -234,9 +220,9 @@ router.post("/ideas", validate(createIdeaSchema), createIdea);
 Forms use `@hookform/zod` resolver:
 
 ```tsx
-import { zodResolver } from "@hookform/zod/zod";
-import { useForm } from "react-hook-form";
-import { createIdeaSchema } from "@repo/shared";
+import { zodResolver } from '@hookform/zod/zod';
+import { useForm } from 'react-hook-form';
+import { createIdeaSchema } from '@repo/shared';
 
 function CreateIdeaForm() {
   const {
@@ -245,7 +231,7 @@ function CreateIdeaForm() {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(createIdeaSchema),
-    defaultValues: { status: "IDEA", priority: "NONE" },
+    defaultValues: { status: 'IDEA', priority: 'NONE' },
   });
   // ...
 }

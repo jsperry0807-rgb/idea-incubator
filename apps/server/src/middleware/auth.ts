@@ -1,13 +1,13 @@
-import type { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from 'express';
 
-import { UnauthorizedError } from "../lib/errors";
-import { validateAccessToken } from "../services/auth.service";
+import { UnauthorizedError } from '../lib/errors';
+import { validateAccessToken } from '../services/auth.service';
 
 export async function authenticate(req: Request, _res: Response, next: NextFunction) {
   const header = req.headers.authorization;
 
-  if (!header || !header.startsWith("Bearer ")) {
-    next(new UnauthorizedError("Missing or invalid authorization header"));
+  if (!header || !header.startsWith('Bearer ')) {
+    next(new UnauthorizedError('Missing or invalid authorization header'));
     return;
   }
 
@@ -19,6 +19,6 @@ export async function authenticate(req: Request, _res: Response, next: NextFunct
     req.userEmail = payload.email;
     next();
   } catch {
-    next(new UnauthorizedError("Invalid or expired token"));
+    next(new UnauthorizedError('Invalid or expired token'));
   }
 }

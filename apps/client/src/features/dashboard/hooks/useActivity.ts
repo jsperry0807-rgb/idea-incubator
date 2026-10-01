@@ -1,10 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query';
 
-import { getActivity } from "../api/activity";
+import { getActivity } from '../api/activity';
 
 export function useActivity(enabled = true) {
   return useQuery({
-    queryKey: ["dashboard", "activity"],
+    queryKey: ['dashboard', 'activity'],
     queryFn: ({ signal }) => getActivity(signal),
     enabled,
     staleTime: 30_000,

@@ -1,15 +1,11 @@
-import prisma from "../lib/prisma";
-import { ConflictError, NotFoundError } from "../lib/errors";
-import type {
-  CreateTagInput,
-  Tag,
-  UpdateTagInput,
-} from "@repo/shared";
+import prisma from '../lib/prisma';
+import { ConflictError, NotFoundError } from '../lib/errors';
+import type { CreateTagInput, Tag, UpdateTagInput } from '@repo/shared';
 
 export async function listTags(userId: string): Promise<Tag[]> {
   const tags = await prisma.tag.findMany({
     where: { userId },
-    orderBy: { name: "asc" },
+    orderBy: { name: 'asc' },
   });
 
   return tags.map(toTagDto);
@@ -35,18 +31,14 @@ export async function createTag(userId: string, input: CreateTagInput): Promise<
   return toTagDto(tag);
 }
 
-export async function updateTag(
-  userId: string,
-  id: string,
-  input: UpdateTagInput,
-): Promise<Tag> {
+export async function updateTag(userId: string, id: string, input: UpdateTagInput): Promise<Tag> {
   const existing = await prisma.tag.findFirst({
     where: { id, userId },
     select: { id: true, name: true },
   });
 
   if (!existing) {
-    throw new NotFoundError("Tag not found");
+    throw new NotFoundError('Tag not found');
   }
 
   if (input.name && input.name !== existing.name) {
@@ -77,7 +69,7 @@ export async function deleteTag(userId: string, id: string): Promise<void> {
   });
 
   if (!existing) {
-    throw new NotFoundError("Tag not found");
+    throw new NotFoundError('Tag not found');
   }
 
   await prisma.tag.delete({ where: { id } });

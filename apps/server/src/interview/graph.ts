@@ -1,30 +1,27 @@
-import { createHash } from "node:crypto";
+import { createHash } from 'node:crypto';
 
-import { questionSchema } from "@repo/shared";
-import type { DecisionPoint, Question } from "@repo/shared";
+import { questionSchema } from '@repo/shared';
+import type { DecisionPoint, Question } from '@repo/shared';
 
-import type { LlmClient } from "../services/llm.service";
-import type { Answer, InterviewDirective, InterviewEvent } from "./reducer";
-import type { InterviewState } from "./state";
+import type { LlmClient } from '../services/llm.service';
+import type { Answer, InterviewDirective, InterviewEvent } from './reducer';
+import type { InterviewState } from './state';
 import {
   buildClassifyMessages,
   classifyOutputSchema,
   normalizeClassifyOutput,
-} from "./prompts/classify";
-import {
-  buildQuestionMessages,
-  normalizeQuestionOutput,
-} from "./prompts/question";
+} from './prompts/classify';
+import { buildQuestionMessages, normalizeQuestionOutput } from './prompts/question';
 import {
   buildReevaluateMessages,
   normalizeReevaluateOutput,
   reevaluateOutputSchema,
-} from "./prompts/reevaluate";
+} from './prompts/reevaluate';
 import {
   buildSynthesisMessages,
   normalizeSynthesisOutput,
   synthesisOutputSchema,
-} from "./prompts/synthesis";
+} from './prompts/synthesis';
 
 /**
  * Resolves reducer directives into the model results the reducer consumes.
@@ -42,20 +39,17 @@ export class InterviewAgent {
   constructor(
     private readonly llm: LlmClient,
     private readonly locale: string,
-    private readonly options: InterviewAgentOptions = {},
+    private readonly options: InterviewAgentOptions = {}
   ) {}
 
   static pointId(label: string, projectType: string): string {
     const slug = label
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "")
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '')
       .slice(0, 48);
-    const hash = createHash("sha1")
-      .update(`${projectType}:${label}`)
-      .digest("hex")
-      .slice(0, 4);
-    return `${slug || "point"}-${hash}`;
+    const hash = createHash('sha1').update(`${projectType}:${label}`).digest('hex').slice(0, 4);
+    return `${slug || 'point'}-${hash}`;
   }
 
   /**
@@ -64,18 +58,18 @@ export class InterviewAgent {
    */
   async resolve(
     state: InterviewState,
-    directive: InterviewDirective,
+    directive: InterviewDirective
   ): Promise<InterviewEvent | null> {
     switch (directive.type) {
-      case "classify":
+      case 'classify':
         return this.classify(state);
-      case "ask":
+      case 'ask':
         return this.ask(state, directive);
-      case "reevaluate":
+      case 'reevaluate':
         return this.reevaluate(state, directive);
-      case "synthesize":
+      case 'synthesize':
         return this.synthesize(state, directive);
-      case "complete":
+      case 'complete':
         return null;
       default:
         return null;
@@ -86,22 +80,22 @@ export class InterviewAgent {
     const out = await this.llm.completeStructured(
       classifyOutputSchema,
       buildClassifyMessages(state, this.locale),
-      { temperature: 0.2, maxTokens: 1400 },
+      { temperature: 0.2, maxTokens: 1400 }
     );
 
     const normalized = normalizeClassifyOutput(out);
     const open: DecisionPoint[] = normalized.open.map((p) => ({
       ...p,
       id: InterviewAgent.pointId(p.id, state.idea.projectType),
-      status: "open" as const,
+      status: 'open' as const,
     }));
 
-    return { type: "CLASSIFIED", domain: normalized.domain, open };
+    return { type: 'CLASSIFIED', domain: normalized.domain, open };
   }
 
   private async ask(
     state: InterviewState,
-    directive: Extract<InterviewDirective, { type: "ask" }>,
+    directive: Extract<InterviewDirective, { type: 'ask' }>
   ): Promise<InterviewEvent | null> {
     const point = state.open.find((p) => p.id === directive.pointId);
     if (!point) return null;
@@ -109,32 +103,32 @@ export class InterviewAgent {
     const q = await this.llm.completeStructured<Question>(
       questionSchema,
       buildQuestionMessages(state, point, this.locale),
-      { temperature: 0.6, maxTokens: 800 },
+      { temperature: 0.6, maxTokens: 800 }
     );
 
     const question = normalizeQuestionOutput(point, q);
-    return { type: "QUESTION_RENDERED", question };
+    return { type: 'QUESTION_RENDERED', question };
   }
 
   private async reevaluate(
     state: InterviewState,
-    directive: Extract<InterviewDirective, { type: "reevaluate" }>,
+    directive: Extract<InterviewDirective, { type: 'reevaluate' }>
   ): Promise<InterviewEvent> {
     const out = await this.llm.completeStructured(
       reevaluateOutputSchema,
       buildReevaluateMessages(state, directive.answer, this.locale),
-      { temperature: 0.4, maxTokens: 900 },
+      { temperature: 0.4, maxTokens: 900 }
     );
 
     const normalized = normalizeReevaluateOutput(out, directive.answer);
     const opened: DecisionPoint[] = normalized.opened.map((p) => ({
       ...p,
       id: InterviewAgent.pointId(p.id, state.idea.projectType),
-      status: "open" as const,
+      status: 'open' as const,
     }));
 
     return {
-      type: "REEVALUATED",
+      type: 'REEVALUATED',
       answer: directive.answer,
       opened,
       closed: normalized.closed,
@@ -144,7 +138,7 @@ export class InterviewAgent {
 
   private async synthesize(
     state: InterviewState,
-    directive: Extract<InterviewDirective, { type: "synthesize" }>,
+    directive: Extract<InterviewDirective, { type: 'synthesize' }>
   ): Promise<InterviewEvent> {
     const out = await this.llm.completeStructured(
       synthesisOutputSchema,
@@ -152,14 +146,12 @@ export class InterviewAgent {
       {
         temperature: 0.3,
         maxTokens: 700,
-        ...(this.options.synthesisModel
-          ? { model: this.options.synthesisModel }
-          : {}),
-      },
+        ...(this.options.synthesisModel ? { model: this.options.synthesisModel } : {}),
+      }
     );
 
     return {
-      type: "SYNTHESIZED",
+      type: 'SYNTHESIZED',
       forPointId: directive.pointId,
       synthesis: normalizeSynthesisOutput(out, directive.pointId),
     };

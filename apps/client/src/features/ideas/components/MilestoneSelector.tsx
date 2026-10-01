@@ -1,9 +1,11 @@
-import { useId, type InputHTMLAttributes } from "react";
+import { useId, type InputHTMLAttributes } from 'react';
 
-import { Input } from "@repo/ui";
+import { Input } from '@repo/ui';
 
-export interface MilestoneSelectorProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "list" | "value" | "onChange"> {
+export interface MilestoneSelectorProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'list' | 'value' | 'onChange'
+> {
   value: string;
   onChange: (value: string) => void;
   milestones: string[];
@@ -15,7 +17,7 @@ export function MilestoneSelector({
   milestones,
   ...props
 }: MilestoneSelectorProps) {
-  const listId = useId().replace(/:/g, "");
+  const listId = useId().replace(/:/g, '');
 
   return (
     <>

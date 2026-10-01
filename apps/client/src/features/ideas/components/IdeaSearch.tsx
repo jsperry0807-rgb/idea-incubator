@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState, type InputHTMLAttributes } from "react";
+import { useEffect, useRef, useState, type InputHTMLAttributes } from 'react';
 
-export interface IdeaSearchProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "onChange"> {
+export interface IdeaSearchProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'value' | 'onChange'
+> {
   value: string;
   onDebouncedChange: (value: string) => void;
   debounceMs?: number;
@@ -47,14 +49,14 @@ export function IdeaSearch({
       </span>
       <input
         type="search"
-        data-shortcut={shortcut ? "search" : undefined}
+        data-shortcut={shortcut ? 'search' : undefined}
         value={inputValue}
         onChange={(e) => handleChange(e.target.value)}
         placeholder={placeholder}
         className={[
-          "w-full rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-bg)] py-2.5 pl-9 pr-12 text-[var(--color-fg)] outline-none transition-[border-color,box-shadow] focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/40",
+          'w-full rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-bg)] py-2.5 pl-9 pr-12 text-[var(--color-fg)] outline-none transition-[border-color,box-shadow] focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]/40',
           className,
-        ].join(" ")}
+        ].join(' ')}
         {...props}
       />
       {shortcut ? (

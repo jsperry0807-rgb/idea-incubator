@@ -1,6 +1,6 @@
-import { Component, type ErrorInfo, type ReactNode } from "react";
-import { useTranslation } from "react-i18next";
-import { Button, EmptyState } from "@repo/ui";
+import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button, EmptyState } from '@repo/ui';
 
 export interface ErrorBoundaryProps {
   children: ReactNode;
@@ -40,13 +40,13 @@ function DefaultFallback({ onReset }: { onReset: () => void }) {
     <div role="alert" className="flex w-full flex-col items-center">
       <EmptyState
         icon={<AlertTriangleIcon />}
-        title={t("errors.boundary.title")}
-        description={t("errors.boundary.description")}
+        title={t('errors.boundary.title')}
+        description={t('errors.boundary.description')}
         action={
           <div className="flex flex-wrap justify-center gap-2">
-            <Button onClick={onReset}>{t("errors.boundary.retry")}</Button>
+            <Button onClick={onReset}>{t('errors.boundary.retry')}</Button>
             <Button variant="secondary" onClick={() => window.location.reload()}>
-              {t("errors.boundary.reload")}
+              {t('errors.boundary.reload')}
             </Button>
           </div>
         }
@@ -63,7 +63,7 @@ class ErrorBoundaryClass extends Component<ErrorBoundaryProps, ErrorBoundaryStat
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error("[ErrorBoundary] Unhandled render error:", error, info);
+    console.error('[ErrorBoundary] Unhandled render error:', error, info);
     this.props.onError?.(error, info);
   }
 

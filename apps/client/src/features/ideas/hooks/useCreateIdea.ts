@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { createIdea } from "../api/ideas";
+import { createIdea } from '../api/ideas';
 
 export function useCreateIdea() {
   const queryClient = useQueryClient();
@@ -8,7 +8,7 @@ export function useCreateIdea() {
   return useMutation({
     mutationFn: createIdea,
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["ideas"] });
+      void queryClient.invalidateQueries({ queryKey: ['ideas'] });
     },
   });
 }

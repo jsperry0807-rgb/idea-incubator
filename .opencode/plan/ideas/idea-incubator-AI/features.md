@@ -6,6 +6,7 @@ Unblocks the prototype. Physical products and SaaS are not representable
 today, so the three seed ideas cannot all run.
 
 ### Server
+
 - [ ] Prisma: add `SAAS` and `PHYSICAL` to `IdeaProjectType`; migration
 - [ ] Shared: extend `IDEA_PROJECT_TYPE_VALUES` in `packages/shared/src/enums.ts`
 - [ ] Shared: add `projectType` to `updateIdeaSchema`, preserving the existing
@@ -23,10 +24,12 @@ today, so the three seed ideas cannot all run.
       and confirm the correct sections scaffold
 
 ### Shared
+
 - [ ] `schemas/interview.ts` — `DecisionPoint`, `Question`, `QuestionOption`,
       `Synthesis`, answer/defer request schemas, DTOs
 
 ### Client
+
 - [ ] Create Idea form: new `SAAS` / `PHYSICAL` pills
 - [ ] Idea meta: project type becomes editable, not creation-locked
 - [ ] i18n: new type labels (en, es, fr)
@@ -42,6 +45,7 @@ The heart of the feature. All domain logic is pure and testable before any UI
 exists.
 
 ### Server
+
 - [ ] `interview/state.ts` — `InterviewState` types
 - [ ] `interview/reducer.ts` — `advance(state, event) -> { state, directives }`;
       no I/O anywhere in this file
@@ -61,6 +65,7 @@ exists.
 - [ ] Locale passed into every prompt
 
 ### QA
+
 - [ ] Reducer unit tests with zero network access
 - [ ] Manual trace: run the "clicker game" seed, confirm `hybrid` on
       `core-loop` opens `upgrade-cadence` and `prestige-layer`
@@ -73,6 +78,7 @@ interview. No UI required.
 ## Phase 3: Core — Golden Traces + Synthesis
 
 ### Server
+
 - [ ] `interview/fixtures/` — three seed ideas: clicker game, SaaS tool,
       physical product
 - [ ] `interview/prompts/synthesis.ts` — ported 3-bullet verdict
@@ -86,6 +92,7 @@ interview. No UI required.
 - [ ] Classification result cached per interview
 
 ### QA
+
 - [ ] Golden-trace tests asserting **branch structure, not wording**
 - [ ] Synthesis latency budget verified (target < 6s)
 
@@ -97,6 +104,7 @@ behavior is regression-guarded.
 ## Phase 4: Core — Plan Generation
 
 ### Server
+
 - [ ] `interview/prompts/plan.ts` — one section at a time, grounded in
       `decisions`
 - [ ] `plan.service.ts` — target sections from existing
@@ -110,6 +118,7 @@ behavior is regression-guarded.
 - [ ] Snapshot existing section content before any write
 
 ### QA
+
 - [ ] Assert generation writes 11 markdown files + `Task` rows (there is no
       `tasks` planning section — it is the `Task` model)
 - [ ] Assert no existing hand-edited content is silently overwritten
@@ -121,6 +130,7 @@ behavior is regression-guarded.
 ## Phase 5: Polish — Client Panel
 
 ### Client
+
 - [ ] `features/interview/` — `api/`, `hooks/`, `components/`, following the
       existing ideas feature structure
 - [ ] Interview panel on `IdeaDetailPage`, near `PlanningAccordion`
@@ -144,6 +154,7 @@ behavior is regression-guarded.
 ## Phase 6: Polish — Tests, CI, Tail Collection
 
 ### Server
+
 - [ ] `vitest` configured for `apps/server`
 - [ ] Reducer unit tests, directive resolution tests, plan-writer output tests
 - [ ] `msw` handlers for LLM HTTP

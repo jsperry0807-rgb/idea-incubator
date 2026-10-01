@@ -1,9 +1,7 @@
-import { NotFoundError } from "../lib/errors";
-import { sectionsForType, type PlanningSection } from "../lib/planningTemplates";
-import { storage } from "./storage.service";
-import {
-  assertIdeaOwnership,
-} from "./idea.service";
+import { NotFoundError } from '../lib/errors';
+import { sectionsForType, type PlanningSection } from '../lib/planningTemplates';
+import { storage } from './storage.service';
+import { assertIdeaOwnership } from './idea.service';
 
 export async function listPlanningSections(userId: string, ideaId: string) {
   const projectType = await assertIdeaOwnership(userId, ideaId);
@@ -24,11 +22,7 @@ export async function listPlanningSections(userId: string, ideaId: string) {
   };
 }
 
-export async function readPlanningSection(
-  userId: string,
-  ideaId: string,
-  section: string,
-) {
+export async function readPlanningSection(userId: string, ideaId: string, section: string) {
   await assertIdeaOwnership(userId, ideaId);
 
   const filename = `${section}.md`;
@@ -38,7 +32,7 @@ export async function readPlanningSection(
     content = await storage.readIdeaSection(userId, ideaId, filename);
   } catch (err) {
     if (err instanceof NotFoundError) {
-      throw new NotFoundError("Planning section not found");
+      throw new NotFoundError('Planning section not found');
     }
     throw err;
   }
@@ -50,20 +44,11 @@ export async function readPlanningSection(
   };
 }
 
-export async function createPlanningSection(
-  userId: string,
-  ideaId: string,
-  section: string,
-) {
+export async function createPlanningSection(userId: string, ideaId: string, section: string) {
   const projectType = await assertIdeaOwnership(userId, ideaId);
 
   const filename = `${section}.md`;
-  const created = await storage.createIdeaSectionIfMissing(
-    userId,
-    ideaId,
-    filename,
-    projectType,
-  );
+  const created = await storage.createIdeaSectionIfMissing(userId, ideaId, filename, projectType);
   const content = await storage.readIdeaSection(userId, ideaId, filename);
 
   return {
@@ -78,7 +63,7 @@ export async function writePlanningSection(
   userId: string,
   ideaId: string,
   section: string,
-  content: string,
+  content: string
 ) {
   await assertIdeaOwnership(userId, ideaId);
 

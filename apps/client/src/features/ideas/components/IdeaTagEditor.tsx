@@ -1,9 +1,9 @@
-import { useTranslation } from "react-i18next";
-import type { Idea } from "@repo/shared";
-import { Spinner, toast } from "@repo/ui";
+import { useTranslation } from 'react-i18next';
+import type { Idea } from '@repo/shared';
+import { Spinner, toast } from '@repo/ui';
 
-import { useTags } from "@features/tags/hooks/useTags";
-import { useUpdateIdea } from "../hooks/useUpdateIdea";
+import { useTags } from '@features/tags/hooks/useTags';
+import { useUpdateIdea } from '../hooks/useUpdateIdea';
 
 export function IdeaTagEditor({ idea }: { idea: Idea }) {
   const { t } = useTranslation();
@@ -20,9 +20,9 @@ export function IdeaTagEditor({ idea }: { idea: Idea }) {
     updateMutation.mutate(
       { id: idea.id, input: { tagIds: next } },
       {
-        onSuccess: () => toast.success(t("ideas.detail.tagsUpdated")),
-        onError: () => toast.error(t("ideas.detail.tagsError")),
-      },
+        onSuccess: () => toast.success(t('ideas.detail.tagsUpdated')),
+        onError: () => toast.error(t('ideas.detail.tagsError')),
+      }
     );
   }
 
@@ -35,23 +35,13 @@ export function IdeaTagEditor({ idea }: { idea: Idea }) {
   }
 
   if ((tagsQuery.data ?? []).length === 0) {
-    return (
-      <p className="text-sm text-[var(--color-muted)]">
-        {t("ideas.detail.tagsEmpty")}
-      </p>
-    );
+    return <p className="text-sm text-[var(--color-muted)]">{t('ideas.detail.tagsEmpty')}</p>;
   }
 
   return (
     <div className="flex flex-col gap-2">
-      <p className="text-xs text-[var(--color-muted)]">
-        {t("ideas.detail.tagsHint")}
-      </p>
-      <div
-        className="flex flex-wrap gap-2"
-        role="group"
-        aria-busy={updateMutation.isPending}
-      >
+      <p className="text-xs text-[var(--color-muted)]">{t('ideas.detail.tagsHint')}</p>
+      <div className="flex flex-wrap gap-2" role="group" aria-busy={updateMutation.isPending}>
         {(tagsQuery.data ?? []).map((tag) => {
           const selected = attachedIds.has(tag.id);
           return (
@@ -62,11 +52,11 @@ export function IdeaTagEditor({ idea }: { idea: Idea }) {
               disabled={updateMutation.isPending}
               onClick={() => toggleTag(tag.id)}
               className={[
-                "rounded-md border px-3 py-1 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)] disabled:opacity-50",
+                'rounded-md border px-3 py-1 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)] disabled:opacity-50',
                 selected
-                  ? "border-[var(--color-accent)] bg-[var(--color-accent)]/10 text-[var(--color-fg)]"
-                  : "border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-muted)] hover:bg-[var(--color-muted)]/10",
-              ].join(" ")}
+                  ? 'border-[var(--color-accent)] bg-[var(--color-accent)]/10 text-[var(--color-fg)]'
+                  : 'border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-muted)] hover:bg-[var(--color-muted)]/10',
+              ].join(' ')}
             >
               {tag.name}
             </button>

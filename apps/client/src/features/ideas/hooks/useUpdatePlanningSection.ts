@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { PlanningSectionName } from "@repo/shared";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { PlanningSectionName } from '@repo/shared';
 
-import { updatePlanningSection } from "../api/planning";
+import { updatePlanningSection } from '../api/planning';
 
 export interface UpdatePlanningSectionVariables {
   ideaId: string;
@@ -17,7 +17,7 @@ export function useUpdatePlanningSection() {
       updatePlanningSection(ideaId, section, content),
     onSuccess: (_data, { ideaId, section }) => {
       void queryClient.invalidateQueries({
-        queryKey: ["ideas", ideaId, "planning", section],
+        queryKey: ['ideas', ideaId, 'planning', section],
       });
     },
   });

@@ -1,6 +1,6 @@
-import type { DecisionPoint, Question } from "@repo/shared";
+import type { DecisionPoint, Question } from '@repo/shared';
 
-import { ValidationError } from "../lib/errors";
+import { ValidationError } from '../lib/errors';
 
 /**
  * Runtime enforcement of the "Minimum Viable Question" invariant.
@@ -10,21 +10,18 @@ import { ValidationError } from "../lib/errors";
  * validator is why the static-template failure mode cannot silently reappear
  * as prompts get edited.
  */
-export function assertValidQuestion(
-  point: DecisionPoint,
-  question: Question,
-): void {
+export function assertValidQuestion(point: DecisionPoint, question: Question): void {
   if (point.eliminatesPaths.length === 0) {
     throw new ValidationError(
       { pointId: point.id },
-      `Decision point ${point.id} eliminates no implementation path`,
+      `Decision point ${point.id} eliminates no implementation path`
     );
   }
 
   if (question.options.length < 2) {
     throw new ValidationError(
       { pointId: point.id, optionCount: question.options.length },
-      `Question for ${point.id} offers no trade-off`,
+      `Question for ${point.id} offers no trade-off`
     );
   }
 }
@@ -39,7 +36,7 @@ export function assertValidFrontier(points: DecisionPoint[]): void {
     if (point.eliminatesPaths.length === 0) {
       throw new ValidationError(
         { pointId: point.id },
-        `Decision point ${point.id} eliminates no implementation path`,
+        `Decision point ${point.id} eliminates no implementation path`
       );
     }
   }

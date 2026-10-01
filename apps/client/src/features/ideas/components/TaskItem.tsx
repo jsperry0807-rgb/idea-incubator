@@ -1,10 +1,10 @@
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { useTranslation } from "react-i18next";
-import type { Task } from "@repo/shared";
-import { Badge, toast } from "@repo/ui";
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { useTranslation } from 'react-i18next';
+import type { Task } from '@repo/shared';
+import { Badge, toast } from '@repo/ui';
 
-import { useUpdateTask } from "../hooks/useUpdateTask";
+import { useUpdateTask } from '../hooks/useUpdateTask';
 
 export interface TaskItemProps {
   ideaId: string;
@@ -14,21 +14,16 @@ export interface TaskItemProps {
 export function TaskItem({ ideaId, task }: TaskItemProps) {
   const { t } = useTranslation();
   const updateMutation = useUpdateTask(ideaId);
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: task.id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: task.id,
+  });
 
   function handleToggle() {
     updateMutation.mutate(
       { taskId: task.id, input: { completed: !task.completed } },
       {
-        onError: () => toast.error(t("ideas.tasks.updateError")),
-      },
+        onError: () => toast.error(t('ideas.tasks.updateError')),
+      }
     );
   }
 
@@ -40,17 +35,15 @@ export function TaskItem({ ideaId, task }: TaskItemProps) {
         transition,
       }}
       className={[
-        "flex items-center gap-2 px-3 py-2 text-sm",
-        isDragging
-          ? "relative z-10 rounded-md bg-[var(--color-bg)] shadow-md"
-          : "",
+        'flex items-center gap-2 px-3 py-2 text-sm',
+        isDragging ? 'relative z-10 rounded-md bg-[var(--color-bg)] shadow-md' : '',
       ]
         .filter(Boolean)
-        .join(" ")}
+        .join(' ')}
     >
       <button
         type="button"
-        aria-label={t("ideas.tasks.reorder")}
+        aria-label={t('ideas.tasks.reorder')}
         className="cursor-grab touch-none text-[var(--color-muted)] transition-colors hover:text-[var(--color-fg)] active:cursor-grabbing"
         {...attributes}
         {...listeners}
@@ -72,9 +65,7 @@ export function TaskItem({ ideaId, task }: TaskItemProps) {
       />
       <span
         className={
-          task.completed
-            ? "line-through text-[var(--color-muted)]"
-            : "text-[var(--color-fg)]"
+          task.completed ? 'line-through text-[var(--color-muted)]' : 'text-[var(--color-fg)]'
         }
       >
         {task.title}

@@ -1,12 +1,12 @@
-import type { Idea } from "@repo/shared";
-import { Card, EmptyState } from "@repo/ui";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import type { Idea } from '@repo/shared';
+import { Card, EmptyState } from '@repo/ui';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
-import { ideaDetailPath } from "@config/routes";
-import { PriorityDot } from "./PriorityDot";
-import { StatusBadge } from "./StatusBadge";
-import { TagBadge } from "./TagBadge";
+import { ideaDetailPath } from '@config/routes';
+import { PriorityDot } from './PriorityDot';
+import { StatusBadge } from './StatusBadge';
+import { TagBadge } from './TagBadge';
 
 export function IdeaListRow({ idea }: { idea: Idea }) {
   return (
@@ -21,13 +21,9 @@ export function IdeaListRow({ idea }: { idea: Idea }) {
         </div>
 
         <div className="min-w-0 flex-1">
-          <h3 className="truncate text-sm font-semibold text-[var(--color-fg)]">
-            {idea.title}
-          </h3>
+          <h3 className="truncate text-sm font-semibold text-[var(--color-fg)]">{idea.title}</h3>
           {idea.description ? (
-            <p className="truncate text-sm text-[var(--color-muted)]">
-              {idea.description}
-            </p>
+            <p className="truncate text-sm text-[var(--color-muted)]">{idea.description}</p>
           ) : null}
         </div>
 
@@ -47,12 +43,7 @@ export function IdeaList({ ideas }: { ideas: Idea[] }) {
   const { t } = useTranslation();
 
   if (ideas.length === 0) {
-    return (
-      <EmptyState
-        title={t("ideas.emptyTitle")}
-        description={t("ideas.emptyDescription")}
-      />
-    );
+    return <EmptyState title={t('ideas.emptyTitle')} description={t('ideas.emptyDescription')} />;
   }
 
   return (

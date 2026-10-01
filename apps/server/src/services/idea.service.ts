@@ -1,9 +1,9 @@
-import type { Prisma } from "../generated/prisma/client";
-import prisma from "../lib/prisma";
-import { NotFoundError } from "../lib/errors";
-import { ensureUniqueSlug, slugify } from "../lib/slug";
-import { sectionsForType } from "../lib/planningTemplates";
-import { storage } from "./storage.service";
+import type { Prisma } from '../generated/prisma/client';
+import prisma from '../lib/prisma';
+import { NotFoundError } from '../lib/errors';
+import { ensureUniqueSlug, slugify } from '../lib/slug';
+import { sectionsForType } from '../lib/planningTemplates';
+import { storage } from './storage.service';
 import type {
   CreateIdeaInput,
   IdeaPipeline,
@@ -13,7 +13,7 @@ import type {
   PipelineIdea,
   Tag,
   UpdateIdeaInput,
-} from "@repo/shared";
+} from '@repo/shared';
 
 export interface IdeaListQuery {
   page?: number;
@@ -22,8 +22,8 @@ export interface IdeaListQuery {
   priority?: string;
   search?: string;
   tagId?: string;
-  sort?: "createdAt" | "updatedAt" | "title";
-  order?: "asc" | "desc";
+  sort?: 'createdAt' | 'updatedAt' | 'title';
+  order?: 'asc' | 'desc';
 }
 
 const IDEA_INCLUDE = {
@@ -33,7 +33,7 @@ const IDEA_INCLUDE = {
 
 export async function assertIdeaOwnership(
   userId: string,
-  ideaId: string,
+  ideaId: string
 ): Promise<IdeaProjectType> {
   const idea = await prisma.idea.findFirst({
     where: { id: ideaId, userId },
@@ -41,23 +41,20 @@ export async function assertIdeaOwnership(
   });
 
   if (!idea) {
-    throw new NotFoundError("Idea not found");
+    throw new NotFoundError('Idea not found');
   }
 
   return idea.projectType;
 }
 
-export async function assertIdeaAccess(
-  userId: string,
-  ideaId: string,
-): Promise<void> {
+export async function assertIdeaAccess(userId: string, ideaId: string): Promise<void> {
   const idea = await prisma.idea.findFirst({
     where: { id: ideaId },
     select: { userId: true },
   });
 
   if (!idea) {
-    throw new NotFoundError("Idea not found");
+    throw new NotFoundError('Idea not found');
   }
 
   if (idea.userId === userId) {
@@ -70,15 +67,15 @@ export async function assertIdeaAccess(
   });
 
   if (!share) {
-    throw new NotFoundError("Idea not found");
+    throw new NotFoundError('Idea not found');
   }
 }
 
 export async function listIdeas(userId: string, query: IdeaListQuery) {
   const page = query.page ?? 1;
   const pageSize = query.pageSize ?? 20;
-  const order: Prisma.SortOrder = query.order === "asc" ? "asc" : "desc";
-  const sortField = query.sort ?? "createdAt";
+  const order: Prisma.SortOrder = query.order === 'asc' ? 'asc' : 'desc';
+  const sortField = query.sort ?? 'createdAt';
 
   const where: Prisma.IdeaWhereInput = {
     userId,
@@ -86,7 +83,7 @@ export async function listIdeas(userId: string, query: IdeaListQuery) {
 
   if (query.status) {
     const statuses = query.status
-      .split(",")
+      .split(',')
       .map((s) => s.trim() as IdeaStatus)
       .filter(Boolean);
     if (statuses.length > 0) {
@@ -106,8 +103,8 @@ export async function listIdeas(userId: string, query: IdeaListQuery) {
     const term = query.search.trim();
     if (term) {
       where.OR = [
-        { title: { contains: term, mode: "insensitive" } },
-        { description: { contains: term, mode: "insensitive" } },
+        { title: { contains: term, mode: 'insensitive' } },
+        { description: { contains: term, mode: 'insensitive' } },
       ];
     }
   }
@@ -141,7 +138,7 @@ export async function getIdea(userId: string, id: string) {
   });
 
   if (!idea) {
-    throw new NotFoundError("Idea not found");
+    throw new NotFoundError('Idea not found');
   }
 
   return toIdeaDto(idea);
@@ -154,7 +151,7 @@ export async function getPipeline(userId: string): Promise<IdeaPipeline> {
       tags: { include: { tag: true } },
       tasks: { select: { completed: true } },
     },
-    orderBy: { updatedAt: "desc" },
+    orderBy: { updatedAt: 'desc' },
   });
 
   const pipeline: IdeaPipeline = {
@@ -175,7 +172,7 @@ export async function getPipeline(userId: string): Promise<IdeaPipeline> {
 
 export async function createIdea(userId: string, input: CreateIdeaInput) {
   const slug = await generateUniqueSlug(userId, input.title);
-  const projectType = input.projectType ?? "SOFTWARE";
+  const projectType = input.projectType ?? 'SOFTWARE';
 
   const idea = await prisma.idea.create({
     data: {
@@ -183,8 +180,8 @@ export async function createIdea(userId: string, input: CreateIdeaInput) {
       title: input.title,
       slug,
       description: input.description ?? null,
-      status: input.status ?? "IDEA",
-      priority: input.priority ?? "NONE",
+      status: input.status ?? 'IDEA',
+      priority: input.priority ?? 'NONE',
       projectType,
       tags: input.tagIds?.length
         ? {
@@ -205,18 +202,14 @@ export async function createIdea(userId: string, input: CreateIdeaInput) {
   return toIdeaDto(idea);
 }
 
-export async function updateIdea(
-  userId: string,
-  id: string,
-  input: UpdateIdeaInput,
-) {
+export async function updateIdea(userId: string, id: string, input: UpdateIdeaInput) {
   const existing = await prisma.idea.findFirst({
     where: { id, userId },
     select: { id: true, title: true, projectType: true },
   });
 
   if (!existing) {
-    throw new NotFoundError("Idea not found");
+    throw new NotFoundError('Idea not found');
   }
 
   let slug: string | undefined;
@@ -227,9 +220,7 @@ export async function updateIdea(
   const data: Prisma.IdeaUpdateInput = {
     ...(input.title !== undefined ? { title: input.title } : {}),
     ...(slug !== undefined ? { slug } : {}),
-    ...(input.description !== undefined
-      ? { description: input.description ?? null }
-      : {}),
+    ...(input.description !== undefined ? { description: input.description ?? null } : {}),
     ...(input.status !== undefined ? { status: input.status } : {}),
     ...(input.priority !== undefined ? { priority: input.priority } : {}),
     ...(input.projectType !== undefined ? { projectType: input.projectType } : {}),
@@ -262,7 +253,7 @@ export async function deleteIdea(userId: string, id: string) {
   });
 
   if (!existing) {
-    throw new NotFoundError("Idea not found");
+    throw new NotFoundError('Idea not found');
   }
 
   await prisma.idea.delete({ where: { id } });
@@ -272,14 +263,14 @@ export async function deleteIdea(userId: string, id: string) {
 async function scaffoldSectionsForType(
   userId: string,
   ideaId: string,
-  projectType: IdeaProjectType,
+  projectType: IdeaProjectType
 ) {
   const { created } = sectionsForType(projectType);
   if (await storage.ideaFolderExists(userId, ideaId)) {
     await Promise.all(
       created.map((section) =>
-        storage.createIdeaSectionIfMissing(userId, ideaId, `${section}.md`, projectType),
-      ),
+        storage.createIdeaSectionIfMissing(userId, ideaId, `${section}.md`, projectType)
+      )
     );
   }
 }
@@ -287,7 +278,7 @@ async function scaffoldSectionsForType(
 async function generateUniqueSlug(
   userId: string,
   title: string,
-  excludeId?: string,
+  excludeId?: string
 ): Promise<string> {
   const base = slugify(title);
 
@@ -302,7 +293,7 @@ async function generateUniqueSlug(
 
   return ensureUniqueSlug(
     base,
-    collisions.map((c) => c.slug),
+    collisions.map((c) => c.slug)
   );
 }
 

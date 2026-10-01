@@ -44,9 +44,7 @@
 // Modal focus trap pattern
 useEffect(() => {
   if (open) {
-    const firstFocusable = modalRef.current?.querySelector(
-      "button, input, [tabindex]",
-    );
+    const firstFocusable = modalRef.current?.querySelector('button, input, [tabindex]');
     firstFocusable?.focus();
   }
 }, [open]);
@@ -147,7 +145,7 @@ All shortcuts documented in the `?` help modal.
   label="Email"
   error={errors.email?.message}
   aria-required="true"
-  aria-describedby={errors.email ? "email-error" : undefined}
+  aria-describedby={errors.email ? 'email-error' : undefined}
 />;
 {
   errors.email && (

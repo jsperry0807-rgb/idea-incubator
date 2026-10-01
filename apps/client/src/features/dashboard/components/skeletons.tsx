@@ -1,5 +1,5 @@
-import { useTranslation } from "react-i18next";
-import { Card, Skeleton } from "@repo/ui";
+import { useTranslation } from 'react-i18next';
+import { Card, Skeleton } from '@repo/ui';
 
 export function StatsGridSkeleton() {
   return (
@@ -18,7 +18,7 @@ export function StatsChartSkeleton() {
   const { t } = useTranslation();
   return (
     <Card className="p-4" role="status" aria-busy="true">
-      <span className="sr-only">{t("app.loading")}</span>
+      <span className="sr-only">{t('app.loading')}</span>
       <Skeleton className="mb-4 h-4 w-32" />
       <div className="flex h-60 items-end gap-6 px-6">
         {[45, 75, 30, 60, 90, 55].map((height) => (
@@ -33,7 +33,7 @@ export function ActivityFeedSkeleton() {
   const { t } = useTranslation();
   return (
     <Card className="p-4" role="status" aria-busy="true">
-      <span className="sr-only">{t("app.loading")}</span>
+      <span className="sr-only">{t('app.loading')}</span>
       <Skeleton className="mb-3 h-4 w-28" />
       <div className="flex flex-col gap-4">
         {Array.from({ length: 4 }, (_, index) => (
@@ -54,7 +54,7 @@ export function NeedsAttentionSkeleton() {
   const { t } = useTranslation();
   return (
     <Card className="p-4" role="status" aria-busy="true">
-      <span className="sr-only">{t("app.loading")}</span>
+      <span className="sr-only">{t('app.loading')}</span>
       <Skeleton className="mb-3 h-4 w-32" />
       <div className="flex flex-col gap-3">
         {Array.from({ length: 3 }, (_, index) => (

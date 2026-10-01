@@ -1,11 +1,11 @@
-import { useTranslation } from "react-i18next";
-import { Skeleton } from "@repo/ui";
+import { useTranslation } from 'react-i18next';
+import { Skeleton } from '@repo/ui';
 
 export function AppSkeleton() {
   const { t } = useTranslation();
   return (
     <div className="flex min-h-screen flex-col" role="status" aria-busy="true">
-      <span className="sr-only">{t("app.loading")}</span>
+      <span className="sr-only">{t('app.loading')}</span>
 
       <header className="border-b border-[var(--color-border)]">
         <div className="mx-auto flex w-full max-w-[var(--max-width)] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">

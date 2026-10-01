@@ -1,14 +1,10 @@
-import type { z } from "zod";
+import type { z } from 'zod';
 
-import type {
-  LlmClient,
-  LlmCompleteOptions,
-  LlmMessage,
-} from "../../services/llm.service";
-import type { ClassifyOutput } from "../prompts/classify";
-import type { QuestionOutput } from "../prompts/question";
-import type { ReevaluateOutput } from "../prompts/reevaluate";
-import type { SynthesisOutput } from "../prompts/synthesis";
+import type { LlmClient, LlmCompleteOptions, LlmMessage } from '../../services/llm.service';
+import type { ClassifyOutput } from '../prompts/classify';
+import type { QuestionOutput } from '../prompts/question';
+import type { ReevaluateOutput } from '../prompts/reevaluate';
+import type { SynthesisOutput } from '../prompts/synthesis';
 
 /**
  * Canned, schema-valid model responses for one golden trace, dispatched by
@@ -26,7 +22,7 @@ export interface TraceScript {
   syntheses: SynthesisOutput[];
 }
 
-export type DirectiveKind = "classify" | "ask" | "reevaluate" | "synthesize";
+export type DirectiveKind = 'classify' | 'ask' | 'reevaluate' | 'synthesize';
 
 export interface RecordedCall {
   kind: DirectiveKind;
@@ -35,18 +31,18 @@ export interface RecordedCall {
 }
 
 const KIND_MARKERS: Array<[DirectiveKind, string]> = [
-  ["classify", "You classify new product ideas"],
-  ["ask", "You interview founders on a specific decision point"],
-  ["reevaluate", "You maintain a frontier of open decision points"],
-  ["synthesize", "You give a decisive 3-part verdict"],
+  ['classify', 'You classify new product ideas'],
+  ['ask', 'You interview founders on a specific decision point'],
+  ['reevaluate', 'You maintain a frontier of open decision points'],
+  ['synthesize', 'You give a decisive 3-part verdict'],
 ];
 
 function kindOf(messages: LlmMessage[]): DirectiveKind {
-  const system = messages.find((m) => m.role === "system")?.content ?? "";
+  const system = messages.find((m) => m.role === 'system')?.content ?? '';
   for (const [kind, marker] of KIND_MARKERS) {
     if (system.includes(marker)) return kind;
   }
-  throw new Error("Unrecognized prompt: no directive marker found");
+  throw new Error('Unrecognized prompt: no directive marker found');
 }
 
 export class ScriptedTraceClient implements LlmClient {
@@ -61,23 +57,23 @@ export class ScriptedTraceClient implements LlmClient {
   constructor(private readonly script: TraceScript) {}
 
   async complete(): Promise<string> {
-    throw new Error("Golden traces must not reach the raw HTTP path");
+    throw new Error('Golden traces must not reach the raw HTTP path');
   }
 
   async completeStructured<T>(
     schema: z.ZodType<T>,
     messages: LlmMessage[],
-    options?: LlmCompleteOptions,
+    options?: LlmCompleteOptions
   ): Promise<T> {
     const kind = kindOf(messages);
     this.calls.push({ kind, model: options?.model, messages });
 
     const queue: unknown[] =
-      kind === "classify"
+      kind === 'classify'
         ? [this.script.classify]
-        : kind === "ask"
+        : kind === 'ask'
           ? this.script.questions
-          : kind === "reevaluate"
+          : kind === 'reevaluate'
             ? this.script.reevaluations
             : this.script.syntheses;
 
@@ -85,15 +81,13 @@ export class ScriptedTraceClient implements LlmClient {
     const fixture = queue[index];
     if (fixture === undefined) {
       throw new Error(
-        `Golden trace ran out of "${kind}" responses (wanted #${index + 1}, scripted ${queue.length})`,
+        `Golden trace ran out of "${kind}" responses (wanted #${index + 1}, scripted ${queue.length})`
       );
     }
 
     const parsed = schema.safeParse(fixture);
     if (!parsed.success) {
-      throw new Error(
-        `Trace fixture invalid for ${kind} #${index + 1}: ${parsed.error.message}`,
-      );
+      throw new Error(`Trace fixture invalid for ${kind} #${index + 1}: ${parsed.error.message}`);
     }
     return parsed.data as T;
   }

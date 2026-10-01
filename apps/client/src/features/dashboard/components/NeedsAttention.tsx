@@ -1,12 +1,12 @@
-import { useMemo } from "react";
-import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { Card } from "@repo/ui";
-import type { IdeaStatus, PipelineIdea } from "@repo/shared";
+import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { Card } from '@repo/ui';
+import type { IdeaStatus, PipelineIdea } from '@repo/shared';
 
-import { ideaDetailPath } from "@config/routes";
-import { usePipeline } from "@/features/ideas/hooks/usePipeline";
-import { NeedsAttentionSkeleton } from "./skeletons";
+import { ideaDetailPath } from '@config/routes';
+import { usePipeline } from '@/features/ideas/hooks/usePipeline';
+import { NeedsAttentionSkeleton } from './skeletons';
 
 const STALE_DAYS = 7;
 
@@ -31,7 +31,7 @@ export function NeedsAttention() {
       return [];
     }
 
-    const staleStatuses: IdeaStatus[] = ["PLANNING", "PLANNED"];
+    const staleStatuses: IdeaStatus[] = ['PLANNING', 'PLANNED'];
     const stale: StaleIdea[] = [];
 
     for (const status of staleStatuses) {
@@ -55,7 +55,7 @@ export function NeedsAttention() {
     return (
       <Card className="p-4">
         <p className="text-sm text-[var(--color-danger)]">
-          {t("dashboard.needsAttention.loadError")}
+          {t('dashboard.needsAttention.loadError')}
         </p>
       </Card>
     );
@@ -64,12 +64,10 @@ export function NeedsAttention() {
   return (
     <Card className="p-4">
       <h2 className="mb-3 text-sm font-semibold text-[var(--color-fg)]">
-        {t("dashboard.needsAttention.title")}
+        {t('dashboard.needsAttention.title')}
       </h2>
       {staleIdeas.length === 0 ? (
-        <p className="text-sm text-[var(--color-muted)]">
-          {t("dashboard.needsAttention.empty")}
-        </p>
+        <p className="text-sm text-[var(--color-muted)]">{t('dashboard.needsAttention.empty')}</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {staleIdeas.map(({ idea, daysSinceUpdate }) => (
@@ -85,8 +83,8 @@ export function NeedsAttention() {
                   {idea.title}
                 </Link>
                 <span className="text-xs text-[var(--color-muted)]">
-                  {t(`ideas.status.${idea.status}`)} ·{" "}
-                  {t("dashboard.needsAttention.staleFor", {
+                  {t(`ideas.status.${idea.status}`)} ·{' '}
+                  {t('dashboard.needsAttention.staleFor', {
                     count: String(daysSinceUpdate),
                   })}
                 </span>

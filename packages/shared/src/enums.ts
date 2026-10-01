@@ -1,66 +1,66 @@
 export const AuthProvider = {
-  LOCAL: "LOCAL",
-  GOOGLE: "GOOGLE",
+  LOCAL: 'LOCAL',
+  GOOGLE: 'GOOGLE',
 } as const;
 export type AuthProvider = (typeof AuthProvider)[keyof typeof AuthProvider];
 
 export const IdeaStatus = {
-  IDEA: "IDEA",
-  PLANNING: "PLANNING",
-  PLANNED: "PLANNED",
-  IN_PROGRESS: "IN_PROGRESS",
-  DONE: "DONE",
-  ARCHIVED: "ARCHIVED",
+  IDEA: 'IDEA',
+  PLANNING: 'PLANNING',
+  PLANNED: 'PLANNED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  DONE: 'DONE',
+  ARCHIVED: 'ARCHIVED',
 } as const;
 export type IdeaStatus = (typeof IdeaStatus)[keyof typeof IdeaStatus];
 
 export const IdeaPriority = {
-  NONE: "NONE",
-  LOW: "LOW",
-  MEDIUM: "MEDIUM",
-  HIGH: "HIGH",
-  CRITICAL: "CRITICAL",
+  NONE: 'NONE',
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  CRITICAL: 'CRITICAL',
 } as const;
 export type IdeaPriority = (typeof IdeaPriority)[keyof typeof IdeaPriority];
 
 export const IdeaProjectType = {
-  SOFTWARE: "SOFTWARE",
-  GAME: "GAME",
-  WEBSITE: "WEBSITE",
-  SAAS: "SAAS",
-  PHYSICAL: "PHYSICAL",
+  SOFTWARE: 'SOFTWARE',
+  GAME: 'GAME',
+  WEBSITE: 'WEBSITE',
+  SAAS: 'SAAS',
+  PHYSICAL: 'PHYSICAL',
 } as const;
 export type IdeaProjectType = (typeof IdeaProjectType)[keyof typeof IdeaProjectType];
 
 export const ShareRole = {
-  OWNER: "OWNER",
-  EDIT: "EDIT",
-  VIEW: "VIEW",
+  OWNER: 'OWNER',
+  EDIT: 'EDIT',
+  VIEW: 'VIEW',
 } as const;
 export type ShareRole = (typeof ShareRole)[keyof typeof ShareRole];
 
 export const NotificationType = {
-  SHARE: "SHARE",
-  COMMENT: "COMMENT",
-  MENTION: "MENTION",
-  TASK_COMPLETED: "TASK_COMPLETED",
+  SHARE: 'SHARE',
+  COMMENT: 'COMMENT',
+  MENTION: 'MENTION',
+  TASK_COMPLETED: 'TASK_COMPLETED',
 } as const;
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType];
 
 export const TaskStatus = {
-  TODO: "TODO",
-  IN_PROGRESS: "IN_PROGRESS",
-  DONE: "DONE",
+  TODO: 'TODO',
+  IN_PROGRESS: 'IN_PROGRESS',
+  DONE: 'DONE',
 } as const;
 export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus];
 
 export const TASK_STATUS_VALUES = Object.values(TaskStatus);
 
 export const ActivityType = {
-  IDEA_CREATED: "IDEA_CREATED",
-  IDEA_UPDATED: "IDEA_UPDATED",
-  COMMENT: "COMMENT",
-  SHARE: "SHARE",
+  IDEA_CREATED: 'IDEA_CREATED',
+  IDEA_UPDATED: 'IDEA_UPDATED',
+  COMMENT: 'COMMENT',
+  SHARE: 'SHARE',
 } as const;
 export type ActivityType = (typeof ActivityType)[keyof typeof ActivityType];
 

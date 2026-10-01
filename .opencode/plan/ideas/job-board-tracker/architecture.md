@@ -290,6 +290,7 @@ section headers, tables, guidance comments, and placeholder examples.
 See `planning-templates.md` for the full template content.
 
 **Generated files per idea:**
+
 - `overview.md` — What it is, who it's for, core concepts, key screens, design principles
 - `tech-stack.md` — Core stack table, new additions table, database choice
 - `features.md` — Phased breakdown with server + client tasks per phase
@@ -297,6 +298,7 @@ See `planning-templates.md` for the full template content.
 - `risks.md` — Created on demand when user clicks "Add Risks section"
 
 **Template design principles:**
+
 - Every template is a **starting point**, not a blank page
 - Templates include **section headers** that match the planning structure
 - Templates include **tables** with example rows to show expected format

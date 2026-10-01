@@ -1,13 +1,13 @@
-import tailwindcss from '@tailwindcss/vite'
-import react from '@vitejs/plugin-react'
-import { fileURLToPath } from 'url'
-import { defineConfig } from 'vite'
+import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
+import { fileURLToPath } from 'url';
+import { defineConfig } from 'vite';
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    allowedHosts: ["idea-incubator-web.loca.lt"],
+    allowedHosts: ['idea-incubator-web.loca.lt'],
   },
   resolve: {
     alias: {
@@ -21,6 +21,6 @@ export default defineConfig({
       '@pages': fileURLToPath(new URL('./src/pages', import.meta.url)),
       '@stores': fileURLToPath(new URL('./src/stores', import.meta.url)),
       '@utils': fileURLToPath(new URL('./src/utils', import.meta.url)),
-    }
-  }
-})
+    },
+  },
+});

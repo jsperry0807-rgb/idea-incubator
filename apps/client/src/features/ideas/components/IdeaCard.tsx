@@ -1,11 +1,11 @@
-import { Card } from "@repo/ui";
-import { Link } from "react-router-dom";
+import { Card } from '@repo/ui';
+import { Link } from 'react-router-dom';
 
-import type { Idea } from "@repo/shared";
-import { ideaDetailPath } from "@config/routes";
-import { PriorityDot } from "./PriorityDot";
-import { StatusBadge } from "./StatusBadge";
-import { TagBadge } from "./TagBadge";
+import type { Idea } from '@repo/shared';
+import { ideaDetailPath } from '@config/routes';
+import { PriorityDot } from './PriorityDot';
+import { StatusBadge } from './StatusBadge';
+import { TagBadge } from './TagBadge';
 
 export function IdeaCard({ idea }: { idea: Idea }) {
   return (
@@ -21,14 +21,10 @@ export function IdeaCard({ idea }: { idea: Idea }) {
           </div>
         </div>
 
-        <h3 className="text-base font-semibold text-[var(--color-fg)]">
-          {idea.title}
-        </h3>
+        <h3 className="text-base font-semibold text-[var(--color-fg)]">{idea.title}</h3>
 
         {idea.description ? (
-          <p className="line-clamp-2 text-sm text-[var(--color-muted)]">
-            {idea.description}
-          </p>
+          <p className="line-clamp-2 text-sm text-[var(--color-muted)]">{idea.description}</p>
         ) : null}
 
         {idea.tags.length > 0 ? (

@@ -1,22 +1,19 @@
-import { useEffect, useMemo, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTranslation } from "react-i18next";
-import { Skeleton, toast } from "@repo/ui";
-import type { Notification, NotificationType } from "@repo/shared";
+import { useEffect, useMemo, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
+import { Skeleton, toast } from '@repo/ui';
+import type { Notification, NotificationType } from '@repo/shared';
 
-import { ideaDetailPath } from "@config/routes";
-import {
-  markAllNotificationsRead,
-  markNotificationRead,
-} from "../api/notifications";
-import { useNotifications } from "../hooks/useNotifications";
+import { ideaDetailPath } from '@config/routes';
+import { markAllNotificationsRead, markNotificationRead } from '../api/notifications';
+import { useNotifications } from '../hooks/useNotifications';
 
 const DOT_CLASSES: Record<NotificationType, string> = {
-  SHARE: "bg-[var(--color-info)]",
-  COMMENT: "bg-[var(--color-warning)]",
-  MENTION: "bg-[var(--color-accent)]",
-  TASK_COMPLETED: "bg-[var(--color-success)]",
+  SHARE: 'bg-[var(--color-info)]',
+  COMMENT: 'bg-[var(--color-warning)]',
+  MENTION: 'bg-[var(--color-accent)]',
+  TASK_COMPLETED: 'bg-[var(--color-success)]',
 };
 
 export interface NotificationPanelProps {
@@ -25,11 +22,7 @@ export interface NotificationPanelProps {
   anchorRef: React.RefObject<HTMLElement | null>;
 }
 
-export function NotificationPanel({
-  open,
-  onClose,
-  anchorRef,
-}: NotificationPanelProps) {
+export function NotificationPanel({ open, onClose, anchorRef }: NotificationPanelProps) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -39,31 +32,31 @@ export function NotificationPanel({
 
   const markRead = useMutation({
     mutationFn: (id: string) => markNotificationRead(id),
-    onSettled: () => void queryClient.invalidateQueries({ queryKey: ["notifications"] }),
+    onSettled: () => void queryClient.invalidateQueries({ queryKey: ['notifications'] }),
   });
 
   const markAllRead = useMutation({
     mutationFn: () => markAllNotificationsRead(),
     onSuccess: () => {
-      toast.success(t("notifications.markedAll"));
+      toast.success(t('notifications.markedAll'));
     },
-    onSettled: () => void queryClient.invalidateQueries({ queryKey: ["notifications"] }),
+    onSettled: () => void queryClient.invalidateQueries({ queryKey: ['notifications'] }),
   });
 
   const dateFormatter = useMemo(
     () =>
       new Intl.DateTimeFormat(i18n.language, {
-        dateStyle: "medium",
-        timeStyle: "short",
+        dateStyle: 'medium',
+        timeStyle: 'short',
       }),
-    [i18n.language],
+    [i18n.language]
   );
 
   useEffect(() => {
     if (!open) return undefined;
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === 'Escape') onClose();
     };
 
     const onMouseDown = (event: MouseEvent) => {
@@ -73,12 +66,12 @@ export function NotificationPanel({
       onClose();
     };
 
-    document.addEventListener("mousedown", onMouseDown);
-    window.addEventListener("keydown", onKeyDown);
+    document.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('keydown', onKeyDown);
 
     return () => {
-      document.removeEventListener("mousedown", onMouseDown);
-      window.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener('mousedown', onMouseDown);
+      window.removeEventListener('keydown', onKeyDown);
     };
   }, [open, onClose, anchorRef]);
 
@@ -89,7 +82,7 @@ export function NotificationPanel({
       try {
         await markRead.mutateAsync(notification.id);
       } catch {
-        toast.error(t("notifications.readError"));
+        toast.error(t('notifications.readError'));
       }
     }
     if (notification.ideaId) {
@@ -105,13 +98,11 @@ export function NotificationPanel({
     <div
       ref={panelRef}
       role="menu"
-      aria-label={t("notifications.title")}
+      aria-label={t('notifications.title')}
       className="absolute right-0 top-full z-50 mt-2 flex max-h-[min(70vh,480px)] w-[min(24rem,90vw)] flex-col overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] shadow-xl"
     >
       <div className="flex items-center justify-between gap-2 border-b border-[var(--color-border)] px-4 py-3">
-        <h2 className="text-sm font-semibold text-[var(--color-fg)]">
-          {t("notifications.title")}
-        </h2>
+        <h2 className="text-sm font-semibold text-[var(--color-fg)]">{t('notifications.title')}</h2>
         {unreadCount > 0 ? (
           <button
             type="button"
@@ -119,7 +110,7 @@ export function NotificationPanel({
             disabled={markAllRead.isPending}
             className="text-xs text-[var(--color-accent)] transition-colors hover:opacity-80 disabled:pointer-events-none disabled:opacity-50"
           >
-            {t("notifications.markAllRead")}
+            {t('notifications.markAllRead')}
           </button>
         ) : null}
       </div>
@@ -127,7 +118,7 @@ export function NotificationPanel({
       <div className="flex-1 overflow-y-auto">
         {query.isLoading ? (
           <div className="flex flex-col gap-3 px-4 py-4" role="status" aria-busy="true">
-            <span className="sr-only">{t("app.loading")}</span>
+            <span className="sr-only">{t('app.loading')}</span>
             {Array.from({ length: 3 }, (_, index) => (
               <div key={index} className="flex items-start gap-3">
                 <Skeleton className="size-3 shrink-0 rounded-full" />
@@ -140,12 +131,10 @@ export function NotificationPanel({
           </div>
         ) : query.isError ? (
           <p className="px-4 py-8 text-sm text-[var(--color-danger)]">
-            {t("notifications.loadError")}
+            {t('notifications.loadError')}
           </p>
         ) : items.length === 0 ? (
-          <p className="px-4 py-8 text-sm text-[var(--color-muted)]">
-            {t("notifications.empty")}
-          </p>
+          <p className="px-4 py-8 text-sm text-[var(--color-muted)]">{t('notifications.empty')}</p>
         ) : (
           <ul className="flex flex-col divide-y divide-[var(--color-border)]">
             {items.map((notification) => (
@@ -162,7 +151,7 @@ export function NotificationPanel({
                   />
                   <span className="min-w-0 flex-1">
                     <span
-                      className={`line-clamp-2 text-sm ${notification.read ? "text-[var(--color-muted)]" : "font-medium text-[var(--color-fg)]"}`}
+                      className={`line-clamp-2 text-sm ${notification.read ? 'text-[var(--color-muted)]' : 'font-medium text-[var(--color-fg)]'}`}
                     >
                       {notification.message}
                     </span>

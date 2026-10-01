@@ -1,4 +1,4 @@
-import { TaskStatus, type Task } from "@repo/shared";
+import { TaskStatus, type Task } from '@repo/shared';
 
 export const TASK_BOARD_STATUSES = [
   TaskStatus.TODO,
@@ -9,7 +9,7 @@ export const TASK_BOARD_STATUSES = [
 export type TaskBoardStatus = (typeof TASK_BOARD_STATUSES)[number];
 
 /** Sentinel lane key for tasks that have no milestone assigned. */
-export const NO_MILESTONE_KEY = "__none__";
+export const NO_MILESTONE_KEY = '__none__';
 
 export interface TaskLane {
   key: string;
@@ -24,7 +24,7 @@ export interface TaskCell {
 }
 
 export function milestoneKey(milestone: string | null): string {
-  return milestone && milestone.trim() !== "" ? milestone : NO_MILESTONE_KEY;
+  return milestone && milestone.trim() !== '' ? milestone : NO_MILESTONE_KEY;
 }
 
 /**
@@ -36,8 +36,10 @@ export function cellId(status: TaskBoardStatus, milestone: string | null): strin
   return `${status}::${encodeURIComponent(milestoneKey(milestone))}`;
 }
 
-export function parseCellId(id: string): { status: TaskBoardStatus; milestone: string | null } | null {
-  const separator = id.indexOf("::");
+export function parseCellId(
+  id: string
+): { status: TaskBoardStatus; milestone: string | null } | null {
+  const separator = id.indexOf('::');
   if (separator === -1) {
     return null;
   }
@@ -83,14 +85,11 @@ export function buildLanes(tasks: Task[]): TaskLane[] {
 export function cellTasks(
   tasks: Task[],
   status: TaskBoardStatus,
-  milestone: string | null,
+  milestone: string | null
 ): Task[] {
   const key = milestoneKey(milestone);
   return tasks
-    .filter(
-      (task) =>
-        task.status === status && milestoneKey(task.milestone) === key,
-    )
+    .filter((task) => task.status === status && milestoneKey(task.milestone) === key)
     .sort((a, b) => a.sortOrder - b.sortOrder || a.createdAt.localeCompare(b.createdAt));
 }
 
@@ -106,11 +105,7 @@ export interface TaskMove {
   milestone: string | null;
 }
 
-export function sameCell(
-  task: Task,
-  status: TaskBoardStatus,
-  milestone: string | null,
-): boolean {
+export function sameCell(task: Task, status: TaskBoardStatus, milestone: string | null): boolean {
   return task.status === status && milestoneKey(task.milestone) === milestoneKey(milestone);
 }
 
@@ -122,7 +117,7 @@ export function sameCell(
 export function buildMovePayloads(
   tasks: Task[],
   movedTaskId: string,
-  target: { status: TaskBoardStatus; milestone: string | null; index: number },
+  target: { status: TaskBoardStatus; milestone: string | null; index: number }
 ): TaskMove[] {
   const lanes = buildLanes(tasks);
 
@@ -148,13 +143,15 @@ export function buildMovePayloads(
 
   const nextMilestone = target.milestone;
   const nextStatus = target.status;
-  const rebucketed =
-    nextStatus === "DONE" ? moving : { ...moving, status: nextStatus };
+  const rebucketed = nextStatus === 'DONE' ? moving : { ...moving, status: nextStatus };
 
   sourceLane.tasks = sourceLane.tasks.filter((task) => task.id !== movedTaskId);
 
   const insertAt = Math.max(0, Math.min(target.index, targetLane.tasks.length));
-  targetLane.tasks.splice(insertAt, 0, { ...rebucketed, milestone: nextMilestone });
+  targetLane.tasks.splice(insertAt, 0, {
+    ...rebucketed,
+    milestone: nextMilestone,
+  });
 
   const flat = flattenBoard(lanes);
   const byId = new Map(tasks.map((task) => [task.id, task]));

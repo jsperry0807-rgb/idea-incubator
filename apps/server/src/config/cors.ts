@@ -1,6 +1,6 @@
-import type { CorsOptions } from "cors";
+import type { CorsOptions } from 'cors';
 
-import { env } from "./env";
+import { env } from './env';
 
 const allowedOrigins = new Set(env.CORS_ORIGINS);
 
@@ -10,7 +10,7 @@ export const corsOptions: CorsOptions = {
       callback(null, true);
       return;
     }
-    callback(new Error("Not allowed by CORS"));
+    callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
 };

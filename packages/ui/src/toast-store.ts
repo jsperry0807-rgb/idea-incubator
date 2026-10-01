@@ -1,6 +1,6 @@
-import { useSyncExternalStore } from "react";
+import { useSyncExternalStore } from 'react';
 
-export type ToastTone = "success" | "error" | "info";
+export type ToastTone = 'success' | 'error' | 'info';
 
 export interface Toast {
   id: string;
@@ -42,9 +42,9 @@ function push(message: string, tone: ToastTone, duration = 4000) {
 }
 
 export const toast = {
-  success: (message: string, duration?: number) => push(message, "success", duration),
-  error: (message: string, duration?: number) => push(message, "error", duration),
-  info: (message: string, duration?: number) => push(message, "info", duration),
+  success: (message: string, duration?: number) => push(message, 'success', duration),
+  error: (message: string, duration?: number) => push(message, 'error', duration),
+  info: (message: string, duration?: number) => push(message, 'info', duration),
 };
 
 export function useToasts(): Toast[] {

@@ -1,32 +1,20 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import {
-  IDEA_PRIORITY_VALUES,
-  IDEA_PROJECT_TYPE_VALUES,
-  IDEA_STATUS_VALUES,
-} from "../enums";
-import type {
-  IdeaPriority,
-  IdeaProjectType,
-  IdeaStatus,
-} from "../enums";
+import { IDEA_PRIORITY_VALUES, IDEA_PROJECT_TYPE_VALUES, IDEA_STATUS_VALUES } from '../enums';
+import type { IdeaPriority, IdeaProjectType, IdeaStatus } from '../enums';
 
 export const ideaTitleSchema = z.string().trim().min(1).max(200);
 
 const statusEnum = z.enum(IDEA_STATUS_VALUES as [IdeaStatus, ...IdeaStatus[]]);
-const priorityEnum = z.enum(
-  IDEA_PRIORITY_VALUES as [IdeaPriority, ...IdeaPriority[]],
-);
-const projectTypeEnum = z.enum(
-  IDEA_PROJECT_TYPE_VALUES as [IdeaProjectType, ...IdeaProjectType[]],
-);
+const priorityEnum = z.enum(IDEA_PRIORITY_VALUES as [IdeaPriority, ...IdeaPriority[]]);
+const projectTypeEnum = z.enum(IDEA_PROJECT_TYPE_VALUES as [IdeaProjectType, ...IdeaProjectType[]]);
 
 export const createIdeaSchema = z.object({
   title: ideaTitleSchema,
   description: z.string().trim().max(5000).optional().nullable(),
   status: statusEnum.optional(),
   priority: priorityEnum.optional(),
-  projectType: projectTypeEnum.default("SOFTWARE"),
+  projectType: projectTypeEnum.default('SOFTWARE'),
   tagIds: z.array(z.string().trim().min(1)).max(20).optional(),
 });
 
@@ -40,7 +28,7 @@ export const updateIdeaSchema = z
     tagIds: z.array(z.string().trim().min(1)).max(20).optional(),
   })
   .refine((data) => Object.keys(data).length > 0, {
-    message: "At least one field must be provided",
+    message: 'At least one field must be provided',
   });
 
 export const updateIdeaStatusSchema = z.object({
@@ -54,8 +42,8 @@ export const ideaListQuerySchema = z.object({
   priority: priorityEnum.optional(),
   search: z.string().trim().max(200).optional(),
   tagId: z.string().trim().min(1).optional(),
-  sort: z.enum(["createdAt", "updatedAt", "title"]).optional(),
-  order: z.enum(["asc", "desc"]).optional(),
+  sort: z.enum(['createdAt', 'updatedAt', 'title']).optional(),
+  order: z.enum(['asc', 'desc']).optional(),
 });
 
 export type CreateIdeaInput = z.infer<typeof createIdeaSchema>;

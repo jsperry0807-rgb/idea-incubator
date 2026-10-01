@@ -1,24 +1,17 @@
-import { createHash, randomBytes, randomUUID } from "node:crypto";
-import bcrypt from "bcryptjs";
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
+import bcrypt from 'bcryptjs';
 
-import prisma from "../lib/prisma";
-import { env } from "../config/env";
-import {
-  ConflictError,
-  NotFoundError,
-  UnauthorizedError,
-} from "../lib/errors";
-import { sendPasswordResetEmail } from "./mailer.service";
+import prisma from '../lib/prisma';
+import { env } from '../config/env';
+import { ConflictError, NotFoundError, UnauthorizedError } from '../lib/errors';
+import { sendPasswordResetEmail } from './mailer.service';
 import {
   signAccessToken,
   signRefreshToken,
   verifyAccessToken,
   verifyRefreshToken,
-} from "../lib/jwt";
-import type {
-  AccessTokenPayload,
-  RefreshTokenPayload,
-} from "../lib/jwt";
+} from '../lib/jwt';
+import type { AccessTokenPayload, RefreshTokenPayload } from '../lib/jwt';
 
 export interface RegisterInput {
   name: string;
@@ -36,23 +29,23 @@ export interface TokenPair {
   expiresIn: number;
 }
 
-const REFRESH_TOKEN_COOKIE = "refresh_token";
+const REFRESH_TOKEN_COOKIE = 'refresh_token';
 
 const DEFAULT_TAGS: Array<{ name: string; color: string }> = [
-  { name: "Frontend", color: "#3b82f6" },
-  { name: "Backend", color: "#ef4444" },
-  { name: "Full-stack", color: "#8b5cf6" },
-  { name: "Mobile", color: "#10b981" },
-  { name: "API", color: "#f59e0b" },
-  { name: "Database", color: "#06b6d4" },
-  { name: "DevOps", color: "#6366f1" },
-  { name: "UI/UX", color: "#ec4899" },
-  { name: "AI", color: "#a855f7" },
-  { name: "MVP", color: "#84cc16" },
+  { name: 'Frontend', color: '#3b82f6' },
+  { name: 'Backend', color: '#ef4444' },
+  { name: 'Full-stack', color: '#8b5cf6' },
+  { name: 'Mobile', color: '#10b981' },
+  { name: 'API', color: '#f59e0b' },
+  { name: 'Database', color: '#06b6d4' },
+  { name: 'DevOps', color: '#6366f1' },
+  { name: 'UI/UX', color: '#ec4899' },
+  { name: 'AI', color: '#a855f7' },
+  { name: 'MVP', color: '#84cc16' },
 ];
 
 function digest(value: string): string {
-  return createHash("sha256").update(value).digest("hex");
+  return createHash('sha256').update(value).digest('hex');
 }
 
 async function ensureDefaultTags(userId: string, tagService = prisma.tag) {
@@ -75,7 +68,7 @@ export async function register(input: RegisterInput) {
   });
 
   if (existing) {
-    throw new ConflictError("An account with this email already exists");
+    throw new ConflictError('An account with this email already exists');
   }
 
   const passwordHash = await bcrypt.hash(input.password, 12);
@@ -85,7 +78,7 @@ export async function register(input: RegisterInput) {
       name: input.name,
       email: input.email.toLowerCase(),
       passwordHash,
-      authProvider: "LOCAL",
+      authProvider: 'LOCAL',
       tags: {
         create: DEFAULT_TAGS,
       },
@@ -103,12 +96,12 @@ export async function login(input: LoginInput) {
   });
 
   if (!user || !user.passwordHash) {
-    throw new UnauthorizedError("Invalid email or password");
+    throw new UnauthorizedError('Invalid email or password');
   }
 
   const valid = await bcrypt.compare(input.password, user.passwordHash);
   if (!valid) {
-    throw new UnauthorizedError("Invalid email or password");
+    throw new UnauthorizedError('Invalid email or password');
   }
 
   const tokens = await createSession(user.id, user.email);
@@ -118,14 +111,14 @@ export async function login(input: LoginInput) {
 
 export async function refresh(refreshToken: string | undefined) {
   if (!refreshToken) {
-    throw new UnauthorizedError("Missing refresh token");
+    throw new UnauthorizedError('Missing refresh token');
   }
 
   let payload: RefreshTokenPayload;
   try {
     payload = await verifyRefreshToken(refreshToken);
   } catch {
-    throw new UnauthorizedError("Invalid or expired refresh token");
+    throw new UnauthorizedError('Invalid or expired refresh token');
   }
 
   const consumed = await prisma.refreshToken.deleteMany({
@@ -136,12 +129,12 @@ export async function refresh(refreshToken: string | undefined) {
   });
 
   if (consumed.count !== 1) {
-    throw new UnauthorizedError("Invalid or expired refresh token");
+    throw new UnauthorizedError('Invalid or expired refresh token');
   }
 
   const user = await prisma.user.findUnique({ where: { id: payload.sub } });
   if (!user) {
-    throw new UnauthorizedError("Invalid or expired refresh token");
+    throw new UnauthorizedError('Invalid or expired refresh token');
   }
 
   const accessToken = await signAccessToken({
@@ -160,7 +153,7 @@ export async function refresh(refreshToken: string | undefined) {
 export async function me(userId: string) {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) {
-    throw new NotFoundError("User not found");
+    throw new NotFoundError('User not found');
   }
   await ensureDefaultTags(userId);
   return toPublicUser(user);
@@ -168,11 +161,11 @@ export async function me(userId: string) {
 
 export async function updateProfile(
   userId: string,
-  input: { name?: string; avatarUrl?: string | null },
+  input: { name?: string; avatarUrl?: string | null }
 ) {
   const existing = await prisma.user.findUnique({ where: { id: userId } });
   if (!existing) {
-    throw new NotFoundError("User not found");
+    throw new NotFoundError('User not found');
   }
 
   const user = await prisma.user.update({
@@ -189,16 +182,16 @@ export async function updateProfile(
 export async function deleteAccount(userId: string, password: string) {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) {
-    throw new NotFoundError("User not found");
+    throw new NotFoundError('User not found');
   }
 
   if (!user.passwordHash) {
-    throw new UnauthorizedError("Password is required to delete this account");
+    throw new UnauthorizedError('Password is required to delete this account');
   }
 
   const valid = await bcrypt.compare(password, user.passwordHash);
   if (!valid) {
-    throw new UnauthorizedError("Incorrect password");
+    throw new UnauthorizedError('Incorrect password');
   }
 
   await prisma.user.delete({ where: { id: userId } });
@@ -222,10 +215,8 @@ export async function forgotPassword(email: string) {
   });
 
   if (user?.passwordHash) {
-    const token = randomBytes(32).toString("hex");
-    const expiresAt = new Date(
-      Date.now() + env.RESET_TOKEN_TTL_MINUTES * 60 * 1000,
-    );
+    const token = randomBytes(32).toString('hex');
+    const expiresAt = new Date(Date.now() + env.RESET_TOKEN_TTL_MINUTES * 60 * 1000);
 
     await prisma.passwordResetToken.create({
       data: {
@@ -252,13 +243,13 @@ export async function resetPassword(token: string, password: string) {
   const isExpired = !resetToken || resetToken.expiresAt <= new Date();
   const isUsed = !!resetToken?.usedAt;
   if (isExpired || isUsed) {
-    throw new UnauthorizedError("Invalid or expired reset link");
+    throw new UnauthorizedError('Invalid or expired reset link');
   }
 
   const user = resetToken.user;
   if (!user.passwordHash) {
     throw new UnauthorizedError(
-      "This account does not use a password. Sign in with your provider instead.",
+      'This account does not use a password. Sign in with your provider instead.'
     );
   }
 
@@ -301,7 +292,7 @@ function toPublicUser(user: {
 
 async function createSession(
   userId: string,
-  email: string,
+  email: string
 ): Promise<TokenPair & { refreshToken: string }> {
   const accessToken = await signAccessToken({ sub: userId, email });
   const refreshToken = await persistRefreshToken(userId);
@@ -314,9 +305,7 @@ async function persistRefreshToken(userId: string): Promise<string> {
     jti: randomUUID(),
   });
 
-  const expiresAt = new Date(
-    Date.now() + env.REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60 * 1000,
-  );
+  const expiresAt = new Date(Date.now() + env.REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60 * 1000);
 
   await prisma.refreshToken.create({
     data: {

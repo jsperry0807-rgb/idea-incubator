@@ -1,4 +1,4 @@
-import { Router, type Router as RouterType } from "express";
+import { Router, type Router as RouterType } from 'express';
 import {
   commentIdParamsSchema,
   createCommentSchema,
@@ -6,16 +6,16 @@ import {
   updateCommentSchema,
   type CreateCommentInput,
   type UpdateCommentInput,
-} from "@repo/shared";
+} from '@repo/shared';
 
-import { validate } from "../middleware/validate";
-import { authenticate } from "../middleware/auth";
+import { validate } from '../middleware/validate';
+import { authenticate } from '../middleware/auth';
 import {
   createComment,
   deleteComment,
   listComments,
   updateComment,
-} from "../services/comment.service";
+} from '../services/comment.service';
 
 const router: RouterType = Router({ mergeParams: true });
 
@@ -23,7 +23,7 @@ router.use(authenticate);
 
 const commentRouteParamsSchema = idParamSchema.merge(commentIdParamsSchema);
 
-router.get("/", validate({ params: idParamSchema }), async (req, res, next) => {
+router.get('/', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
     const data = await listComments(req.userId!, String(req.params.id));
     res.json({ data });
@@ -33,24 +33,24 @@ router.get("/", validate({ params: idParamSchema }), async (req, res, next) => {
 });
 
 router.post(
-  "/",
+  '/',
   validate({ params: idParamSchema, body: createCommentSchema }),
   async (req, res, next) => {
     try {
       const data = await createComment(
         req.userId!,
         String(req.params.id),
-        req.body as CreateCommentInput,
+        req.body as CreateCommentInput
       );
       res.status(201).json({ data });
     } catch (err) {
       next(err);
     }
-  },
+  }
 );
 
 router.patch(
-  "/:commentId",
+  '/:commentId',
   validate({ params: commentRouteParamsSchema, body: updateCommentSchema }),
   async (req, res, next) => {
     try {
@@ -58,30 +58,26 @@ router.patch(
         req.userId!,
         String(req.params.id),
         String(req.params.commentId),
-        req.body as UpdateCommentInput,
+        req.body as UpdateCommentInput
       );
       res.json({ data });
     } catch (err) {
       next(err);
     }
-  },
+  }
 );
 
 router.delete(
-  "/:commentId",
+  '/:commentId',
   validate({ params: commentRouteParamsSchema }),
   async (req, res, next) => {
     try {
-      await deleteComment(
-        req.userId!,
-        String(req.params.id),
-        String(req.params.commentId),
-      );
+      await deleteComment(req.userId!, String(req.params.id), String(req.params.commentId));
       res.status(204).send();
     } catch (err) {
       next(err);
     }
-  },
+  }
 );
 
 export default router;

@@ -19,12 +19,12 @@ roadmap, markdown planning documents, tasks & milestones, and collaboration
 > Dashboard → Ideas (grid) → Roadmap (Kanban) → Idea detail →
 > Sharing/notifications → Settings.
 
-| Dashboard | Ideas grid | Roadmap (Kanban) |
-| :---: | :---: | :---: |
+|                    Dashboard                     |                  Ideas grid                   |               Roadmap (Kanban)               |
+| :----------------------------------------------: | :-------------------------------------------: | :------------------------------------------: |
 | `![Dashboard](assets/screenshots/dashboard.png)` | `![Ideas](assets/screenshots/ideas-grid.png)` | `![Roadmap](assets/screenshots/roadmap.png)` |
 
-| Idea detail | Sharing & notifications | Settings |
-| :---: | :---: | :---: |
+|                     Idea detail                      |                 Sharing & notifications                  |                    Settings                    |
+| :--------------------------------------------------: | :------------------------------------------------------: | :--------------------------------------------: |
 | `![Idea detail](assets/screenshots/idea-detail.png)` | `![Collaboration](assets/screenshots/collaboration.png)` | `![Settings](assets/screenshots/settings.png)` |
 
 ---
@@ -56,16 +56,16 @@ roadmap, markdown planning documents, tasks & milestones, and collaboration
 
 ## Tech stack
 
-| Layer | Technology |
-| --- | --- |
-| Frontend | React 19, TypeScript 6, Vite, Tailwind CSS 4, React Router, TanStack Query, Zustand |
-| UI | Custom `@repo/ui` primitives (Button, Card, Modal, Toast, Skeleton, …), recharts, @dnd-kit |
-| Backend | Node.js, Express 5, TypeScript (tsx runtime) |
-| Database | PostgreSQL via Prisma ORM 7 (SQL driver adapter) |
-| Auth | JWT (`jose`) + httpOnly refresh cookie, bcryptjs |
-| Validation | Zod 4 (shared schemas in `@repo/shared`) |
-| i18n | i18next + react-i18next |
-| Tooling | pnpm workspaces, ESLint (boundaries), TypeScript project refs |
+| Layer      | Technology                                                                                 |
+| ---------- | ------------------------------------------------------------------------------------------ |
+| Frontend   | React 19, TypeScript 6, Vite, Tailwind CSS 4, React Router, TanStack Query, Zustand        |
+| UI         | Custom `@repo/ui` primitives (Button, Card, Modal, Toast, Skeleton, …), recharts, @dnd-kit |
+| Backend    | Node.js, Express 5, TypeScript (tsx runtime)                                               |
+| Database   | PostgreSQL via Prisma ORM 7 (SQL driver adapter)                                           |
+| Auth       | JWT (`jose`) + httpOnly refresh cookie, bcryptjs                                           |
+| Validation | Zod 4 (shared schemas in `@repo/shared`)                                                   |
+| i18n       | i18next + react-i18next                                                                    |
+| Tooling    | pnpm workspaces, ESLint (boundaries), TypeScript project refs                              |
 
 ---
 
@@ -141,24 +141,24 @@ Register a new account from the UI, then create your first idea.
 
 `apps/server/.env` (values are validated by a Zod schema at boot):
 
-| Variable | Required | Default | Description |
-| --- | --- | --- | --- |
-| `DATABASE_URL` | ✅ | – | PostgreSQL connection string |
-| `ACCESS_TOKEN_SECRET` | ✅ | – | JWT signing secret for access tokens |
-| `REFRESH_TOKEN_SECRET` | ✅ | – | JWT signing secret for refresh tokens |
-| `PORT` | – | `3000` | API port |
-| `NODE_ENV` | – | `development` | One of `development` \| `test` \| `production` |
-| `ACCESS_TOKEN_TTL` | – | `15m` | Access token lifetime |
-| `REFRESH_TOKEN_TTL_DAYS` | – | `30` | Refresh token lifetime in days |
-| `CORS_ORIGINS` | – | `http://localhost:5173` | Comma-separated allowed origins |
-| `STORAGE_PATH` | – | `./storage` | Directory for planning-section files |
+| Variable                 | Required | Default                 | Description                                    |
+| ------------------------ | -------- | ----------------------- | ---------------------------------------------- |
+| `DATABASE_URL`           | ✅       | –                       | PostgreSQL connection string                   |
+| `ACCESS_TOKEN_SECRET`    | ✅       | –                       | JWT signing secret for access tokens           |
+| `REFRESH_TOKEN_SECRET`   | ✅       | –                       | JWT signing secret for refresh tokens          |
+| `PORT`                   | –        | `3000`                  | API port                                       |
+| `NODE_ENV`               | –        | `development`           | One of `development` \| `test` \| `production` |
+| `ACCESS_TOKEN_TTL`       | –        | `15m`                   | Access token lifetime                          |
+| `REFRESH_TOKEN_TTL_DAYS` | –        | `30`                    | Refresh token lifetime in days                 |
+| `CORS_ORIGINS`           | –        | `http://localhost:5173` | Comma-separated allowed origins                |
+| `STORAGE_PATH`           | –        | `./storage`             | Directory for planning-section files           |
 
 ### Client environment
 
 `apps/client/.env`:
 
-| Variable | Default | Description |
-| --- | --- | --- |
+| Variable       | Default                 | Description         |
+| -------------- | ----------------------- | ------------------- |
 | `VITE_API_URL` | `http://localhost:3000` | Base URL of the API |
 
 > Never commit `.env` files. `.env` is gitignored; use a `.env.example` in

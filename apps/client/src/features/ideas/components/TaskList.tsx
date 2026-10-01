@@ -6,22 +6,22 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   SortableContext,
   arrayMove,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { useQueryClient } from "@tanstack/react-query";
-import { useTranslation } from "react-i18next";
-import type { Task } from "@repo/shared";
-import { EmptyState, ProgressBar, Skeleton, toast } from "@repo/ui";
+} from '@dnd-kit/sortable';
+import { useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
+import type { Task } from '@repo/shared';
+import { EmptyState, ProgressBar, Skeleton, toast } from '@repo/ui';
 
-import { useTasks } from "../hooks/useTasks";
-import { useReorderTasks } from "../hooks/useReorderTasks";
-import { AddTaskForm } from "./AddTaskForm";
-import { TaskItem } from "./TaskItem";
+import { useTasks } from '../hooks/useTasks';
+import { useReorderTasks } from '../hooks/useReorderTasks';
+import { AddTaskForm } from './AddTaskForm';
+import { TaskItem } from './TaskItem';
 
 export interface TaskListProps {
   ideaId: string;
@@ -62,18 +62,16 @@ function TaskGroupSection({ group, ideaId, onDragEnd }: TaskGroupSectionProps) {
   const { t } = useTranslation();
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 3 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
   );
 
   const groupCompleted = group.tasks.filter((task) => task.completed).length;
   const groupPercent = progressPercent(groupCompleted, group.tasks.length);
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={onDragEnd}
-    >
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
       <SortableContext
         items={group.tasks.map((task) => task.id)}
         strategy={verticalListSortingStrategy}
@@ -81,15 +79,15 @@ function TaskGroupSection({ group, ideaId, onDragEnd }: TaskGroupSectionProps) {
         <section className="flex flex-col gap-2">
           <h3 className="flex flex-col gap-1.5 text-sm font-medium text-[var(--color-fg)]">
             <div className="flex items-center justify-between">
-              <span>{group.milestone ?? t("ideas.tasks.noMilestone")}</span>
+              <span>{group.milestone ?? t('ideas.tasks.noMilestone')}</span>
               <span className="text-xs font-normal text-[var(--color-muted)]">
-                {groupCompleted}/{group.tasks.length}{" "}
-                {t("ideas.tasks.task", { count: group.tasks.length })}
+                {groupCompleted}/{group.tasks.length}{' '}
+                {t('ideas.tasks.task', { count: group.tasks.length })}
               </span>
             </div>
             <ProgressBar
               value={groupPercent}
-              ariaLabel={group.milestone ?? t("ideas.tasks.noMilestone")}
+              ariaLabel={group.milestone ?? t('ideas.tasks.noMilestone')}
             />
           </h3>
           <ul className="flex flex-col divide-y divide-[var(--color-border)] rounded-md border border-[var(--color-border)]">
@@ -113,7 +111,7 @@ export function TaskList({ ideaId }: TaskListProps) {
     return (
       <div className="flex flex-col gap-3 px-4 pb-4" role="status" aria-busy="true">
         <AddTaskForm ideaId={ideaId} />
-        <span className="sr-only">{t("app.loading")}</span>
+        <span className="sr-only">{t('app.loading')}</span>
         {Array.from({ length: 3 }, (_, index) => (
           <div key={index} className="flex items-center gap-3">
             <Skeleton className="size-4 rounded-sm" />
@@ -127,9 +125,7 @@ export function TaskList({ ideaId }: TaskListProps) {
   if (query.isError) {
     return (
       <div className="px-4 pb-4">
-        <p className="text-sm text-[var(--color-danger)]">
-          {t("ideas.tasks.loadError")}
-        </p>
+        <p className="text-sm text-[var(--color-danger)]">{t('ideas.tasks.loadError')}</p>
       </div>
     );
   }
@@ -141,8 +137,8 @@ export function TaskList({ ideaId }: TaskListProps) {
       <div className="flex flex-col gap-3 px-4 pb-4">
         <AddTaskForm ideaId={ideaId} />
         <EmptyState
-          title={t("ideas.tasks.emptyTitle")}
-          description={t("ideas.tasks.emptyDescription")}
+          title={t('ideas.tasks.emptyTitle')}
+          description={t('ideas.tasks.emptyDescription')}
         />
       </div>
     );
@@ -160,11 +156,11 @@ export function TaskList({ ideaId }: TaskListProps) {
       return;
     }
 
-    const queryKey = ["ideas", ideaId, "tasks"];
+    const queryKey = ['ideas', ideaId, 'tasks'];
     const current = queryClient.getQueryData<Task[]>(queryKey) ?? tasks;
     const currentGroups = groupTasksByMilestone(current);
     const groupIndex = currentGroups.findIndex((group) =>
-      group.tasks.some((task) => task.id === active.id),
+      group.tasks.some((task) => task.id === active.id)
     );
     if (groupIndex < 0) {
       return;
@@ -179,7 +175,7 @@ export function TaskList({ ideaId }: TaskListProps) {
 
     const reordered = arrayMove(group.tasks, oldIndex, newIndex);
     const nextGroups = currentGroups.map((currentGroup, index) =>
-      index === groupIndex ? { ...currentGroup, tasks: reordered } : currentGroup,
+      index === groupIndex ? { ...currentGroup, tasks: reordered } : currentGroup
     );
     const flat = nextGroups.flatMap((currentGroup) => currentGroup.tasks);
 
@@ -192,7 +188,7 @@ export function TaskList({ ideaId }: TaskListProps) {
 
     reorderMutation.mutateAsync(payloads).catch(() => {
       void queryClient.invalidateQueries({ queryKey });
-      toast.error(t("ideas.tasks.reorderError"));
+      toast.error(t('ideas.tasks.reorderError'));
     });
   }
 
@@ -202,16 +198,14 @@ export function TaskList({ ideaId }: TaskListProps) {
 
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between text-sm">
-          <span className="font-medium text-[var(--color-fg)]">
-            {t("ideas.tasks.overall")}
-          </span>
+          <span className="font-medium text-[var(--color-fg)]">{t('ideas.tasks.overall')}</span>
           <span className="text-xs text-[var(--color-muted)]">
             {completed}/{total} · {overallPercent}%
           </span>
         </div>
         <ProgressBar
           value={overallPercent}
-          ariaLabel={t("ideas.tasks.overallProgress", {
+          ariaLabel={t('ideas.tasks.overallProgress', {
             percent: overallPercent,
           })}
         />
@@ -219,7 +213,7 @@ export function TaskList({ ideaId }: TaskListProps) {
 
       {groups.map((group) => (
         <TaskGroupSection
-          key={group.milestone ?? ""}
+          key={group.milestone ?? ''}
           group={group}
           ideaId={ideaId}
           onDragEnd={(event) => handleReorder(event)}

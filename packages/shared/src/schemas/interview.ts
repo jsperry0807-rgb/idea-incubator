@@ -1,8 +1,8 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { planningSectionSchema } from "./planning";
+import { planningSectionSchema } from './planning';
 
-export const prioritySchema = z.enum(["P0", "P1", "P2", "P3"]);
+export const prioritySchema = z.enum(['P0', 'P1', 'P2', 'P3']);
 export type InterviewPriority = z.infer<typeof prioritySchema>;
 
 export const decisionPointSchema = z.object({
@@ -12,7 +12,7 @@ export const decisionPointSchema = z.object({
   priority: prioritySchema,
   eliminatesPaths: z.array(z.string().min(1)).min(1),
   blocks: z.array(planningSectionSchema),
-  status: z.enum(["open", "resolved", "deferred"]),
+  status: z.enum(['open', 'resolved', 'deferred']),
 });
 
 export const questionOptionSchema = z.object({

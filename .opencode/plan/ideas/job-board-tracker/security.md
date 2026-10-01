@@ -52,12 +52,12 @@
 // apps/server/src/config/cors.ts
 const corsOptions = {
   origin: [
-    "http://localhost:5173", // Vite dev server
-    "https://your-app.com", // Production client
+    'http://localhost:5173', // Vite dev server
+    'https://your-app.com', // Production client
   ],
   credentials: true, // Allow cookies
-  methods: ["GET", "POST", "PATCH", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
 ```
 
@@ -115,8 +115,8 @@ const validate = (schema: ZodSchema) => (req, res, next) => {
   if (!result.success) {
     return res.status(422).json({
       error: {
-        code: "VALIDATION_ERROR",
-        message: "Invalid input",
+        code: 'VALIDATION_ERROR',
+        message: 'Invalid input',
         details: result.error.issues,
       },
     });
@@ -175,7 +175,7 @@ Planning section files are read/written from `storage/content/{userId}/{ideaId}/
 function safePath(baseDir: string, ...segments: string[]): string {
   const resolved = path.resolve(baseDir, ...segments);
   if (!resolved.startsWith(baseDir)) {
-    throw new ForbiddenError("Invalid file path");
+    throw new ForbiddenError('Invalid file path');
   }
   return resolved;
 }

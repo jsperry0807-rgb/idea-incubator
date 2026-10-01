@@ -4,14 +4,14 @@ Continues from Phase 10 (wireframes, week 22).
 
 ## Timeline
 
-| Phase | Weeks | Focus |
-| ----- | ----- | ---- |
-| 11 | 23–24 | Project types (`SAAS` / `PHYSICAL`), reclassification, interview contracts, LLM client |
-| 12 | 25–27 | Pure reducer engine, prompts, graph loop, interview routes |
-| 13 | 28–29 | Golden traces, stuck detection, synthesis node |
-| 14 | 30–31 | Plan generation, diff preview, Task rows |
-| 15 | 32–33 | Client interview panel, decision log, plan review |
-| 16 | 34 | Tests, CI fixes, tail collection behind flag |
+| Phase | Weeks | Focus                                                                                  |
+| ----- | ----- | -------------------------------------------------------------------------------------- |
+| 11    | 23–24 | Project types (`SAAS` / `PHYSICAL`), reclassification, interview contracts, LLM client |
+| 12    | 25–27 | Pure reducer engine, prompts, graph loop, interview routes                             |
+| 13    | 28–29 | Golden traces, stuck detection, synthesis node                                         |
+| 14    | 30–31 | Plan generation, diff preview, Task rows                                               |
+| 15    | 32–33 | Client interview panel, decision log, plan review                                      |
+| 16    | 34    | Tests, CI fixes, tail collection behind flag                                           |
 
 **Total: ~12 weeks**
 
@@ -134,10 +134,10 @@ Continues from Phase 10 (wireframes, week 22).
 
 ## Deferred
 
-| Item | Trigger to revisit |
-| ---- | ------------------ |
-| LangGraph migration | Branch complexity grows past ~12 decision-point types, or time-travel debugging becomes necessary |
-| SSE streaming for turns | Users report perceived slowness (non-streaming ships first) |
-| `InterviewTurn` as a real table | Cross-idea analytics of decision points becomes a real question |
-| Shared/collab interviews | An `EDIT` collaborator requests access; needs a permissions redesign first |
-| Physical-product section refinement | Real usage shows the initial supply-chain set is wrong |
+| Item                                | Trigger to revisit                                                                                |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------- |
+| LangGraph migration                 | Branch complexity grows past ~12 decision-point types, or time-travel debugging becomes necessary |
+| SSE streaming for turns             | Users report perceived slowness (non-streaming ships first)                                       |
+| `InterviewTurn` as a real table     | Cross-idea analytics of decision points becomes a real question                                   |
+| Shared/collab interviews            | An `EDIT` collaborator requests access; needs a permissions redesign first                        |
+| Physical-product section refinement | Real usage shows the initial supply-chain set is wrong                                            |

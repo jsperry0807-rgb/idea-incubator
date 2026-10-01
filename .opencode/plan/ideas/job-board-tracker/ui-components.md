@@ -10,8 +10,8 @@ Reusable primitives built in `@repo/ui` and domain components in `feature/` modu
 
 ```tsx
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant: "primary" | "secondary" | "ghost" | "danger";
-  size: "sm" | "md" | "lg";
+  variant: 'primary' | 'secondary' | 'ghost' | 'danger';
+  size: 'sm' | 'md' | 'lg';
   loading?: boolean;
   icon?: ReactNode;
 }
@@ -70,7 +70,7 @@ interface ModalProps {
   onClose: () => void;
   title?: string;
   children: ReactNode;
-  size?: "sm" | "md" | "lg";
+  size?: 'sm' | 'md' | 'lg';
 }
 ```
 
@@ -95,9 +95,9 @@ interface CardProps {
 
 ```tsx
 interface BadgeProps {
-  variant: "default" | "success" | "warning" | "danger" | "info" | "muted";
+  variant: 'default' | 'success' | 'warning' | 'danger' | 'info' | 'muted';
   children: ReactNode;
-  size?: "sm" | "md";
+  size?: 'sm' | 'md';
 }
 ```
 
@@ -111,7 +111,7 @@ interface BadgeProps {
 interface AvatarProps {
   src?: string | null;
   name: string;
-  size?: "sm" | "md" | "lg";
+  size?: 'sm' | 'md' | 'lg';
 }
 ```
 
@@ -125,7 +125,7 @@ interface AvatarProps {
 interface TooltipProps {
   content: string;
   children: ReactNode;
-  side?: "top" | "bottom" | "left" | "right";
+  side?: 'top' | 'bottom' | 'left' | 'right';
 }
 ```
 
@@ -135,9 +135,9 @@ interface TooltipProps {
 
 ```tsx
 // Trigger
-toast.success("Idea created!");
-toast.error("Something went wrong");
-toast.info("Tip: Press / to search");
+toast.success('Idea created!');
+toast.error('Something went wrong');
+toast.info('Tip: Press / to search');
 
 // Provider (in root layout)
 <Toaster />;
@@ -149,7 +149,7 @@ toast.info("Tip: Press / to search");
 
 ```tsx
 interface SpinnerProps {
-  size?: "sm" | "md" | "lg";
+  size?: 'sm' | 'md' | 'lg';
 }
 ```
 
@@ -203,8 +203,8 @@ interface TabsProps {
 ```tsx
 interface ProgressBarProps {
   value: number; // 0-100
-  size?: "sm" | "md";
-  color?: "default" | "success";
+  size?: 'sm' | 'md';
+  color?: 'default' | 'success';
 }
 ```
 
@@ -220,7 +220,7 @@ interface ConfirmDialogProps {
   title: string;
   message: string;
   confirmLabel?: string;
-  variant?: "danger" | "default";
+  variant?: 'danger' | 'default';
 }
 ```
 
@@ -235,7 +235,7 @@ Compact card for grid view. Shows title, status badge, priority dot, tags, task 
 ```tsx
 interface IdeaCardProps {
   idea: IdeaSummary;
-  viewMode: "grid" | "list";
+  viewMode: 'grid' | 'list';
   onClick: () => void;
 }
 ```

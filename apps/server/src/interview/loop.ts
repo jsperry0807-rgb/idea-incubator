@@ -1,11 +1,11 @@
-import { advance, type Answer, type InterviewDirective, type InterviewEvent } from "./reducer";
-import type { InterviewAgent } from "./graph";
-import type { InterviewState } from "./state";
+import { advance, type Answer, type InterviewDirective, type InterviewEvent } from './reducer';
+import type { InterviewAgent } from './graph';
+import type { InterviewState } from './state';
 
 /** Guard against a resolver that keeps emitting events. */
 export const MAX_PUMP_STEPS = 100;
 
-export type LoopTerminal = "none" | "ready" | "turn-cap" | "needs-synthesis";
+export type LoopTerminal = 'none' | 'ready' | 'turn-cap' | 'needs-synthesis';
 
 export interface LoopResult {
   state: InterviewState;
@@ -31,14 +31,14 @@ export async function runLoop(
   agent: InterviewAgent,
   state: InterviewState,
   initialEvents: InterviewEvent[],
-  options: LoopOptions = {},
+  options: LoopOptions = {}
 ): Promise<LoopResult> {
   const maxSteps = options.maxSteps ?? MAX_PUMP_STEPS;
   let s = state;
   const queue: InterviewEvent[] = [...initialEvents];
   const events: InterviewEvent[] = [];
   let steps = 0;
-  let terminal: LoopTerminal = "none";
+  let terminal: LoopTerminal = 'none';
 
   while (queue.length > 0 && steps < maxSteps) {
     const event = queue.shift()!;
@@ -48,12 +48,12 @@ export async function runLoop(
     options.onEvent?.(event, s);
 
     for (const directive of result.directives) {
-      if (directive.type === "complete") {
-        terminal = directive.reason === "turn-cap" ? "turn-cap" : "ready";
+      if (directive.type === 'complete') {
+        terminal = directive.reason === 'turn-cap' ? 'turn-cap' : 'ready';
         continue;
       }
-      if (directive.type === "synthesize") {
-        terminal = "needs-synthesis";
+      if (directive.type === 'synthesize') {
+        terminal = 'needs-synthesis';
       }
 
       const resolved = await agent.resolve(s, directive);

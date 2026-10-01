@@ -1,12 +1,10 @@
-import { z } from "zod";
-import { cidSchema } from "./common";
-import { ShareRole } from "../enums";
+import { z } from 'zod';
+import { cidSchema } from './common';
+import { ShareRole } from '../enums';
 
 export const createShareSchema = z.object({
   email: z.string().trim().toLowerCase().email(),
-  role: z
-    .nativeEnum(ShareRole)
-    .default("VIEW"),
+  role: z.nativeEnum(ShareRole).default('VIEW'),
 });
 
 export const updateShareSchema = z.object({

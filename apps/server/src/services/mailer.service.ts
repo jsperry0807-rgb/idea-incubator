@@ -1,6 +1,6 @@
-import { env } from "../config/env";
+import { env } from '../config/env';
 
-const isProduction = env.NODE_ENV === "production";
+const isProduction = env.NODE_ENV === 'production';
 
 export interface SendPasswordResetEmailInput {
   to: string;
@@ -21,13 +21,13 @@ export async function sendPasswordResetEmail(input: SendPasswordResetEmailInput)
   if (isProduction) {
     console.warn(
       `[mailer] No SMTP transport configured — password reset for ${to} NOT emailed. ` +
-        `Reset URL: ${resetUrl}`,
+        `Reset URL: ${resetUrl}`
     );
     return;
   }
 
   console.log(
     `\n[mailer:dev] Password reset for ${to}\n` +
-      `  Reset link (valid ${env.RESET_TOKEN_TTL_MINUTES} min): ${resetUrl}\n`,
+      `  Reset link (valid ${env.RESET_TOKEN_TTL_MINUTES} min): ${resetUrl}\n`
   );
 }

@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @plugin "@tailwindcss/typography";
 @source "../../../../../packages/ui/src";
 
@@ -9,7 +9,7 @@
    Light values are the default; dark overrides follow below.
    ============================================================ */
 :root,
-:root[data-theme="light"] {
+:root[data-theme='light'] {
   color-scheme: light;
 
   /* Brand */
@@ -45,8 +45,9 @@
   --color-info: #0284c7;
 
   /* Typography */
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-sans:
+    'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
@@ -120,7 +121,7 @@
 
 /* Auto (system) dark mode — before JS attaches an explicit theme */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
+  :root:not([data-theme='light']) {
     color-scheme: dark;
 
     --color-primary: #2dd4bf;
@@ -161,7 +162,7 @@
 }
 
 /* Explicit dark theme */
-:root[data-theme="dark"],
+:root[data-theme='dark'],
 :root.dark {
   color-scheme: dark;
 
@@ -258,7 +259,7 @@
   }
 
   button:not(:disabled),
-  [role="button"]:not(:disabled) {
+  [role='button']:not(:disabled) {
     cursor: pointer;
   }
 

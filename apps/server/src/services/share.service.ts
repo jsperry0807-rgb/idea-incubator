@@ -1,13 +1,8 @@
-import prisma from "../lib/prisma";
-import { ConflictError, NotFoundError } from "../lib/errors";
-import { assertIdeaOwnership, toIdeaTags } from "./idea.service";
-import { createNotification } from "./notification.service";
-import type {
-  CreateShareInput,
-  SharedIdea,
-  Share,
-  UpdateShareInput,
-} from "@repo/shared";
+import prisma from '../lib/prisma';
+import { ConflictError, NotFoundError } from '../lib/errors';
+import { assertIdeaOwnership, toIdeaTags } from './idea.service';
+import { createNotification } from './notification.service';
+import type { CreateShareInput, SharedIdea, Share, UpdateShareInput } from '@repo/shared';
 
 export async function getSharedWithMe(userId: string): Promise<SharedIdea[]> {
   const shares = await prisma.share.findMany({
@@ -23,7 +18,7 @@ export async function getSharedWithMe(userId: string): Promise<SharedIdea[]> {
         },
       },
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: { createdAt: 'desc' },
   });
 
   return shares.map(({ role, idea }) => ({
@@ -54,7 +49,7 @@ export async function listShares(userId: string, ideaId: string): Promise<Share[
     include: {
       user: { select: { id: true, name: true, email: true, avatarUrl: true } },
     },
-    orderBy: { createdAt: "asc" },
+    orderBy: { createdAt: 'asc' },
   });
 
   return shares.map(toShareDto);
@@ -63,7 +58,7 @@ export async function listShares(userId: string, ideaId: string): Promise<Share[
 export async function createShare(
   userId: string,
   ideaId: string,
-  input: CreateShareInput,
+  input: CreateShareInput
 ): Promise<Share> {
   const idea = await prisma.idea.findFirst({
     where: { id: ideaId, userId },
@@ -75,7 +70,7 @@ export async function createShare(
   });
 
   if (!idea) {
-    throw new NotFoundError("Idea not found");
+    throw new NotFoundError('Idea not found');
   }
 
   const target = await prisma.user.findUnique({
@@ -84,11 +79,11 @@ export async function createShare(
   });
 
   if (!target) {
-    throw new NotFoundError("User with that email not found");
+    throw new NotFoundError('User with that email not found');
   }
 
   if (target.id === userId) {
-    throw new ConflictError("Cannot share an idea with yourself");
+    throw new ConflictError('Cannot share an idea with yourself');
   }
 
   const existing = await prisma.share.findUnique({
@@ -97,7 +92,7 @@ export async function createShare(
   });
 
   if (existing) {
-    throw new ConflictError("User already has access to this idea");
+    throw new ConflictError('User already has access to this idea');
   }
 
   const share = await prisma.share.create({
@@ -113,7 +108,7 @@ export async function createShare(
 
   await createNotification({
     userId: target.id,
-    type: "SHARE",
+    type: 'SHARE',
     message: `${idea.user.name} shared "${idea.title}" with you`,
     ideaId: idea.id,
   });
@@ -125,7 +120,7 @@ export async function updateShareRole(
   userId: string,
   ideaId: string,
   shareId: string,
-  input: UpdateShareInput,
+  input: UpdateShareInput
 ): Promise<Share> {
   await assertIdeaOwnership(userId, ideaId);
 
@@ -135,7 +130,7 @@ export async function updateShareRole(
   });
 
   if (!existing) {
-    throw new NotFoundError("Share not found");
+    throw new NotFoundError('Share not found');
   }
 
   const share = await prisma.share.update({
@@ -149,11 +144,7 @@ export async function updateShareRole(
   return toShareDto(share);
 }
 
-export async function removeShare(
-  userId: string,
-  ideaId: string,
-  shareId: string,
-): Promise<void> {
+export async function removeShare(userId: string, ideaId: string, shareId: string): Promise<void> {
   await assertIdeaOwnership(userId, ideaId);
 
   const existing = await prisma.share.findFirst({
@@ -162,7 +153,7 @@ export async function removeShare(
   });
 
   if (!existing) {
-    throw new NotFoundError("Share not found");
+    throw new NotFoundError('Share not found');
   }
 
   await prisma.share.delete({ where: { id: shareId } });
@@ -172,9 +163,14 @@ function toShareDto(share: {
   id: string;
   ideaId: string;
   userId: string;
-  role: Share["role"];
+  role: Share['role'];
   createdAt: Date;
-  user?: { id: string; name: string; email: string; avatarUrl: string | null } | null;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+    avatarUrl: string | null;
+  } | null;
 }): Share {
   return {
     id: share.id,

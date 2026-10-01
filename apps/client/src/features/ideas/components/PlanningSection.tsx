@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import type { PlanningSectionName } from "@repo/shared";
-import { Button, Skeleton, toast } from "@repo/ui";
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import type { PlanningSectionName } from '@repo/shared';
+import { Button, Skeleton, toast } from '@repo/ui';
 
-import { usePlanningSection } from "../hooks/usePlanningSection";
-import { useCreatePlanningSection } from "../hooks/useCreatePlanningSection";
-import { useUpdatePlanningSection } from "../hooks/useUpdatePlanningSection";
-import { ImportMarkdownModal } from "./ImportMarkdownModal";
-import { MarkdownEditor } from "./MarkdownEditor";
-import { MarkdownViewer } from "./MarkdownViewer";
+import { usePlanningSection } from '../hooks/usePlanningSection';
+import { useCreatePlanningSection } from '../hooks/useCreatePlanningSection';
+import { useUpdatePlanningSection } from '../hooks/useUpdatePlanningSection';
+import { ImportMarkdownModal } from './ImportMarkdownModal';
+import { MarkdownEditor } from './MarkdownEditor';
+import { MarkdownViewer } from './MarkdownViewer';
 
 export interface PlanningSectionProps {
   ideaId: string;
@@ -22,13 +22,13 @@ export function PlanningSection({ ideaId, section }: PlanningSectionProps) {
   const updateMutation = useUpdatePlanningSection();
 
   const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState("");
+  const [draft, setDraft] = useState('');
   const [importOpen, setImportOpen] = useState(false);
 
   if (query.isLoading) {
     return (
       <div className="flex flex-col gap-2 px-4 pb-4" role="status" aria-busy="true">
-        <span className="sr-only">{t("app.loading")}</span>
+        <span className="sr-only">{t('app.loading')}</span>
         <Skeleton className="h-3 w-full" />
         <Skeleton className="h-3 w-5/6" />
         <Skeleton className="h-3 w-2/3" />
@@ -37,15 +37,12 @@ export function PlanningSection({ ideaId, section }: PlanningSectionProps) {
   }
 
   const notFound =
-    (query.error as { response?: { status?: number } } | undefined)?.response
-      ?.status === 404;
+    (query.error as { response?: { status?: number } } | undefined)?.response?.status === 404;
 
   if (notFound) {
     return (
       <div className="flex flex-col items-center gap-3 px-4 pb-4 text-center">
-        <p className="text-sm text-[var(--color-muted)]">
-          {t("ideas.planning.emptyDescription")}
-        </p>
+        <p className="text-sm text-[var(--color-muted)]">{t('ideas.planning.emptyDescription')}</p>
         <Button
           variant="secondary"
           size="sm"
@@ -53,8 +50,8 @@ export function PlanningSection({ ideaId, section }: PlanningSectionProps) {
           disabled={createMutation.isPending}
         >
           {createMutation.isPending
-            ? t("ideas.planning.creating")
-            : t("ideas.planning.createSection", { filename: `${section}.md` })}
+            ? t('ideas.planning.creating')
+            : t('ideas.planning.createSection', { filename: `${section}.md` })}
         </Button>
       </div>
     );
@@ -63,21 +60,19 @@ export function PlanningSection({ ideaId, section }: PlanningSectionProps) {
   if (query.isError) {
     return (
       <div className="px-4 pb-4">
-        <p className="text-sm text-[var(--color-danger)]">
-          {t("ideas.planning.loadError")}
-        </p>
+        <p className="text-sm text-[var(--color-danger)]">{t('ideas.planning.loadError')}</p>
       </div>
     );
   }
 
-  const content = query.data?.content ?? "";
+  const content = query.data?.content ?? '';
 
   async function handleCreate() {
     try {
       await createMutation.mutateAsync({ ideaId, section });
-      toast.success(t("ideas.planning.created"));
+      toast.success(t('ideas.planning.created'));
     } catch {
-      toast.error(t("ideas.planning.createError"));
+      toast.error(t('ideas.planning.createError'));
     }
   }
 
@@ -89,16 +84,16 @@ export function PlanningSection({ ideaId, section }: PlanningSectionProps) {
   async function handleSave() {
     try {
       await updateMutation.mutateAsync({ ideaId, section, content: draft });
-      toast.success(t("ideas.planning.saved"));
+      toast.success(t('ideas.planning.saved'));
       setEditing(false);
     } catch {
-      toast.error(t("ideas.planning.saveError"));
+      toast.error(t('ideas.planning.saveError'));
     }
   }
 
   function handleCancel() {
     setEditing(false);
-    setDraft("");
+    setDraft('');
   }
 
   return (
@@ -118,7 +113,7 @@ export function PlanningSection({ ideaId, section }: PlanningSectionProps) {
               onClick={handleCancel}
               disabled={updateMutation.isPending}
             >
-              {t("ideas.planning.cancel")}
+              {t('ideas.planning.cancel')}
             </Button>
             <Button
               variant="primary"
@@ -126,24 +121,18 @@ export function PlanningSection({ ideaId, section }: PlanningSectionProps) {
               onClick={() => void handleSave()}
               disabled={updateMutation.isPending}
             >
-              {updateMutation.isPending
-                ? t("ideas.planning.saving")
-                : t("ideas.planning.save")}
+              {updateMutation.isPending ? t('ideas.planning.saving') : t('ideas.planning.save')}
             </Button>
           </div>
         </>
       ) : (
         <>
           <div className="flex justify-end gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setImportOpen(true)}
-            >
-              {t("ideas.planning.import")}
+            <Button variant="ghost" size="sm" onClick={() => setImportOpen(true)}>
+              {t('ideas.planning.import')}
             </Button>
             <Button variant="ghost" size="sm" onClick={startEdit}>
-              {t("ideas.planning.edit")}
+              {t('ideas.planning.edit')}
             </Button>
           </div>
           <div className="max-h-96 overflow-auto rounded-md border border-[var(--color-border)] bg-[var(--color-muted)]/10 p-3">
@@ -162,7 +151,7 @@ export function PlanningSection({ ideaId, section }: PlanningSectionProps) {
             section,
             content: importedContent,
           });
-          toast.success(t("ideas.planning.imported"));
+          toast.success(t('ideas.planning.imported'));
         }}
       />
     </div>

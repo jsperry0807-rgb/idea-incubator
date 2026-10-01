@@ -1,14 +1,10 @@
-import axios from "axios";
-import type {
-  AxiosError,
-  AxiosRequestConfig,
-  InternalAxiosRequestConfig,
-} from "axios";
+import axios from 'axios';
+import type { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 
-import type { ApiEnvelope, HealthResponse } from "@repo/shared";
+import type { ApiEnvelope, HealthResponse } from '@repo/shared';
 
 export const client = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:3000",
+  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3000',
   withCredentials: true,
 });
 
@@ -35,9 +31,9 @@ let refreshPromise: Promise<string | null> | null = null;
 async function performRefresh(): Promise<string | null> {
   try {
     const { data } = await axios.post<{ data: RefreshResponse }>(
-      `${import.meta.env.VITE_API_URL ?? "http://localhost:3000"}/auth/refresh`,
+      `${import.meta.env.VITE_API_URL ?? 'http://localhost:3000'}/auth/refresh`,
       undefined,
-      { withCredentials: true },
+      { withCredentials: true }
     );
     accessToken = data.data.accessToken;
     return accessToken;
@@ -68,16 +64,11 @@ client.interceptors.response.use(
     const original = error.config as RetriableConfig | undefined;
 
     const isAuthRefreshRequest =
-      original?.url?.includes("/auth/refresh") ||
-      original?.url?.includes("/auth/login") ||
-      original?.url?.includes("/auth/register");
+      original?.url?.includes('/auth/refresh') ||
+      original?.url?.includes('/auth/login') ||
+      original?.url?.includes('/auth/register');
 
-    if (
-      error.response?.status === 401 &&
-      original &&
-      !original._retry &&
-      !isAuthRefreshRequest
-    ) {
+    if (error.response?.status === 401 && original && !original._retry && !isAuthRefreshRequest) {
       original._retry = true;
 
       const token = await refreshAccessToken();
@@ -91,16 +82,16 @@ client.interceptors.response.use(
       }
 
       setAccessToken(null);
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(new Event("auth:unauthorized"));
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('auth:unauthorized'));
       }
     }
 
     return Promise.reject(error);
-  },
+  }
 );
 
 export async function fetchHealth(): Promise<ApiEnvelope<HealthResponse>> {
-  const { data } = await client.get<ApiEnvelope<HealthResponse>>("/health");
+  const { data } = await client.get<ApiEnvelope<HealthResponse>>('/health');
   return data;
 }

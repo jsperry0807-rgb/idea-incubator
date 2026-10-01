@@ -1,12 +1,16 @@
-import { useTranslation } from "react-i18next";
-import { Card, Skeleton } from "@repo/ui";
-import { IDEA_STATUS_VALUES } from "@repo/shared";
+import { useTranslation } from 'react-i18next';
+import { Card, Skeleton } from '@repo/ui';
+import { IDEA_STATUS_VALUES } from '@repo/shared';
 
 export function IdeaGridSkeleton() {
   const { t } = useTranslation();
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" role="status" aria-busy="true">
-      <span className="sr-only">{t("app.loading")}</span>
+    <div
+      className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+      role="status"
+      aria-busy="true"
+    >
+      <span className="sr-only">{t('app.loading')}</span>
       {Array.from({ length: 6 }, (_, index) => (
         <Card key={index} className="flex flex-col gap-3 p-4">
           <div className="flex items-center gap-2">
@@ -30,7 +34,7 @@ export function IdeaListSkeleton() {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col gap-3" role="status" aria-busy="true">
-      <span className="sr-only">{t("app.loading")}</span>
+      <span className="sr-only">{t('app.loading')}</span>
       {Array.from({ length: 5 }, (_, index) => (
         <Card key={index}>
           <div className="flex items-center gap-4 p-4">
@@ -57,7 +61,7 @@ export function KanbanBoardSkeleton() {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col gap-4" role="status" aria-busy="true">
-      <span className="sr-only">{t("app.loading")}</span>
+      <span className="sr-only">{t('app.loading')}</span>
       <div className="flex flex-wrap items-center gap-2">
         <Skeleton className="h-8 w-40 rounded-full" />
         <Skeleton className="h-8 w-32 rounded-full" />
@@ -90,7 +94,7 @@ export function IdeaDetailSkeleton() {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col gap-5" role="status" aria-busy="true">
-      <span className="sr-only">{t("app.loading")}</span>
+      <span className="sr-only">{t('app.loading')}</span>
       <Skeleton className="h-4 w-24" />
       <Card className="flex flex-col gap-3 p-4">
         <div className="flex items-center justify-between gap-2">

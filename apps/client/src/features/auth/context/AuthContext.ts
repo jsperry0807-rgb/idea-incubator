@@ -1,11 +1,6 @@
-import { createContext } from "react";
+import { createContext } from 'react';
 
-import type {
-  LoginInput,
-  RegisterInput,
-  UpdateProfileInput,
-  User,
-} from "../types";
+import type { LoginInput, RegisterInput, UpdateProfileInput, User } from '../types';
 
 export interface AuthContextValue {
   user: User | null;

@@ -1,32 +1,32 @@
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
-import { LOCALES } from "@i18n";
-import type { Locale } from "@i18n";
+import { LOCALES } from '@i18n';
+import type { Locale } from '@i18n';
 
 const LOCALE_LABELS: Record<Locale, string> = {
-  en: "English",
-  es: "Español",
-  fr: "Français",
+  en: 'English',
+  es: 'Español',
+  fr: 'Français',
 };
 
 export function LanguageSwitcher() {
   const { t, i18n } = useTranslation();
-  const current = i18n.resolvedLanguage ?? "en";
+  const current = i18n.resolvedLanguage ?? 'en';
 
   return (
     <select
-      aria-label={t("app.language")}
+      aria-label={t('app.language')}
       value={current}
       onChange={(event) => void i18n.changeLanguage(event.target.value)}
       className="rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
       style={{
-        background: "var(--color-bg)",
-        color: "var(--color-fg)",
-        border: "1px solid var(--color-border)",
-        borderRadius: "var(--radius)",
-        padding: "0.25rem 0.5rem",
-        fontSize: "0.875rem",
-        cursor: "pointer",
+        background: 'var(--color-bg)',
+        color: 'var(--color-fg)',
+        border: '1px solid var(--color-border)',
+        borderRadius: 'var(--radius)',
+        padding: '0.25rem 0.5rem',
+        fontSize: '0.875rem',
+        cursor: 'pointer',
       }}
     >
       {LOCALES.map((locale) => (

@@ -1,17 +1,14 @@
-import type { CreateIdeaInput, Idea, PaginationMeta, UpdateIdeaInput } from "@repo/shared";
+import type { CreateIdeaInput, Idea, PaginationMeta, UpdateIdeaInput } from '@repo/shared';
 
-import { client } from "@/axios";
-import type { IdeaFilters } from "../types";
+import { client } from '@/axios';
+import type { IdeaFilters } from '../types';
 
 export interface IdeasResult {
   items: Idea[];
   meta: PaginationMeta;
 }
 
-export async function getIdeas(
-  filters: IdeaFilters,
-  signal?: AbortSignal,
-): Promise<IdeasResult> {
+export async function getIdeas(filters: IdeaFilters, signal?: AbortSignal): Promise<IdeasResult> {
   const params: Record<string, string | undefined> = {
     status: filters.status || undefined,
     priority: filters.priority || undefined,
@@ -21,7 +18,7 @@ export async function getIdeas(
     order: filters.order,
   };
 
-  const { data } = await client.get<{ data: Idea[]; meta: PaginationMeta }>("/ideas", {
+  const { data } = await client.get<{ data: Idea[]; meta: PaginationMeta }>('/ideas', {
     params,
     signal,
   });
@@ -35,7 +32,7 @@ export async function getIdea(id: string): Promise<Idea> {
 }
 
 export async function createIdea(input: CreateIdeaInput): Promise<Idea> {
-  const { data } = await client.post<{ data: Idea }>("/ideas", input);
+  const { data } = await client.post<{ data: Idea }>('/ideas', input);
   return data.data;
 }
 

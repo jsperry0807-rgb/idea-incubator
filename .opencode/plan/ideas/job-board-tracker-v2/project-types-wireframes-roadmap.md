@@ -2,10 +2,10 @@
 
 ## Timeline
 
-| Phase | Weeks | Focus |
-| ----- | ----- | ----- |
+| Phase | Weeks | Focus                                                       |
+| ----- | ----- | ----------------------------------------------------------- |
 | 9     | 19–20 | Project-type planning scaffolds (software / game / website) |
-| 10    | 21–22 | Wireframes folder (upload / view / delete HTML mockups) |
+| 10    | 21–22 | Wireframes folder (upload / view / delete HTML mockups)     |
 
 **Total: ~22 weeks**
 

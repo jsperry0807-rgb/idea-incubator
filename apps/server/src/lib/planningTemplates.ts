@@ -2,23 +2,23 @@
 // Each template is a starting point — section headers, tables, and
 // guidance comments guide the user; content is editable per-idea.
 
-import type { IdeaProjectType } from "@repo/shared";
+import type { IdeaProjectType } from '@repo/shared';
 
 export type PlanningSection =
-  | "overview"
-  | "tech-stack"
-  | "features"
-  | "timeline"
-  | "risks"
-  | "pages"
-  | "content"
-  | "seo"
-  | "mechanics"
-  | "progression"
-  | "art-audio"
-  | "playtest"
-  | "supply-chain"
-  | "unit-economics";
+  | 'overview'
+  | 'tech-stack'
+  | 'features'
+  | 'timeline'
+  | 'risks'
+  | 'pages'
+  | 'content'
+  | 'seo'
+  | 'mechanics'
+  | 'progression'
+  | 'art-audio'
+  | 'playtest'
+  | 'supply-chain'
+  | 'unit-economics';
 
 type TemplateMap = Record<PlanningSection, string>;
 
@@ -471,8 +471,8 @@ const OVERVIEW_BY_TYPE: Record<IdeaProjectType, string> = {
   PHYSICAL: PHYSICAL_OVERVIEW,
 };
 
-const SECTION_TEMPLATES: Omit<TemplateMap, "overview"> = {
-  "tech-stack": TECH_STACK,
+const SECTION_TEMPLATES: Omit<TemplateMap, 'overview'> = {
+  'tech-stack': TECH_STACK,
   features: FEATURES,
   timeline: TIMELINE,
   risks: RISKS,
@@ -481,44 +481,27 @@ const SECTION_TEMPLATES: Omit<TemplateMap, "overview"> = {
   seo: SEO,
   mechanics: MECHANICS,
   progression: PROGRESSION,
-  "art-audio": ART_AUDIO,
+  'art-audio': ART_AUDIO,
   playtest: PLAYTEST,
-  "supply-chain": SUPPLY_CHAIN,
-  "unit-economics": UNIT_ECONOMICS,
+  'supply-chain': SUPPLY_CHAIN,
+  'unit-economics': UNIT_ECONOMICS,
 };
 
 /** Sections written immediately when an idea of each type is created. */
-export const CREATED_SECTIONS_BY_TYPE: Record<
-  IdeaProjectType,
-  readonly PlanningSection[]
-> = {
-  SOFTWARE: ["overview", "tech-stack", "features", "timeline"],
-  SAAS: ["overview", "tech-stack", "features", "timeline"],
-  WEBSITE: ["overview", "pages", "content", "tech-stack", "timeline"],
-  GAME: [
-    "overview",
-    "mechanics",
-    "progression",
-    "art-audio",
-    "tech-stack",
-    "timeline",
-  ],
-  PHYSICAL: [
-    "overview",
-    "supply-chain",
-    "unit-economics",
-    "tech-stack",
-    "features",
-    "timeline",
-  ],
+export const CREATED_SECTIONS_BY_TYPE: Record<IdeaProjectType, readonly PlanningSection[]> = {
+  SOFTWARE: ['overview', 'tech-stack', 'features', 'timeline'],
+  SAAS: ['overview', 'tech-stack', 'features', 'timeline'],
+  WEBSITE: ['overview', 'pages', 'content', 'tech-stack', 'timeline'],
+  GAME: ['overview', 'mechanics', 'progression', 'art-audio', 'tech-stack', 'timeline'],
+  PHYSICAL: ['overview', 'supply-chain', 'unit-economics', 'tech-stack', 'features', 'timeline'],
 };
 
 export const ON_DEMAND_SECTIONS: Record<IdeaProjectType, readonly PlanningSection[]> = {
-  SOFTWARE: ["risks"],
-  SAAS: ["risks"],
-  WEBSITE: ["risks", "seo"],
-  GAME: ["risks", "playtest"],
-  PHYSICAL: ["risks"],
+  SOFTWARE: ['risks'],
+  SAAS: ['risks'],
+  WEBSITE: ['risks', 'seo'],
+  GAME: ['risks', 'playtest'],
+  PHYSICAL: ['risks'],
 };
 
 export function sectionsForType(type: IdeaProjectType): {
@@ -531,12 +514,9 @@ export function sectionsForType(type: IdeaProjectType): {
   };
 }
 
-export function getTemplate(
-  type: IdeaProjectType,
-  section: string,
-): string | undefined {
-  if (section === "overview") {
+export function getTemplate(type: IdeaProjectType, section: string): string | undefined {
+  if (section === 'overview') {
     return OVERVIEW_BY_TYPE[type];
   }
-  return SECTION_TEMPLATES[section as Exclude<PlanningSection, "overview">];
+  return SECTION_TEMPLATES[section as Exclude<PlanningSection, 'overview'>];
 }

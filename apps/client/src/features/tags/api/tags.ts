@@ -1,14 +1,14 @@
-import type { CreateTagInput, Tag, UpdateTagInput } from "@repo/shared";
+import type { CreateTagInput, Tag, UpdateTagInput } from '@repo/shared';
 
-import { client } from "@/axios";
+import { client } from '@/axios';
 
 export async function getTags(): Promise<Tag[]> {
-  const { data } = await client.get<{ data: Tag[] }>("/tags");
+  const { data } = await client.get<{ data: Tag[] }>('/tags');
   return data.data;
 }
 
 export async function createTag(input: CreateTagInput): Promise<Tag> {
-  const { data } = await client.post<{ data: Tag }>("/tags", input);
+  const { data } = await client.post<{ data: Tag }>('/tags', input);
   return data.data;
 }
 

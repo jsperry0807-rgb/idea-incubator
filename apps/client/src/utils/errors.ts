@@ -1,4 +1,4 @@
-import type { TFunction } from "i18next";
+import type { TFunction } from 'i18next';
 
 interface ApiErrorEnvelope {
   error?: {
@@ -15,11 +15,11 @@ export function authErrorMessage(err: unknown, t: TFunction): string {
   const status = axiosErr.response?.status;
   const code = data?.error?.code;
 
-  if (status === 401 || code === "UNAUTHORIZED") {
-    return t("auth.invalidCredentials");
+  if (status === 401 || code === 'UNAUTHORIZED') {
+    return t('auth.invalidCredentials');
   }
-  if (status === 409 || code === "CONFLICT") {
-    return t("auth.emailTaken");
+  if (status === 409 || code === 'CONFLICT') {
+    return t('auth.emailTaken');
   }
-  return t("auth.genericError");
+  return t('auth.genericError');
 }

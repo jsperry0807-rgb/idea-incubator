@@ -1,18 +1,18 @@
-import { useTranslation } from "react-i18next";
-import { Skeleton, toast } from "@repo/ui";
-import type { Share, ShareRole } from "@repo/shared";
+import { useTranslation } from 'react-i18next';
+import { Skeleton, toast } from '@repo/ui';
+import type { Share, ShareRole } from '@repo/shared';
 
-import { useShareMutations } from "../../hooks/useShareMutations";
-import { useShares } from "../../hooks/useShares";
-import { AccessRoleSelect } from "./AccessRoleSelect";
+import { useShareMutations } from '../../hooks/useShareMutations';
+import { useShares } from '../../hooks/useShares';
+import { AccessRoleSelect } from './AccessRoleSelect';
 
 const AVATAR_COLORS = [
-  "bg-[var(--color-accent)]/15 text-[var(--color-accent)]",
-  "bg-[var(--color-info)]/15 text-[var(--color-info)]",
-  "bg-[var(--color-success)]/15 text-[var(--color-success)]",
-  "bg-[var(--color-warning)]/15 text-[var(--color-warning)]",
-  "bg-[var(--color-danger)]/15 text-[var(--color-danger)]",
-  "bg-[var(--color-accent-cta)]/15 text-[var(--color-accent-cta)]",
+  'bg-[var(--color-accent)]/15 text-[var(--color-accent)]',
+  'bg-[var(--color-info)]/15 text-[var(--color-info)]',
+  'bg-[var(--color-success)]/15 text-[var(--color-success)]',
+  'bg-[var(--color-warning)]/15 text-[var(--color-warning)]',
+  'bg-[var(--color-danger)]/15 text-[var(--color-danger)]',
+  'bg-[var(--color-accent-cta)]/15 text-[var(--color-accent-cta)]',
 ];
 
 function initials(name: string): string {
@@ -20,16 +20,15 @@ function initials(name: string): string {
     .split(/\s+/)
     .filter(Boolean)
     .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
+    .map((part) => part[0]?.toUpperCase() ?? '')
+    .join('');
 }
 
 function shareAvatar(share: Share) {
   const name = share.user?.name ?? share.userId;
   const color =
     AVATAR_COLORS[
-      [...name].reduce((acc, char) => acc + char.charCodeAt(0), 0) %
-        AVATAR_COLORS.length
+      [...name].reduce((acc, char) => acc + char.charCodeAt(0), 0) % AVATAR_COLORS.length
     ];
 
   if (share.user?.avatarUrl) {
@@ -65,18 +64,18 @@ function ShareRow({ share, ideaId }: ShareRowProps) {
   async function handleRoleChange(role: ShareRole) {
     try {
       await changeRole.mutateAsync({ shareId: share.id, role });
-      toast.success(t("ideas.sharing.roleUpdated"));
+      toast.success(t('ideas.sharing.roleUpdated'));
     } catch {
-      toast.error(t("ideas.sharing.updateRoleError"));
+      toast.error(t('ideas.sharing.updateRoleError'));
     }
   }
 
   async function handleRemove() {
     try {
       await remove.mutateAsync(share.id);
-      toast.success(t("ideas.sharing.removed"));
+      toast.success(t('ideas.sharing.removed'));
     } catch {
-      toast.error(t("ideas.sharing.removeError"));
+      toast.error(t('ideas.sharing.removeError'));
     }
   }
 
@@ -84,18 +83,16 @@ function ShareRow({ share, ideaId }: ShareRowProps) {
     <li className="flex items-center gap-3 py-2 first:pt-0 last:pb-0">
       {shareAvatar(share)}
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-[var(--color-fg)]">
-          {share.user?.name}
-        </p>
-        <p className="truncate text-xs text-[var(--color-muted)]">
-          {share.user?.email}
-        </p>
+        <p className="truncate text-sm font-medium text-[var(--color-fg)]">{share.user?.name}</p>
+        <p className="truncate text-xs text-[var(--color-muted)]">{share.user?.email}</p>
       </div>
       <AccessRoleSelect
         value={share.role}
         onChange={(role) => void handleRoleChange(role)}
         disabled={busy}
-        ariaLabel={t("ideas.sharing.changeRole", { name: share.user?.name ?? "" })}
+        ariaLabel={t('ideas.sharing.changeRole', {
+          name: share.user?.name ?? '',
+        })}
       />
       <button
         type="button"
@@ -103,7 +100,7 @@ function ShareRow({ share, ideaId }: ShareRowProps) {
         disabled={busy}
         className="shrink-0 px-2 py-1 text-sm text-[var(--color-danger)] transition-colors hover:opacity-80 disabled:pointer-events-none disabled:opacity-50"
       >
-        {t("ideas.sharing.remove")}
+        {t('ideas.sharing.remove')}
       </button>
     </li>
   );
@@ -120,7 +117,7 @@ export function ShareList({ ideaId }: ShareListProps) {
   if (query.isLoading) {
     return (
       <ul className="flex flex-col gap-3" role="status" aria-busy="true">
-        <span className="sr-only">{t("app.loading")}</span>
+        <span className="sr-only">{t('app.loading')}</span>
         {Array.from({ length: 3 }, (_, index) => (
           <li key={index} className="flex items-center gap-3 py-2">
             <Skeleton className="size-9 shrink-0 rounded-full" />
@@ -136,20 +133,14 @@ export function ShareList({ ideaId }: ShareListProps) {
   }
 
   if (query.isError) {
-    return (
-      <p className="text-sm text-[var(--color-danger)]">
-        {t("ideas.sharing.loadError")}
-      </p>
-    );
+    return <p className="text-sm text-[var(--color-danger)]">{t('ideas.sharing.loadError')}</p>;
   }
 
   const shares = query.data ?? [];
 
   if (shares.length === 0) {
     return (
-      <p className="py-3 text-sm text-[var(--color-muted)]">
-        {t("ideas.sharing.emptyAccess")}
-      </p>
+      <p className="py-3 text-sm text-[var(--color-muted)]">{t('ideas.sharing.emptyAccess')}</p>
     );
   }
 

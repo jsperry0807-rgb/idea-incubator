@@ -1,13 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import {
-  deleteWireframe,
-  getWireframe,
-  listWireframes,
-  uploadWireframe,
-} from "../api/wireframes";
+import { deleteWireframe, getWireframe, listWireframes, uploadWireframe } from '../api/wireframes';
 
-const WIREFRAMES_KEY = (ideaId: string) => ["ideas", ideaId, "wireframes"] as const;
+const WIREFRAMES_KEY = (ideaId: string) => ['ideas', ideaId, 'wireframes'] as const;
 
 export function useWireframes(ideaId: string) {
   return useQuery({

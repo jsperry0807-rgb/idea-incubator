@@ -1,9 +1,7 @@
-import { useTranslation } from "react-i18next";
-import { ShareRole, SHARE_ROLE_VALUES } from "@repo/shared";
+import { useTranslation } from 'react-i18next';
+import { ShareRole, SHARE_ROLE_VALUES } from '@repo/shared';
 
-const INVITED_ROLES = SHARE_ROLE_VALUES.filter(
-  (role) => role !== ShareRole.OWNER,
-);
+const INVITED_ROLES = SHARE_ROLE_VALUES.filter((role) => role !== ShareRole.OWNER);
 
 export interface AccessRoleSelectProps {
   value: ShareRole;
@@ -29,13 +27,13 @@ export function AccessRoleSelect({
       disabled={disabled}
       aria-label={ariaLabel}
       className={[
-        "rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-bg)] px-2.5 py-1.5 text-sm text-[var(--color-fg)]",
-        "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]",
-        "disabled:pointer-events-none disabled:opacity-50",
+        'rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-bg)] px-2.5 py-1.5 text-sm text-[var(--color-fg)]',
+        'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]',
+        'disabled:pointer-events-none disabled:opacity-50',
         className,
       ]
         .filter(Boolean)
-        .join(" ")}
+        .join(' ')}
     >
       {INVITED_ROLES.map((role) => (
         <option key={role} value={role}>

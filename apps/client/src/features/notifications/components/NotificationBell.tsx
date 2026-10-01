@@ -1,6 +1,6 @@
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
-import { useNotifications } from "../hooks/useNotifications";
+import { useNotifications } from '../hooks/useNotifications';
 
 export interface NotificationBellProps {
   onClick?: () => void;
@@ -15,23 +15,23 @@ export function NotificationBell({ onClick }: NotificationBellProps) {
     <button
       type="button"
       onClick={onClick}
-      aria-label={t("app.nav.notifications")}
-      title={t("app.nav.notifications")}
+      aria-label={t('app.nav.notifications')}
+      title={t('app.nav.notifications')}
       className="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
       style={{
-        position: "relative",
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
+        position: 'relative',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         width: 36,
         height: 36,
         borderRadius: 9999,
-        color: "var(--color-muted)",
-        background: "none",
-        border: "none",
+        color: 'var(--color-muted)',
+        background: 'none',
+        border: 'none',
         padding: 0,
-        cursor: onClick ? "pointer" : "default",
-        fontFamily: "inherit",
+        cursor: onClick ? 'pointer' : 'default',
+        fontFamily: 'inherit',
       }}
     >
       <BellIcon />
@@ -39,22 +39,22 @@ export function NotificationBell({ onClick }: NotificationBellProps) {
         <span
           aria-hidden="true"
           style={{
-            position: "absolute",
+            position: 'absolute',
             top: 2,
             right: 2,
             minWidth: 16,
             height: 16,
-            padding: "0 4px",
+            padding: '0 4px',
             borderRadius: 9999,
-            backgroundColor: "var(--color-danger)",
-            color: "var(--color-danger-fg)",
+            backgroundColor: 'var(--color-danger)',
+            color: 'var(--color-danger-fg)',
             fontSize: 10,
             fontWeight: 600,
-            lineHeight: "16px",
-            textAlign: "center",
+            lineHeight: '16px',
+            textAlign: 'center',
           }}
         >
-          {unreadCount > 99 ? "99+" : unreadCount}
+          {unreadCount > 99 ? '99+' : unreadCount}
         </span>
       ) : null}
     </button>

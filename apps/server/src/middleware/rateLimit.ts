@@ -1,20 +1,20 @@
-import rateLimit from "express-rate-limit";
+import rateLimit from 'express-rate-limit';
 
-import { env } from "../config/env";
+import { env } from '../config/env';
 
-const isDev = env.NODE_ENV === "development";
+const isDev = env.NODE_ENV === 'development';
 
 export const globalRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: isDev ? 2000 : 100,
-  standardHeaders: "draft-7",
+  standardHeaders: 'draft-7',
   legacyHeaders: false,
 });
 
 export const authRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: isDev ? 200 : 10,
-  standardHeaders: "draft-7",
+  standardHeaders: 'draft-7',
   legacyHeaders: false,
 });
 
@@ -25,7 +25,7 @@ export const authRateLimit = rateLimit({
 export const interviewRateLimit = rateLimit({
   windowMs: 60 * 60 * 1000,
   limit: isDev ? 600 : 60,
-  standardHeaders: "draft-7",
+  standardHeaders: 'draft-7',
   legacyHeaders: false,
 });
 
@@ -36,6 +36,6 @@ export const interviewRateLimit = rateLimit({
 export const synthesisRateLimit = rateLimit({
   windowMs: 60 * 60 * 1000,
   limit: isDev ? 100 : 10,
-  standardHeaders: "draft-7",
+  standardHeaders: 'draft-7',
   legacyHeaders: false,
 });

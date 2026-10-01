@@ -1,15 +1,11 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { CreateShareInput, ShareRole } from "@repo/shared";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { CreateShareInput, ShareRole } from '@repo/shared';
 
-import {
-  createShare,
-  removeShare,
-  updateShareRole,
-} from "../api/shares";
+import { createShare, removeShare, updateShareRole } from '../api/shares';
 
 export function useShareMutations(ideaId: string) {
   const queryClient = useQueryClient();
-  const queryKey = ["ideas", ideaId, "shares"] as const;
+  const queryKey = ['ideas', ideaId, 'shares'] as const;
   const invalidate = () => void queryClient.invalidateQueries({ queryKey });
 
   const invite = useMutation({

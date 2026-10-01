@@ -1,4 +1,4 @@
-import { Router, type Router as RouterType, type Response } from "express";
+import { Router, type Router as RouterType, type Response } from 'express';
 import {
   deleteAccountSchema,
   forgotPasswordSchema,
@@ -6,11 +6,11 @@ import {
   registerSchema,
   resetPasswordSchema,
   updateProfileSchema,
-} from "@repo/shared";
+} from '@repo/shared';
 
-import { validate } from "../middleware/validate";
-import { authenticate } from "../middleware/auth";
-import { authRateLimit } from "../middleware/rateLimit";
+import { validate } from '../middleware/validate';
+import { authenticate } from '../middleware/auth';
+import { authRateLimit } from '../middleware/rateLimit';
 import {
   deleteAccount,
   forgotPassword,
@@ -22,8 +22,8 @@ import {
   resetPassword,
   updateProfile,
   getRefreshTokenCookieName,
-} from "../services/auth.service";
-import { env } from "../config/env";
+} from '../services/auth.service';
+import { env } from '../config/env';
 
 const router: RouterType = Router();
 
@@ -32,18 +32,18 @@ const COOKIE_NAME = getRefreshTokenCookieName();
 function setRefreshCookie(res: Response, token: string) {
   res.cookie(COOKIE_NAME, token, {
     httpOnly: true,
-    secure: env.NODE_ENV === "production",
-    sameSite: "strict",
-    path: "/",
+    secure: env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    path: '/',
     maxAge: env.REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60 * 1000,
   });
 }
 
 function clearRefreshCookie(res: Response) {
-  res.clearCookie(COOKIE_NAME, { path: "/" });
+  res.clearCookie(COOKIE_NAME, { path: '/' });
 }
 
-router.post("/register", authRateLimit, validate(registerSchema), async (req, res, next) => {
+router.post('/register', authRateLimit, validate(registerSchema), async (req, res, next) => {
   try {
     const result = await register(req.body);
     setRefreshCookie(res, result.refreshToken);
@@ -59,7 +59,7 @@ router.post("/register", authRateLimit, validate(registerSchema), async (req, re
   }
 });
 
-router.post("/login", authRateLimit, validate(loginSchema), async (req, res, next) => {
+router.post('/login', authRateLimit, validate(loginSchema), async (req, res, next) => {
   try {
     const result = await login(req.body);
     setRefreshCookie(res, result.refreshToken);
@@ -75,25 +75,35 @@ router.post("/login", authRateLimit, validate(loginSchema), async (req, res, nex
   }
 });
 
-router.post("/forgot-password", authRateLimit, validate(forgotPasswordSchema), async (req, res, next) => {
-  try {
-    const result = await forgotPassword(req.body.email);
-    res.json({ data: result });
-  } catch (err) {
-    next(err);
+router.post(
+  '/forgot-password',
+  authRateLimit,
+  validate(forgotPasswordSchema),
+  async (req, res, next) => {
+    try {
+      const result = await forgotPassword(req.body.email);
+      res.json({ data: result });
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
-router.post("/reset-password", authRateLimit, validate(resetPasswordSchema), async (req, res, next) => {
-  try {
-    const result = await resetPassword(req.body.token, req.body.password);
-    res.json({ data: result });
-  } catch (err) {
-    next(err);
+router.post(
+  '/reset-password',
+  authRateLimit,
+  validate(resetPasswordSchema),
+  async (req, res, next) => {
+    try {
+      const result = await resetPassword(req.body.token, req.body.password);
+      res.json({ data: result });
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
-router.post("/refresh", async (req, res, next) => {
+router.post('/refresh', async (req, res, next) => {
   try {
     const result = await refresh(req.cookies?.[COOKIE_NAME]);
     setRefreshCookie(res, result.refreshToken);
@@ -108,7 +118,7 @@ router.post("/refresh", async (req, res, next) => {
   }
 });
 
-router.post("/logout", async (req, res, next) => {
+router.post('/logout', async (req, res, next) => {
   try {
     await logout(req.cookies?.[COOKIE_NAME]);
     clearRefreshCookie(res);
@@ -118,7 +128,7 @@ router.post("/logout", async (req, res, next) => {
   }
 });
 
-router.get("/me", authenticate, async (req, res, next) => {
+router.get('/me', authenticate, async (req, res, next) => {
   try {
     res.json({ data: await me(req.userId!) });
   } catch (err) {
@@ -126,7 +136,7 @@ router.get("/me", authenticate, async (req, res, next) => {
   }
 });
 
-router.patch("/me", authenticate, validate(updateProfileSchema), async (req, res, next) => {
+router.patch('/me', authenticate, validate(updateProfileSchema), async (req, res, next) => {
   try {
     res.json({ data: await updateProfile(req.userId!, req.body) });
   } catch (err) {
@@ -134,7 +144,7 @@ router.patch("/me", authenticate, validate(updateProfileSchema), async (req, res
   }
 });
 
-router.delete("/me", authenticate, validate(deleteAccountSchema), async (req, res, next) => {
+router.delete('/me', authenticate, validate(deleteAccountSchema), async (req, res, next) => {
   try {
     await deleteAccount(req.userId!, req.body.password);
     clearRefreshCookie(res);

@@ -1,9 +1,9 @@
-import { Navigate, useLocation } from "react-router-dom";
-import type { ReactNode } from "react";
-import { useTranslation } from "react-i18next";
+import { Navigate, useLocation } from 'react-router-dom';
+import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { ROUTES } from "@config/routes";
-import { useAuth } from "../hooks/useAuth";
+import { ROUTES } from '@config/routes';
+import { useAuth } from '../hooks/useAuth';
 
 export function ProtectedRoute({ children }: { children: ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -15,13 +15,13 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
       <div
         role="status"
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "60vh",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '60vh',
         }}
       >
-        <span style={{ color: "var(--color-muted)" }}>{t("app.loading")}</span>
+        <span style={{ color: 'var(--color-muted)' }}>{t('app.loading')}</span>
       </div>
     );
   }

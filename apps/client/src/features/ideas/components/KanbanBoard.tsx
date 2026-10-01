@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   DndContext,
   KeyboardSensor,
@@ -9,23 +9,23 @@ import {
   useSensors,
   type DragEndEvent,
   type DragStartEvent,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   IDEA_STATUS_VALUES,
   type IdeaPipeline,
   type IdeaPriority,
   type IdeaStatus,
   type PipelineIdea,
-} from "@repo/shared";
-import { toast } from "@repo/ui";
+} from '@repo/shared';
+import { toast } from '@repo/ui';
 
-import { useTags } from "@features/tags/hooks/useTags";
-import { usePipeline } from "../hooks/usePipeline";
-import { useUpdateIdeaStatus } from "../hooks/useUpdateIdeaStatus";
-import { DragOverlay } from "./DragOverlay";
-import { KanbanColumn } from "./KanbanColumn";
-import { PipelineFilterBar } from "./PipelineFilterBar";
-import { KanbanBoardSkeleton } from "./skeletons";
+import { useTags } from '@features/tags/hooks/useTags';
+import { usePipeline } from '../hooks/usePipeline';
+import { useUpdateIdeaStatus } from '../hooks/useUpdateIdeaStatus';
+import { DragOverlay } from './DragOverlay';
+import { KanbanColumn } from './KanbanColumn';
+import { PipelineFilterBar } from './PipelineFilterBar';
+import { KanbanBoardSkeleton } from './skeletons';
 
 export function KanbanBoard() {
   const { t } = useTranslation();
@@ -33,12 +33,12 @@ export function KanbanBoard() {
   const tagsQuery = useTags();
   const statusMutation = useUpdateIdeaStatus();
   const [activeIdea, setActiveIdea] = useState<PipelineIdea | null>(null);
-  const [tagFilter, setTagFilter] = useState("");
-  const [priorityFilter, setPriorityFilter] = useState<IdeaPriority | "">("");
+  const [tagFilter, setTagFilter] = useState('');
+  const [priorityFilter, setPriorityFilter] = useState<IdeaPriority | ''>('');
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 3 } }),
-    useSensor(KeyboardSensor),
+    useSensor(KeyboardSensor)
   );
 
   function handleDragStart(event: DragStartEvent) {
@@ -64,9 +64,9 @@ export function KanbanBoard() {
       { ideaId: idea.id, status: nextStatus },
       {
         onError: () => {
-          toast.error(t("ideas.pipeline.moveError"));
+          toast.error(t('ideas.pipeline.moveError'));
         },
-      },
+      }
     );
   }
 
@@ -80,8 +80,7 @@ export function KanbanBoard() {
     const result = {} as IdeaPipeline;
     for (const status of IDEA_STATUS_VALUES) {
       result[status] = (pipeline?.[status] ?? []).filter((idea) => {
-        const tagMatch =
-          !tagFilter || idea.tags.some(({ tagId }) => tagId === tagFilter);
+        const tagMatch = !tagFilter || idea.tags.some(({ tagId }) => tagId === tagFilter);
         const priorityMatch = !priorityFilter || idea.priority === priorityFilter;
         return tagMatch && priorityMatch;
       });
@@ -94,7 +93,7 @@ export function KanbanBoard() {
   }
 
   if (query.isError) {
-    return <p className="text-sm text-[var(--color-danger)]">{t("ideas.pipeline.loadError")}</p>;
+    return <p className="text-sm text-[var(--color-danger)]">{t('ideas.pipeline.loadError')}</p>;
   }
 
   if (!query.data) {
@@ -120,11 +119,7 @@ export function KanbanBoard() {
       >
         <div className="flex min-h-0 flex-1 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-clip pt-1 pb-2">
           {IDEA_STATUS_VALUES.map((status) => (
-            <KanbanColumn
-              key={status}
-              status={status}
-              ideas={filteredPipeline[status]}
-            />
+            <KanbanColumn key={status} status={status} ideas={filteredPipeline[status]} />
           ))}
         </div>
         <DragOverlay active={activeIdea} />

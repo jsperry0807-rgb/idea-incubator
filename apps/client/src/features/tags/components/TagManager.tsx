@@ -1,14 +1,14 @@
-import { useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import type { Tag } from "@repo/shared";
-import { Button, Skeleton, EmptyState, toast } from "@repo/ui";
+import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import type { Tag } from '@repo/shared';
+import { Button, Skeleton, EmptyState, toast } from '@repo/ui';
 
-import { TagBadge } from "@features/ideas/components/TagBadge";
-import { useCreateTag } from "../hooks/useCreateTag";
-import { useDeleteTag } from "../hooks/useDeleteTag";
-import { useTags } from "../hooks/useTags";
-import { useUpdateTag } from "../hooks/useUpdateTag";
-import { TagForm } from "./TagForm";
+import { TagBadge } from '@features/ideas/components/TagBadge';
+import { useCreateTag } from '../hooks/useCreateTag';
+import { useDeleteTag } from '../hooks/useDeleteTag';
+import { useTags } from '../hooks/useTags';
+import { useUpdateTag } from '../hooks/useUpdateTag';
+import { TagForm } from './TagForm';
 
 export function TagManager() {
   const { t } = useTranslation();
@@ -44,22 +44,22 @@ export function TagManager() {
     }
     try {
       await deleteMutation.mutateAsync(tag.id);
-      toast.success(t("tags.deleted"));
+      toast.success(t('tags.deleted'));
     } catch {
-      toast.error(t("tags.deleteError"));
+      toast.error(t('tags.deleteError'));
     }
   }
 
   async function handleCreate(input: Parameters<typeof createMutation.mutateAsync>[0]) {
     await createMutation.mutateAsync(input);
     setCreating(false);
-    toast.success(t("tags.created"));
+    toast.success(t('tags.created'));
   }
 
   async function handleUpdate(input: Parameters<typeof updateMutation.mutateAsync>[0]) {
     await updateMutation.mutateAsync(input);
     setEditingId(null);
-    toast.success(t("tags.updated"));
+    toast.success(t('tags.updated'));
   }
 
   const tags = tagsQuery.data ?? [];
@@ -68,10 +68,10 @@ export function TagManager() {
     <div className="flex w-full flex-col gap-4">
       <div className="flex items-center justify-between">
         <p className="text-sm text-[var(--color-muted)]">
-          {tags.length === 1 ? "1" : String(tags.length)} {t("tags.count")}
+          {tags.length === 1 ? '1' : String(tags.length)} {t('tags.count')}
         </p>
         <Button variant="secondary" size="sm" onClick={() => setCreating((v) => !v)}>
-          {creating ? t("tags.cancel") : `+ ${t("tags.newTag")}`}
+          {creating ? t('tags.cancel') : `+ ${t('tags.newTag')}`}
         </Button>
       </div>
 
@@ -86,7 +86,7 @@ export function TagManager() {
 
       {tagsQuery.isLoading ? (
         <ul className="flex flex-col gap-2" role="status" aria-busy="true">
-          <span className="sr-only">{t("app.loading")}</span>
+          <span className="sr-only">{t('app.loading')}</span>
           {Array.from({ length: 5 }, (_, index) => (
             <li
               key={index}
@@ -98,10 +98,7 @@ export function TagManager() {
           ))}
         </ul>
       ) : tags.length === 0 ? (
-        <EmptyState
-          title={t("tags.emptyTitle")}
-          description={t("tags.emptyDescription")}
-        />
+        <EmptyState title={t('tags.emptyTitle')} description={t('tags.emptyDescription')} />
       ) : (
         <ul className="flex flex-col gap-2">
           {tags.map((tag) => (
@@ -122,7 +119,7 @@ export function TagManager() {
                   <TagBadge tag={tag} />
                   <div className="flex items-center gap-2">
                     <Button variant="ghost" size="sm" onClick={() => setEditingId(tag.id)}>
-                      {t("tags.edit")}
+                      {t('tags.edit')}
                     </Button>
                     {confirmingDeleteId === tag.id ? (
                       <Button
@@ -131,15 +128,11 @@ export function TagManager() {
                         disabled={deleteMutation.isPending}
                         onClick={() => void confirmDelete(tag)}
                       >
-                        {t("tags.deleteConfirm")}
+                        {t('tags.deleteConfirm')}
                       </Button>
                     ) : (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => requestDelete(tag.id)}
-                      >
-                        {t("tags.delete")}
+                      <Button variant="ghost" size="sm" onClick={() => requestDelete(tag.id)}>
+                        {t('tags.delete')}
                       </Button>
                     )}
                   </div>

@@ -90,19 +90,19 @@ packages/shared/src/
 
 ```ts
 // apps/client/vitest.config.ts
-import { defineConfig } from "vitest/config";
-import react from "@vitejs/plugin-react";
+import { defineConfig } from 'vitest/config';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
   test: {
     globals: true,
-    environment: "jsdom",
-    setupFiles: ["./vitest.setup.ts"],
+    environment: 'jsdom',
+    setupFiles: ['./vitest.setup.ts'],
     coverage: {
-      provider: "v8",
-      reporter: ["text", "html"],
-      exclude: ["node_modules/", "dist/"],
+      provider: 'v8',
+      reporter: ['text', 'html'],
+      exclude: ['node_modules/', 'dist/'],
     },
   },
 });
@@ -110,7 +110,7 @@ export default defineConfig({
 
 ```ts
 // apps/client/vitest.setup.ts
-import "@testing-library/jest-dom";
+import '@testing-library/jest-dom';
 ```
 
 ---
@@ -119,17 +119,17 @@ import "@testing-library/jest-dom";
 
 ```ts
 // apps/client/src/mocks/handlers.ts
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse } from 'msw';
 
 export const handlers = [
-  http.get("/api/ideas", () => {
+  http.get('/api/ideas', () => {
     return HttpResponse.json({
       data: [
         {
-          id: "1",
-          title: "Test Idea",
-          status: "IDEA",
-          priority: "NONE",
+          id: '1',
+          title: 'Test Idea',
+          status: 'IDEA',
+          priority: 'NONE',
           tags: [],
         },
       ],
@@ -137,13 +137,13 @@ export const handlers = [
     });
   }),
 
-  http.post("/api/auth/login", async ({ request }) => {
+  http.post('/api/auth/login', async ({ request }) => {
     const body = await request.json();
-    if (body.email === "test@example.com") {
+    if (body.email === 'test@example.com') {
       return HttpResponse.json({
         data: {
-          user: { id: "1", name: "Test", email: "test@example.com" },
-          accessToken: "mock-token",
+          user: { id: '1', name: 'Test', email: 'test@example.com' },
+          accessToken: 'mock-token',
         },
       });
     }

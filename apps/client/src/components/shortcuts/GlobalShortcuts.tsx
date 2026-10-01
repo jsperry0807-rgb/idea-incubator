@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { ROUTES } from "@config/routes";
-import { ShortcutsHelpModal } from "./ShortcutsHelpModal";
+import { ROUTES } from '@config/routes';
+import { ShortcutsHelpModal } from './ShortcutsHelpModal';
 
-const EDITABLE_TAGS = ["INPUT", "TEXTAREA", "SELECT"];
+const EDITABLE_TAGS = ['INPUT', 'TEXTAREA', 'SELECT'];
 
 function isEditableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
@@ -21,8 +21,8 @@ export function GlobalShortcuts() {
       const target = event.target as HTMLElement | null;
 
       // Cmd/Ctrl + Enter → submit the form that currently has focus.
-      if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
-        const form = target?.closest("form");
+      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+        const form = target?.closest('form');
         if (form) {
           event.preventDefault();
           form.requestSubmit();
@@ -34,29 +34,27 @@ export function GlobalShortcuts() {
       if (event.metaKey || event.ctrlKey || event.altKey) return;
 
       switch (event.key) {
-        case "/": {
-          const search = document.querySelector<HTMLElement>(
-            '[data-shortcut="search"]',
-          );
+        case '/': {
+          const search = document.querySelector<HTMLElement>('[data-shortcut="search"]');
           if (search) {
             event.preventDefault();
             search.focus();
           }
           break;
         }
-        case "n":
+        case 'n':
           event.preventDefault();
           navigate(ROUTES.NEW_IDEA);
           break;
-        case "?":
+        case '?':
           event.preventDefault();
           setHelpOpen((value) => !value);
           break;
       }
     }
 
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
   }, [navigate]);
 
   return <ShortcutsHelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />;

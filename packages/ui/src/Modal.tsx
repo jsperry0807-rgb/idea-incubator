@@ -1,5 +1,5 @@
-import { useEffect, useRef, type ReactNode } from "react";
-import { createPortal } from "react-dom";
+import { useEffect, useRef, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 
 export interface ModalProps {
   open: boolean;
@@ -18,16 +18,16 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
     const previouslyFocused = document.activeElement as HTMLElement | null;
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === 'Escape') onClose();
     };
 
-    window.addEventListener("keydown", onKeyDown);
-    document.body.style.overflow = "hidden";
+    window.addEventListener('keydown', onKeyDown);
+    document.body.style.overflow = 'hidden';
     panelRef.current?.focus();
 
     return () => {
-      window.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = "";
+      window.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = '';
       previouslyFocused?.focus();
     };
   }, [open, onClose]);
@@ -73,6 +73,6 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
         ) : null}
       </div>
     </div>,
-    document.body,
+    document.body
   );
 }

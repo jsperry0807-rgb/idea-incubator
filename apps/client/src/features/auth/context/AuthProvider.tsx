@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 
-import { setAccessToken as setAxiosToken } from "@/axios";
+import { setAccessToken as setAxiosToken } from '@/axios';
 import {
   deleteAccountRequest,
   loginRequest,
@@ -8,14 +8,9 @@ import {
   meRequest,
   registerRequest,
   updateProfileRequest,
-} from "../api/auth";
-import type {
-  LoginInput,
-  RegisterInput,
-  UpdateProfileInput,
-  User,
-} from "../types";
-import { AuthContext, type AuthContextValue } from "./AuthContext";
+} from '../api/auth';
+import type { LoginInput, RegisterInput, UpdateProfileInput, User } from '../types';
+import { AuthContext, type AuthContextValue } from './AuthContext';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -47,21 +42,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
       setIsLoading(false);
     };
-    window.addEventListener("auth:unauthorized", onUnauthorized);
-    return () => window.removeEventListener("auth:unauthorized", onUnauthorized);
+    window.addEventListener('auth:unauthorized', onUnauthorized);
+    return () => window.removeEventListener('auth:unauthorized', onUnauthorized);
   }, []);
 
-  const login = useCallback(async (input: LoginInput) => {
-    const res = await loginRequest(input);
-    setAccessToken(res.accessToken);
-    setUser(res.user);
-  }, [setAccessToken]);
+  const login = useCallback(
+    async (input: LoginInput) => {
+      const res = await loginRequest(input);
+      setAccessToken(res.accessToken);
+      setUser(res.user);
+    },
+    [setAccessToken]
+  );
 
-  const register = useCallback(async (input: RegisterInput) => {
-    const res = await registerRequest(input);
-    setAccessToken(res.accessToken);
-    setUser(res.user);
-  }, [setAccessToken]);
+  const register = useCallback(
+    async (input: RegisterInput) => {
+      const res = await registerRequest(input);
+      setAccessToken(res.accessToken);
+      setUser(res.user);
+    },
+    [setAccessToken]
+  );
 
   const logout = useCallback(async () => {
     try {
@@ -95,7 +96,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       deleteAccount,
       setAccessToken,
     }),
-    [user, isLoading, login, register, logout, updateProfile, deleteAccount, setAccessToken],
+    [user, isLoading, login, register, logout, updateProfile, deleteAccount, setAccessToken]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

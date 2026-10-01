@@ -1,17 +1,10 @@
-import prisma from "../lib/prisma";
-import { ForbiddenError, NotFoundError } from "../lib/errors";
-import { assertIdeaAccess } from "./idea.service";
-import { createNotification } from "./notification.service";
-import type {
-  Comment,
-  CreateCommentInput,
-  UpdateCommentInput,
-} from "@repo/shared";
+import prisma from '../lib/prisma';
+import { ForbiddenError, NotFoundError } from '../lib/errors';
+import { assertIdeaAccess } from './idea.service';
+import { createNotification } from './notification.service';
+import type { Comment, CreateCommentInput, UpdateCommentInput } from '@repo/shared';
 
-export async function listComments(
-  userId: string,
-  ideaId: string,
-): Promise<Comment[]> {
+export async function listComments(userId: string, ideaId: string): Promise<Comment[]> {
   await assertIdeaAccess(userId, ideaId);
 
   const comments = await prisma.comment.findMany({
@@ -19,7 +12,7 @@ export async function listComments(
     include: {
       user: { select: { id: true, name: true, avatarUrl: true } },
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: { createdAt: 'desc' },
   });
 
   return comments.map(toCommentDto);
@@ -28,7 +21,7 @@ export async function listComments(
 export async function createComment(
   userId: string,
   ideaId: string,
-  input: CreateCommentInput,
+  input: CreateCommentInput
 ): Promise<Comment> {
   const idea = await prisma.idea.findFirst({
     where: { id: ideaId },
@@ -36,7 +29,7 @@ export async function createComment(
   });
 
   if (!idea) {
-    throw new NotFoundError("Idea not found");
+    throw new NotFoundError('Idea not found');
   }
 
   if (idea.userId !== userId) {
@@ -46,7 +39,7 @@ export async function createComment(
     });
 
     if (!share) {
-      throw new NotFoundError("Idea not found");
+      throw new NotFoundError('Idea not found');
     }
   }
 
@@ -69,7 +62,7 @@ export async function createComment(
 
     await createNotification({
       userId: idea.userId,
-      type: "COMMENT",
+      type: 'COMMENT',
       message: `${commenter?.name} commented on "${idea.title}"`,
       ideaId: idea.id,
     });
@@ -82,7 +75,7 @@ export async function updateComment(
   userId: string,
   ideaId: string,
   commentId: string,
-  input: UpdateCommentInput,
+  input: UpdateCommentInput
 ): Promise<Comment> {
   await assertIdeaAccess(userId, ideaId);
 
@@ -92,11 +85,11 @@ export async function updateComment(
   });
 
   if (!existing) {
-    throw new NotFoundError("Comment not found");
+    throw new NotFoundError('Comment not found');
   }
 
   if (existing.userId !== userId) {
-    throw new ForbiddenError("You can only edit your own comments");
+    throw new ForbiddenError('You can only edit your own comments');
   }
 
   const comment = await prisma.comment.update({
@@ -113,7 +106,7 @@ export async function updateComment(
 export async function deleteComment(
   userId: string,
   ideaId: string,
-  commentId: string,
+  commentId: string
 ): Promise<void> {
   const idea = await prisma.idea.findFirst({
     where: { id: ideaId },
@@ -121,7 +114,7 @@ export async function deleteComment(
   });
 
   if (!idea) {
-    throw new NotFoundError("Idea not found");
+    throw new NotFoundError('Idea not found');
   }
 
   const comment = await prisma.comment.findFirst({
@@ -130,7 +123,7 @@ export async function deleteComment(
   });
 
   if (!comment) {
-    throw new NotFoundError("Comment not found");
+    throw new NotFoundError('Comment not found');
   }
 
   if (comment.userId !== userId && idea.userId !== userId) {

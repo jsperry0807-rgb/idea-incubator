@@ -1,35 +1,49 @@
-import { PLANNING_SECTION_NAMES } from "@repo/shared";
-import type { DecisionPoint, Question, Synthesis } from "@repo/shared";
+import { PLANNING_SECTION_NAMES } from '@repo/shared';
+import type { DecisionPoint, Question, Synthesis } from '@repo/shared';
 
-import { sectionsForType } from "../lib/planningTemplates";
-import { assertValidFrontier } from "./validate";
+import { sectionsForType } from '../lib/planningTemplates';
+import { assertValidFrontier } from './validate';
 import {
   MAX_TURNS,
   STUCK_ATTEMPTS,
   type InterviewDecision,
   type InterviewPhase,
   type InterviewState,
-} from "./state";
+} from './state';
 
-export type Answer
-  = { pointId: string; optionId: string; value: string; freeText: string | null };
+export type Answer = {
+  pointId: string;
+  optionId: string;
+  value: string;
+  freeText: string | null;
+};
 
 export type InterviewEvent =
-  | { type: "START" }
-  | { type: "CLASSIFIED"; domain: NonNullable<InterviewState["domain"]>; open: DecisionPoint[] }
-  | { type: "QUESTION_RENDERED"; question: Question }
-  | { type: "ANSWERED"; answer: Answer }
-  | { type: "REEVALUATED"; opened: DecisionPoint[]; closed: string[]; invalidated: string[]; answer: Answer }
-  | { type: "SKIPPED"; pointId: string }
-  | { type: "DEFERRED"; pointId: string; reason?: string }
-  | { type: "SYNTHESIZED"; forPointId: string; synthesis: Synthesis };
+  | { type: 'START' }
+  | {
+      type: 'CLASSIFIED';
+      domain: NonNullable<InterviewState['domain']>;
+      open: DecisionPoint[];
+    }
+  | { type: 'QUESTION_RENDERED'; question: Question }
+  | { type: 'ANSWERED'; answer: Answer }
+  | {
+      type: 'REEVALUATED';
+      opened: DecisionPoint[];
+      closed: string[];
+      invalidated: string[];
+      answer: Answer;
+    }
+  | { type: 'SKIPPED'; pointId: string }
+  | { type: 'DEFERRED'; pointId: string; reason?: string }
+  | { type: 'SYNTHESIZED'; forPointId: string; synthesis: Synthesis };
 
 export type InterviewDirective =
-  | { type: "classify" }
-  | { type: "ask"; pointId: string }
-  | { type: "reevaluate"; answer: Answer }
-  | { type: "synthesize"; pointId: string }
-  | { type: "complete"; reason: "ready" | "turn-cap" };
+  | { type: 'classify' }
+  | { type: 'ask'; pointId: string }
+  | { type: 'reevaluate'; answer: Answer }
+  | { type: 'synthesize'; pointId: string }
+  | { type: 'complete'; reason: 'ready' | 'turn-cap' };
 
 export interface ReduceResult {
   state: InterviewState;
@@ -45,26 +59,23 @@ const PRIORITY_RANK: Record<string, number> = { P0: 0, P1: 1, P2: 2, P3: 3 };
  * events; the caller (the graph) resolves directives with LLM calls and feeds
  * the results back as events.
  */
-export function advance(
-  state: InterviewState,
-  event: InterviewEvent,
-): ReduceResult {
+export function advance(state: InterviewState, event: InterviewEvent): ReduceResult {
   switch (event.type) {
-    case "START":
+    case 'START':
       return onStart(state);
-    case "CLASSIFIED":
+    case 'CLASSIFIED':
       return onClassified(state, event);
-    case "QUESTION_RENDERED":
+    case 'QUESTION_RENDERED':
       return onQuestionRendered(state, event);
-    case "ANSWERED":
+    case 'ANSWERED':
       return onAnswered(state, event);
-    case "REEVALUATED":
+    case 'REEVALUATED':
       return onReevaluated(state, event);
-    case "SKIPPED":
+    case 'SKIPPED':
       return onSkipped(state, event);
-    case "DEFERRED":
+    case 'DEFERRED':
       return onDeferred(state, event);
-    case "SYNTHESIZED":
+    case 'SYNTHESIZED':
       return onSynthesized(state, event);
     default:
       return { state, directives: [] };
@@ -72,42 +83,40 @@ export function advance(
 }
 
 function onStart(state: InterviewState): ReduceResult {
-  if (state.phase !== "CLASSIFY") {
+  if (state.phase !== 'CLASSIFY') {
     return { state, directives: [] };
   }
-  return { state, directives: [{ type: "classify" }] };
+  return { state, directives: [{ type: 'classify' }] };
 }
 
 function onClassified(
   state: InterviewState,
-  event: Extract<InterviewEvent, { type: "CLASSIFIED" }>,
+  event: Extract<InterviewEvent, { type: 'CLASSIFIED' }>
 ): ReduceResult {
   assertValidFrontier(event.open);
 
   const next = {
     ...state,
-    phase: "ASK" as InterviewPhase,
+    phase: 'ASK' as InterviewPhase,
     domain: event.domain,
-    open: event.open.map((p) => ({ ...p, status: "open" as const })),
-    coverage: computeCoverage(
-      event.open.map((p) => ({ ...p, status: "open" as const })),
-    ),
+    open: event.open.map((p) => ({ ...p, status: 'open' as const })),
+    coverage: computeCoverage(event.open.map((p) => ({ ...p, status: 'open' as const }))),
   };
 
   const selected = selectPoint(next);
   if (!selected) {
     return {
-      state: { ...next, phase: "READY", current: null },
-      directives: [{ type: "complete", reason: "ready" }],
+      state: { ...next, phase: 'READY', current: null },
+      directives: [{ type: 'complete', reason: 'ready' }],
     };
   }
 
-  return { state: next, directives: [{ type: "ask", pointId: selected.id }] };
+  return { state: next, directives: [{ type: 'ask', pointId: selected.id }] };
 }
 
 function onQuestionRendered(
   state: InterviewState,
-  event: Extract<InterviewEvent, { type: "QUESTION_RENDERED" }>,
+  event: Extract<InterviewEvent, { type: 'QUESTION_RENDERED' }>
 ): ReduceResult {
   const asked = state.asked.includes(event.question.point.id)
     ? state.asked
@@ -121,22 +130,22 @@ function onQuestionRendered(
 
 function onAnswered(
   state: InterviewState,
-  event: Extract<InterviewEvent, { type: "ANSWERED" }>,
+  event: Extract<InterviewEvent, { type: 'ANSWERED' }>
 ): ReduceResult {
   // An answer is legal either in normal dialog (ASK) or when resolving a
   // stuck point after synthesis (SYNTHESIZE).
-  if (state.phase !== "ASK" && state.phase !== "SYNTHESIZE") {
+  if (state.phase !== 'ASK' && state.phase !== 'SYNTHESIZE') {
     return { state, directives: [] };
   }
   return {
     state,
-    directives: [{ type: "reevaluate", answer: event.answer }],
+    directives: [{ type: 'reevaluate', answer: event.answer }],
   };
 }
 
 function onReevaluated(
   state: InterviewState,
-  event: Extract<InterviewEvent, { type: "REEVALUATED" }>,
+  event: Extract<InterviewEvent, { type: 'REEVALUATED' }>
 ): ReduceResult {
   const { answer, opened, closed, invalidated } = event;
 
@@ -147,16 +156,12 @@ function onReevaluated(
 
   assertValidFrontier(opened);
 
-  const decidedPointIds = new Set([
-    answer.pointId,
-    ...closed,
-    ...invalidated,
-  ]);
+  const decidedPointIds = new Set([answer.pointId, ...closed, ...invalidated]);
   const kept = state.open.filter((p) => !decidedPointIds.has(p.id));
   const keptIds = new Set(kept.map((p) => p.id));
   const openedClean = opened
     .filter((p) => p.id !== answer.pointId && !keptIds.has(p.id))
-    .map((p) => ({ ...p, status: "open" as const }));
+    .map((p) => ({ ...p, status: 'open' as const }));
 
   const decision: InterviewDecision = {
     pointId: answer.pointId,
@@ -170,12 +175,11 @@ function onReevaluated(
   };
 
   const turn = state.turn + 1;
-  const resolvesStuck =
-    state.phase === "SYNTHESIZE" && state.stuck?.pointId === answer.pointId;
+  const resolvesStuck = state.phase === 'SYNTHESIZE' && state.stuck?.pointId === answer.pointId;
   const next: InterviewState = {
     ...state,
     // Resolving the stuck point after synthesis returns to normal dialog.
-    phase: resolvesStuck ? "ASK" : state.phase,
+    phase: resolvesStuck ? 'ASK' : state.phase,
     decisions: { ...state.decisions, [answer.pointId]: decision },
     open: [...kept, ...openedClean],
     current: null,
@@ -189,19 +193,21 @@ function onReevaluated(
 
 function onSkipped(
   state: InterviewState,
-  event: Extract<InterviewEvent, { type: "SKIPPED" }>,
+  event: Extract<InterviewEvent, { type: 'SKIPPED' }>
 ): ReduceResult {
-  const attempts =
-    state.stuck?.pointId === event.pointId ? state.stuck.attempts + 1 : 1;
+  const attempts = state.stuck?.pointId === event.pointId ? state.stuck.attempts + 1 : 1;
 
-  const asked = state.asked.includes(event.pointId)
-    ? state.asked
-    : [...state.asked, event.pointId];
+  const asked = state.asked.includes(event.pointId) ? state.asked : [...state.asked, event.pointId];
 
   if (attempts >= STUCK_ATTEMPTS) {
     return {
-      state: { ...state, asked, stuck: { pointId: event.pointId, attempts }, phase: "SYNTHESIZE" },
-      directives: [{ type: "synthesize", pointId: event.pointId }],
+      state: {
+        ...state,
+        asked,
+        stuck: { pointId: event.pointId, attempts },
+        phase: 'SYNTHESIZE',
+      },
+      directives: [{ type: 'synthesize', pointId: event.pointId }],
     };
   }
 
@@ -212,7 +218,7 @@ function onSkipped(
   if (state.open.some((p) => p.id === event.pointId)) {
     return {
       state: { ...state, asked, stuck: { pointId: event.pointId, attempts } },
-      directives: [{ type: "ask", pointId: event.pointId }],
+      directives: [{ type: 'ask', pointId: event.pointId }],
     };
   }
 
@@ -223,21 +229,21 @@ function onSkipped(
       state: {
         ...state,
         stuck: { pointId: event.pointId, attempts },
-        phase: "SYNTHESIZE",
+        phase: 'SYNTHESIZE',
       },
-      directives: [{ type: "synthesize", pointId: event.pointId }],
+      directives: [{ type: 'synthesize', pointId: event.pointId }],
     };
   }
 
   return {
     state: { ...state, asked, stuck: { pointId: event.pointId, attempts } },
-    directives: [{ type: "ask", pointId: selected.id }],
+    directives: [{ type: 'ask', pointId: selected.id }],
   };
 }
 
 function onDeferred(
   state: InterviewState,
-  event: Extract<InterviewEvent, { type: "DEFERRED" }>,
+  event: Extract<InterviewEvent, { type: 'DEFERRED' }>
 ): ReduceResult {
   if (event.pointId === undefined) return { state, directives: [] };
 
@@ -246,8 +252,8 @@ function onDeferred(
 
   const decision: InterviewDecision = {
     pointId: point.id,
-    optionId: "deferred",
-    value: `deferred: ${event.reason ?? "no reason given"}`,
+    optionId: 'deferred',
+    value: `deferred: ${event.reason ?? 'no reason given'}`,
     openedPointIds: [],
     closedPointIds: [point.id],
     deferred: true,
@@ -256,12 +262,11 @@ function onDeferred(
   };
 
   const kept = state.open.filter((p) => p.id !== point.id);
-  const resolvesStuck =
-    state.phase === "SYNTHESIZE" && state.stuck?.pointId === point.id;
+  const resolvesStuck = state.phase === 'SYNTHESIZE' && state.stuck?.pointId === point.id;
   const next: InterviewState = {
     ...state,
     // Deferring the stuck point after synthesis also returns to dialog.
-    phase: resolvesStuck ? "ASK" : state.phase,
+    phase: resolvesStuck ? 'ASK' : state.phase,
     decisions: { ...state.decisions, [point.id]: decision },
     open: kept,
     current: null,
@@ -274,16 +279,16 @@ function onDeferred(
 
 function onSynthesized(
   state: InterviewState,
-  event: Extract<InterviewEvent, { type: "SYNTHESIZED" }>,
+  event: Extract<InterviewEvent, { type: 'SYNTHESIZED' }>
 ): ReduceResult {
-  if (state.phase === "READY" || state.phase === "DONE") {
+  if (state.phase === 'READY' || state.phase === 'DONE') {
     return { state, directives: [] };
   }
   // Park the interview in SYNTHESIZE so the verdict is the current view. The
   // user resolves the stuck point by answering or deferring it, which flips
   // the phase back to ASK.
   return {
-    state: { ...state, phase: "SYNTHESIZE", synthesis: event.synthesis },
+    state: { ...state, phase: 'SYNTHESIZE', synthesis: event.synthesis },
     directives: [],
   };
 }
@@ -291,43 +296,40 @@ function onSynthesized(
 function afterResolution(state: InterviewState): ReduceResult {
   if (state.turn >= MAX_TURNS) {
     return {
-      state: { ...state, phase: "DONE", current: null },
-      directives: [{ type: "complete", reason: "turn-cap" }],
+      state: { ...state, phase: 'DONE', current: null },
+      directives: [{ type: 'complete', reason: 'turn-cap' }],
     };
   }
 
   if (isReady(state)) {
     return {
-      state: { ...state, phase: "READY", current: null },
-      directives: [{ type: "complete", reason: "ready" }],
+      state: { ...state, phase: 'READY', current: null },
+      directives: [{ type: 'complete', reason: 'ready' }],
     };
   }
 
   const selected = selectPoint(state);
   if (!selected) {
     return {
-      state: { ...state, phase: "READY", current: null },
-      directives: [{ type: "complete", reason: "ready" }],
+      state: { ...state, phase: 'READY', current: null },
+      directives: [{ type: 'complete', reason: 'ready' }],
     };
   }
 
-  return { state, directives: [{ type: "ask", pointId: selected.id }] };
+  return { state, directives: [{ type: 'ask', pointId: selected.id }] };
 }
 
 /** Highest-priority unresolved point that has not been asked. Pure. */
-export function selectPoint(state: Pick<InterviewState, "open" | "asked">): DecisionPoint | null {
+export function selectPoint(state: Pick<InterviewState, 'open' | 'asked'>): DecisionPoint | null {
   const candidates = state.open
     .filter((p) => !state.asked.includes(p.id))
-    .sort(
-      (a, b) =>
-        (PRIORITY_RANK[a.priority] ?? 9) - (PRIORITY_RANK[b.priority] ?? 9),
-    );
+    .sort((a, b) => (PRIORITY_RANK[a.priority] ?? 9) - (PRIORITY_RANK[b.priority] ?? 9));
 
   return candidates[0] ?? null;
 }
 
 function isReady(state: InterviewState): boolean {
-  const openP0 = state.open.some((p) => p.priority === "P0");
+  const openP0 = state.open.some((p) => p.priority === 'P0');
   if (openP0) return false;
 
   return state.coverage && isCoverageMet(state);
@@ -346,10 +348,8 @@ function isCoverageMet(state: InterviewState): boolean {
  * resolves the questions that actually matter for it, and it is derived from
  * the canonical section list so there is no second copy to drift.
  */
-export function computeCoverage(
-  open: DecisionPoint[],
-): InterviewState["coverage"] {
-  const coverage = {} as InterviewState["coverage"];
+export function computeCoverage(open: DecisionPoint[]): InterviewState['coverage'] {
+  const coverage = {} as InterviewState['coverage'];
   for (const section of PLANNING_SECTION_NAMES) {
     const blockers = open.filter((p) => p.blocks.includes(section)).length;
     coverage[section] = blockers > 0 ? 0 : 1;

@@ -1,22 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
-import type { PlanningSectionName } from "@repo/shared";
+import { useQuery } from '@tanstack/react-query';
+import type { PlanningSectionName } from '@repo/shared';
 
-import { getPlanningSection } from "../api/planning";
+import { getPlanningSection } from '../api/planning';
 
-export function usePlanningSection(
-  ideaId: string,
-  section: PlanningSectionName,
-  enabled = true,
-) {
+export function usePlanningSection(ideaId: string, section: PlanningSectionName, enabled = true) {
   return useQuery({
-    queryKey: ["ideas", ideaId, "planning", section],
+    queryKey: ['ideas', ideaId, 'planning', section],
     queryFn: ({ signal }) => getPlanningSection(ideaId, section, signal),
     enabled: enabled && Boolean(ideaId),
     staleTime: 30_000,
     retry: (failureCount, error) => {
-      const status = (
-        error as { response?: { status?: number } } | undefined
-      )?.response?.status;
+      const status = (error as { response?: { status?: number } } | undefined)?.response?.status;
       if (status === 404) return false;
       return failureCount < 3;
     },

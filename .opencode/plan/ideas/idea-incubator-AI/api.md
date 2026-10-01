@@ -15,11 +15,11 @@ exceptions.
 
 Each turn is a paid LLM call, so the global limiter is not enough.
 
-| Scope | Limit | Rationale |
-| ----- | ----- | --------- |
-| Per interview | 40 turns | Hard termination cap; also a runaway guard |
-| Per user | 60 turns / hour | Stops a loop of refresh-and-retry from draining the budget |
-| Synthesis | 10 / hour | The most expensive call in the system |
+| Scope         | Limit           | Rationale                                                  |
+| ------------- | --------------- | ---------------------------------------------------------- |
+| Per interview | 40 turns        | Hard termination cap; also a runaway guard                 |
+| Per user      | 60 turns / hour | Stops a loop of refresh-and-retry from draining the budget |
+| Synthesis     | 10 / hour       | The most expensive call in the system                      |
 
 A user who exhausts a limit gets a clear, non-error message pointing at the
 decision log, not a generic 429 wall.

@@ -70,18 +70,16 @@ Server validates all env vars on startup using Zod:
 
 ```ts
 // apps/server/src/config/env.ts
-import { z } from "zod";
+import { z } from 'zod';
 
 const envSchema = z.object({
   DATABASE_URL: z.string().url(),
   JWT_SECRET: z.string().min(32),
   JWT_REFRESH_SECRET: z.string().min(32),
   PORT: z.coerce.number().default(3000),
-  NODE_ENV: z
-    .enum(["development", "test", "production"])
-    .default("development"),
-  CORS_ORIGIN: z.string().default("http://localhost:5173"),
-  STORAGE_PATH: z.string().default("./storage"),
+  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  CORS_ORIGIN: z.string().default('http://localhost:5173'),
+  STORAGE_PATH: z.string().default('./storage'),
 });
 
 export const env = envSchema.parse(process.env);

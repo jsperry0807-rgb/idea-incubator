@@ -3,6 +3,7 @@
 Base URL: `http://localhost:3000` (dev) or production URL.
 
 All responses follow the `ApiEnvelope<T>` pattern:
+
 ```json
 {
   "data": { ... },
@@ -11,6 +12,7 @@ All responses follow the `ApiEnvelope<T>` pattern:
 ```
 
 Errors follow:
+
 ```json
 {
   "error": {
@@ -30,6 +32,7 @@ Errors follow:
 Create a new user account.
 
 **Request:**
+
 ```json
 {
   "name": "Jane Doe",
@@ -39,10 +42,15 @@ Create a new user account.
 ```
 
 **Response (201):**
+
 ```json
 {
   "data": {
-    "user": { "id": "cuid...", "name": "Jane Doe", "email": "jane@example.com" },
+    "user": {
+      "id": "cuid...",
+      "name": "Jane Doe",
+      "email": "jane@example.com"
+    },
     "accessToken": "eyJ...",
     "expiresIn": 900
   }
@@ -52,6 +60,7 @@ Create a new user account.
 **Cookies:** `refresh_token` set (HttpOnly, Secure, SameSite=Strict, 30 days)
 
 **Errors:**
+
 - `409 CONFLICT` — Email already registered
 - `422 UNPROCESSABLE` — Validation errors (missing/invalid fields)
 
@@ -60,6 +69,7 @@ Create a new user account.
 ### POST /auth/login
 
 **Request:**
+
 ```json
 {
   "email": "jane@example.com",
@@ -68,10 +78,16 @@ Create a new user account.
 ```
 
 **Response (200):**
+
 ```json
 {
   "data": {
-    "user": { "id": "cuid...", "name": "Jane Doe", "email": "jane@example.com", "avatarUrl": null },
+    "user": {
+      "id": "cuid...",
+      "name": "Jane Doe",
+      "email": "jane@example.com",
+      "avatarUrl": null
+    },
     "accessToken": "eyJ...",
     "expiresIn": 900
   }
@@ -81,6 +97,7 @@ Create a new user account.
 **Cookies:** `refresh_token` set
 
 **Errors:**
+
 - `401 UNAUTHORIZED` — Invalid email or password
 
 ---
@@ -92,6 +109,7 @@ Rotate refresh token and issue new access token.
 **Request:** No body. Reads `refresh_token` from cookie.
 
 **Response (200):**
+
 ```json
 {
   "data": {
@@ -104,6 +122,7 @@ Rotate refresh token and issue new access token.
 **Cookies:** New `refresh_token` set (old one invalidated)
 
 **Errors:**
+
 - `401 UNAUTHORIZED` — Invalid or expired refresh token
 
 ---
@@ -113,6 +132,7 @@ Rotate refresh token and issue new access token.
 Get current user profile. **Requires auth.**
 
 **Response (200):**
+
 ```json
 {
   "data": {
@@ -134,17 +154,19 @@ Get current user profile. **Requires auth.**
 List user's ideas with filtering, search, and pagination.
 
 **Query Parameters:**
-| Param | Type | Default | Description |
-|-------|------|---------|-------------|
-| `page` | number | 1 | Page number |
-| `limit` | number | 20 | Items per page (max 50) |
-| `status` | string | — | Filter by status (comma-separated: `IDEA,PLANNING`) |
-| `priority` | string | — | Filter by priority |
-| `tag` | string | — | Filter by tag name |
-| `search` | string | — | Search in title + description |
-| `sort` | string | `recent` | Sort: `recent`, `alpha`, `priority`, `status` |
+
+| Param      | Type   | Default  | Description                                         |
+| ---------- | ------ | -------- | --------------------------------------------------- |
+| `page`     | number | 1        | Page number                                         |
+| `limit`    | number | 20       | Items per page (max 50)                             |
+| `status`   | string | —        | Filter by status (comma-separated: `IDEA,PLANNING`) |
+| `priority` | string | —        | Filter by priority                                  |
+| `tag`      | string | —        | Filter by tag name                                  |
+| `search`   | string | —        | Search in title + description                       |
+| `sort`     | string | `recent` | Sort: `recent`, `alpha`, `priority`, `status`       |
 
 **Response (200):**
+
 ```json
 {
   "data": [
@@ -155,9 +177,7 @@ List user's ideas with filtering, search, and pagination.
       "description": "A headless CMS for blogs",
       "status": "PLANNING",
       "priority": "HIGH",
-      "tags": [
-        { "id": "cuid...", "name": "React", "color": "#61DAFB" }
-      ],
+      "tags": [{ "id": "cuid...", "name": "React", "color": "#61DAFB" }],
       "taskCount": 10,
       "completedTaskCount": 4,
       "createdAt": "2026-01-15T10:30:00Z",
@@ -175,6 +195,7 @@ List user's ideas with filtering, search, and pagination.
 Get a single idea with full details. **Includes own ideas + shared ideas.**
 
 **Response (200):**
+
 ```json
 {
   "data": {
@@ -184,12 +205,22 @@ Get a single idea with full details. **Includes own ideas + shared ideas.**
     "description": "A headless CMS for blogs",
     "status": "PLANNING",
     "priority": "HIGH",
-    "tags": [
-      { "id": "cuid...", "name": "React", "color": "#61DAFB" }
-    ],
+    "tags": [{ "id": "cuid...", "name": "React", "color": "#61DAFB" }],
     "tasks": [
-      { "id": "cuid...", "title": "Set up project structure", "completed": true, "milestone": "Planning", "sortOrder": 0 },
-      { "id": "cuid...", "title": "Design database schema", "completed": true, "milestone": "Planning", "sortOrder": 1 }
+      {
+        "id": "cuid...",
+        "title": "Set up project structure",
+        "completed": true,
+        "milestone": "Planning",
+        "sortOrder": 0
+      },
+      {
+        "id": "cuid...",
+        "title": "Design database schema",
+        "completed": true,
+        "milestone": "Planning",
+        "sortOrder": 1
+      }
     ],
     "taskCount": 10,
     "completedTaskCount": 4,
@@ -201,6 +232,7 @@ Get a single idea with full details. **Includes own ideas + shared ideas.**
 ```
 
 **Errors:**
+
 - `404 NOT_FOUND` — Idea doesn't exist or user has no access
 
 ---
@@ -210,6 +242,7 @@ Get a single idea with full details. **Includes own ideas + shared ideas.**
 Create a new idea. Automatically generates planning folder with default `.md` files.
 
 **Request:**
+
 ```json
 {
   "title": "URL Shortener",
@@ -221,6 +254,7 @@ Create a new idea. Automatically generates planning folder with default `.md` fi
 ```
 
 **Response (201):**
+
 ```json
 {
   "data": {
@@ -236,6 +270,7 @@ Create a new idea. Automatically generates planning folder with default `.md` fi
 ```
 
 **Side effects:**
+
 - Creates planning folder `storage/content/{userId}/{ideaId}/` with 4 default `.md` files
 - Creates DB records for selected tags (via IdeaTag)
 
@@ -246,6 +281,7 @@ Create a new idea. Automatically generates planning folder with default `.md` fi
 Update an idea. Only the owner or users with EDIT access can update.
 
 **Request (all fields optional):**
+
 ```json
 {
   "title": "Updated Title",
@@ -259,6 +295,7 @@ Update an idea. Only the owner or users with EDIT access can update.
 **Response (200):** Updated idea object.
 
 **Side effects:**
+
 - If `title` changes, regenerates `slug`
 - If `status` changes, no file changes (status is metadata only)
 
@@ -271,6 +308,7 @@ Delete an idea and all associated data. **Owner only.**
 **Response (204):** No body.
 
 **Side effects:**
+
 - Deletes planning folder and all `.md` files
 - Cascades: tasks, comments, shares, tags removed
 
@@ -281,6 +319,7 @@ Delete an idea and all associated data. **Owner only.**
 Get ideas grouped by status for Kanban view.
 
 **Response (200):**
+
 ```json
 {
   "data": {
@@ -305,6 +344,7 @@ Get ideas grouped by status for Kanban view.
 Quick status change (used by Kanban drag-and-drop).
 
 **Request:**
+
 ```json
 { "status": "IN_PROGRESS" }
 ```
@@ -320,6 +360,7 @@ Quick status change (used by Kanban drag-and-drop).
 Read a planning section file. Sections: `overview`, `tech-stack`, `features`, `timeline`, `risks`.
 
 **Response (200):**
+
 ```json
 {
   "data": {
@@ -331,6 +372,7 @@ Read a planning section file. Sections: `overview`, `tech-stack`, `features`, `t
 ```
 
 **Errors:**
+
 - `404 NOT_FOUND` — Section file doesn't exist (e.g., `risks.md` not yet created)
 
 ---
@@ -340,6 +382,7 @@ Read a planning section file. Sections: `overview`, `tech-stack`, `features`, `t
 Write/update a planning section file. Creates the file if it doesn't exist.
 
 **Request:**
+
 ```json
 {
   "content": "# Blog CMS Platform\n\n## What It Is\n\nA modern headless CMS..."
@@ -347,6 +390,7 @@ Write/update a planning section file. Creates the file if it doesn't exist.
 ```
 
 **Response (200):**
+
 ```json
 {
   "data": {
@@ -365,12 +409,31 @@ Write/update a planning section file. Creates the file if it doesn't exist.
 List tasks for an idea, ordered by milestone and sort order.
 
 **Response (200):**
+
 ```json
 {
   "data": [
-    { "id": "cuid...", "title": "Set up project", "completed": true, "milestone": "Planning", "sortOrder": 0 },
-    { "id": "cuid...", "title": "Design API", "completed": false, "milestone": "Planning", "sortOrder": 1 },
-    { "id": "cuid...", "title": "Build UI", "completed": false, "milestone": "Development", "sortOrder": 2 }
+    {
+      "id": "cuid...",
+      "title": "Set up project",
+      "completed": true,
+      "milestone": "Planning",
+      "sortOrder": 0
+    },
+    {
+      "id": "cuid...",
+      "title": "Design API",
+      "completed": false,
+      "milestone": "Planning",
+      "sortOrder": 1
+    },
+    {
+      "id": "cuid...",
+      "title": "Build UI",
+      "completed": false,
+      "milestone": "Development",
+      "sortOrder": 2
+    }
   ]
 }
 ```
@@ -382,6 +445,7 @@ List tasks for an idea, ordered by milestone and sort order.
 Create a task.
 
 **Request:**
+
 ```json
 {
   "title": "Write tests",
@@ -399,6 +463,7 @@ Create a task.
 Update a task (title, completed, milestone, sortOrder).
 
 **Request:**
+
 ```json
 { "completed": true }
 ```
@@ -420,6 +485,7 @@ Delete a task. **Response (204).**
 List comments for an idea, newest first.
 
 **Response (200):**
+
 ```json
 {
   "data": [
@@ -441,6 +507,7 @@ List comments for an idea, newest first.
 Add a comment. Owner or users with EDIT/VIEW access.
 
 **Request:**
+
 ```json
 { "content": "Looks good to me!" }
 ```
@@ -470,10 +537,17 @@ Delete a comment. **Comment owner or idea owner.** Response (204).
 List users who have access to an idea. **Owner only.**
 
 **Response (200):**
+
 ```json
 {
   "data": [
-    { "userId": "cuid...", "name": "Bob", "email": "bob@example.com", "avatarUrl": null, "role": "EDIT" }
+    {
+      "userId": "cuid...",
+      "name": "Bob",
+      "email": "bob@example.com",
+      "avatarUrl": null,
+      "role": "EDIT"
+    }
   ]
 }
 ```
@@ -485,6 +559,7 @@ List users who have access to an idea. **Owner only.**
 Share an idea with a user by email. **Owner only.**
 
 **Request:**
+
 ```json
 {
   "email": "bob@example.com",
@@ -495,6 +570,7 @@ Share an idea with a user by email. **Owner only.**
 **Response (201):** Created share object. Sends notification to the invited user.
 
 **Errors:**
+
 - `404 NOT_FOUND` — User with that email not found
 - `409 CONFLICT` — User already has access
 
@@ -519,6 +595,7 @@ Remove a user's access. **Owner only.** Response (204).
 List ideas shared with the current user.
 
 **Response (200):**
+
 ```json
 {
   "data": [
@@ -542,6 +619,7 @@ List user's notifications, newest first.
 **Query:** `?unread=true` to filter unread only.
 
 **Response (200):**
+
 ```json
 {
   "data": [
@@ -579,6 +657,7 @@ Mark all notifications as read. Response (200).
 List user's tags.
 
 **Response (200):**
+
 ```json
 {
   "data": [
@@ -619,6 +698,7 @@ Delete a tag. Cascades: removes all IdeaTag associations. **Response (204).**
 Get aggregate statistics for the current user.
 
 **Response (200):**
+
 ```json
 {
   "data": {
@@ -644,6 +724,7 @@ Get aggregate statistics for the current user.
 Get recent activity (last 10 actions).
 
 **Response (200):**
+
 ```json
 {
   "data": [

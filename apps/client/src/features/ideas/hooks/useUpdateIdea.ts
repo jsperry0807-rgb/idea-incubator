@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { UpdateIdeaInput } from "@repo/shared";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { UpdateIdeaInput } from '@repo/shared';
 
-import { updateIdea } from "../api/ideas";
+import { updateIdea } from '../api/ideas';
 
 export interface UpdateIdeaArgs {
   id: string;
@@ -14,7 +14,7 @@ export function useUpdateIdea() {
   return useMutation({
     mutationFn: ({ id, input }: UpdateIdeaArgs) => updateIdea(id, input),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["ideas"] });
+      void queryClient.invalidateQueries({ queryKey: ['ideas'] });
     },
   });
 }

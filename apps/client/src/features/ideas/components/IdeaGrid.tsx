@@ -1,19 +1,14 @@
-import type { Idea } from "@repo/shared";
-import { EmptyState } from "@repo/ui";
-import { useTranslation } from "react-i18next";
+import type { Idea } from '@repo/shared';
+import { EmptyState } from '@repo/ui';
+import { useTranslation } from 'react-i18next';
 
-import { IdeaCard } from "./IdeaCard";
+import { IdeaCard } from './IdeaCard';
 
 export function IdeaGrid({ ideas }: { ideas: Idea[] }) {
   const { t } = useTranslation();
 
   if (ideas.length === 0) {
-    return (
-      <EmptyState
-        title={t("ideas.emptyTitle")}
-        description={t("ideas.emptyDescription")}
-      />
-    );
+    return <EmptyState title={t('ideas.emptyTitle')} description={t('ideas.emptyDescription')} />;
   }
 
   return (

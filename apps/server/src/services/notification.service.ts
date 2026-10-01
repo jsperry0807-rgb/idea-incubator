@@ -1,10 +1,6 @@
-import prisma from "../lib/prisma";
-import { NotFoundError } from "../lib/errors";
-import type {
-  Notification,
-  NotificationListQuery,
-  NotificationType,
-} from "@repo/shared";
+import prisma from '../lib/prisma';
+import { NotFoundError } from '../lib/errors';
+import type { Notification, NotificationListQuery, NotificationType } from '@repo/shared';
 
 export async function createNotification(input: {
   userId: string;
@@ -17,12 +13,12 @@ export async function createNotification(input: {
 
 export async function listNotifications(
   userId: string,
-  query: NotificationListQuery,
+  query: NotificationListQuery
 ): Promise<{ items: Notification[]; unreadCount: number }> {
   const [notifications, unreadCount] = await prisma.$transaction([
     prisma.notification.findMany({
       where: { userId, ...(query.unread ? { read: false } : {}) },
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: 'desc' },
     }),
     prisma.notification.count({
       where: { userId, read: false },
@@ -35,17 +31,14 @@ export async function listNotifications(
   };
 }
 
-export async function markNotificationRead(
-  userId: string,
-  id: string,
-): Promise<Notification> {
+export async function markNotificationRead(userId: string, id: string): Promise<Notification> {
   const existing = await prisma.notification.findFirst({
     where: { id, userId },
     select: { id: true },
   });
 
   if (!existing) {
-    throw new NotFoundError("Notification not found");
+    throw new NotFoundError('Notification not found');
   }
 
   const notification = await prisma.notification.update({
@@ -56,9 +49,7 @@ export async function markNotificationRead(
   return toNotificationDto(notification);
 }
 
-export async function markAllNotificationsRead(
-  userId: string,
-): Promise<{ updated: number }> {
+export async function markAllNotificationsRead(userId: string): Promise<{ updated: number }> {
   const result = await prisma.notification.updateMany({
     where: { userId, read: false },
     data: { read: true },
@@ -70,7 +61,7 @@ export async function markAllNotificationsRead(
 function toNotificationDto(notification: {
   id: string;
   userId: string;
-  type: Notification["type"];
+  type: Notification['type'];
   message: string;
   ideaId: string | null;
   read: boolean;

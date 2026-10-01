@@ -7,7 +7,7 @@ import type {
   NotificationType,
   ShareRole,
   TaskStatus,
-} from "./enums";
+} from './enums';
 
 export interface User {
   id: string;
@@ -97,7 +97,7 @@ export interface Comment {
   content: string;
   createdAt: string;
   updatedAt: string;
-  user?: Pick<User, "id" | "name" | "avatarUrl">;
+  user?: Pick<User, 'id' | 'name' | 'avatarUrl'>;
 }
 
 export interface Share {
@@ -106,14 +106,17 @@ export interface Share {
   userId: string;
   role: ShareRole;
   createdAt: string;
-  user?: Pick<User, "id" | "name" | "avatarUrl" | "email">;
+  user?: Pick<User, 'id' | 'name' | 'avatarUrl' | 'email'>;
 }
 
 export interface SharedIdea {
-  idea: Pick<Idea, "id" | "title" | "slug" | "description" | "status" | "priority" | "updatedAt"> & {
+  idea: Pick<
+    Idea,
+    'id' | 'title' | 'slug' | 'description' | 'status' | 'priority' | 'updatedAt'
+  > & {
     tags: IdeaTag[];
   };
-  sharedBy: Pick<User, "id" | "name" | "avatarUrl">;
+  sharedBy: Pick<User, 'id' | 'name' | 'avatarUrl'>;
   role: ShareRole;
 }
 

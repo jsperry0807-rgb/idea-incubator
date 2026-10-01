@@ -4,9 +4,9 @@ import type {
   RegisterInput as SharedRegisterInput,
   ResetPasswordInput as SharedResetPasswordInput,
   UpdateProfileInput,
-} from "@repo/shared";
+} from '@repo/shared';
 
-export type { User } from "@repo/shared";
+export type { User } from '@repo/shared';
 export type LoginInput = SharedLoginInput;
 export type RegisterInput = SharedRegisterInput;
 export type ForgotPasswordInput = SharedForgotPasswordInput;

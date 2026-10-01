@@ -7,11 +7,11 @@
  * must survive it.
  */
 
-export const ASSUMPTIONS_HEADING = "## Assumptions";
+export const ASSUMPTIONS_HEADING = '## Assumptions';
 
 export function formatAssumption(pointTitle: string, reason?: string): string {
   const trimmed = reason?.trim();
-  return `- ${pointTitle}: ${trimmed && trimmed.length > 0 ? trimmed : "deferred without a reason"}`;
+  return `- ${pointTitle}: ${trimmed && trimmed.length > 0 ? trimmed : 'deferred without a reason'}`;
 }
 
 /**
@@ -19,17 +19,13 @@ export function formatAssumption(pointTitle: string, reason?: string): string {
  * creating the section when absent. Everything outside that section is
  * preserved byte for byte.
  */
-export function appendAssumption(
-  content: string,
-  pointTitle: string,
-  reason?: string,
-): string {
+export function appendAssumption(content: string, pointTitle: string, reason?: string): string {
   const entry = formatAssumption(pointTitle, reason);
   const heading = /^##[ \t]+Assumptions[ \t]*$/im;
   const match = heading.exec(content);
 
   if (!match) {
-    const base = content.replace(/\s*$/, "\n");
+    const base = content.replace(/\s*$/, '\n');
     return `${base}\n${ASSUMPTIONS_HEADING}\n\n${entry}\n`;
   }
 
@@ -37,10 +33,10 @@ export function appendAssumption(
   const rest = content.slice(afterHeading);
   const nextHeading = rest.search(/^##[ \t]+/m);
   const body = nextHeading === -1 ? rest : rest.slice(0, nextHeading);
-  const tail = nextHeading === -1 ? "" : rest.slice(nextHeading);
+  const tail = nextHeading === -1 ? '' : rest.slice(nextHeading);
 
-  const spacedBody = body.replace(/\s*$/, "\n");
-  const rebuiltTail = nextHeading === -1 ? "" : `\n${tail.replace(/^\n+/, "")}`;
+  const spacedBody = body.replace(/\s*$/, '\n');
+  const rebuiltTail = nextHeading === -1 ? '' : `\n${tail.replace(/^\n+/, '')}`;
 
-  return content.slice(0, afterHeading) + spacedBody + entry + "\n" + rebuiltTail;
+  return content.slice(0, afterHeading) + spacedBody + entry + '\n' + rebuiltTail;
 }

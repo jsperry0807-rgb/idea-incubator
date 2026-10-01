@@ -29,28 +29,28 @@ mocks. They are where the branching contract is actually enforced.
 interview/reducer.test.ts
 ```
 
-| Test | Asserts |
-| ---- | ------- |
-| `CLASSIFIED` seeds a P0/P1 frontier | Initial open points populated, phase → `ASK` |
-| Highest priority unresolved point is selected first | P0 before P1 regardless of insertion order |
-| A point in `asked[]` is never re-asked | Re-ask suppression is structural |
-| Answering `hybrid` to `core-loop` opens `upgrade-cadence` and `prestige-layer` | The core branch behavior |
-| `pure-incremental` does **not** open those points | Branches are genuinely divergent, not cosmetic |
-| An answer that invalidates an open point closes it | Re-evaluation both closes and opens |
-| `attempts` reaching 2 emits a `SYNTHESIZE` directive | Stuck threshold fires at the right boundary |
-| Deferring removes the point from the frontier and records an assumption | Defer is not the same as resolve |
-| All P0 resolved + coverage met → `READY` | Termination is reachable |
-| Turn cap emits a terminating directive | Runaway guard |
-| `eliminatesPaths: []` is rejected | The static-template invariant holds |
+| Test                                                                           | Asserts                                        |
+| ------------------------------------------------------------------------------ | ---------------------------------------------- |
+| `CLASSIFIED` seeds a P0/P1 frontier                                            | Initial open points populated, phase → `ASK`   |
+| Highest priority unresolved point is selected first                            | P0 before P1 regardless of insertion order     |
+| A point in `asked[]` is never re-asked                                         | Re-ask suppression is structural               |
+| Answering `hybrid` to `core-loop` opens `upgrade-cadence` and `prestige-layer` | The core branch behavior                       |
+| `pure-incremental` does **not** open those points                              | Branches are genuinely divergent, not cosmetic |
+| An answer that invalidates an open point closes it                             | Re-evaluation both closes and opens            |
+| `attempts` reaching 2 emits a `SYNTHESIZE` directive                           | Stuck threshold fires at the right boundary    |
+| Deferring removes the point from the frontier and records an assumption        | Defer is not the same as resolve               |
+| All P0 resolved + coverage met → `READY`                                       | Termination is reachable                       |
+| Turn cap emits a terminating directive                                         | Runaway guard                                  |
+| `eliminatesPaths: []` is rejected                                              | The static-template invariant holds            |
 
 ## Layer 2 — Golden Traces (the executable behavior spec)
 
 Three seed ideas in `apps/server/src/interview/fixtures/`:
 
-| Fixture | Exercises |
-| ------- | --------- |
-| `clicker-game` | GAME domain; the worked branch from `architecture.md` |
-| `saas-tool` | SOFTWARE/SAAS; different frontier, proves domain sensitivity |
+| Fixture            | Exercises                                                     |
+| ------------------ | ------------------------------------------------------------- |
+| `clicker-game`     | GAME domain; the worked branch from `architecture.md`         |
+| `saas-tool`        | SOFTWARE/SAAS; different frontier, proves domain sensitivity  |
 | `physical-product` | PHYSICAL; a third section set, proves the enum change is real |
 
 **Assert branch structure, never wording.** Exact question prose is
@@ -65,7 +65,7 @@ unrelated changes. What must be stable:
 Two tiers:
 
 - **Committed** — hand-authored expectations, run in CI with no API key. This
-  is the regression net. It encodes our *asserted* branch structure, so it is
+  is the regression net. It encodes our _asserted_ branch structure, so it is
   a weaker guarantee than observed behavior, but it catches accidental
   regressions in prompt or reducer changes.
 - **Regenerated** — real transcripts produced with a key present, reviewed and

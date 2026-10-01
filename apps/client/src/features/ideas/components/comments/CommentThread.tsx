@@ -1,10 +1,10 @@
-import { useMemo } from "react";
-import { useTranslation } from "react-i18next";
-import { Skeleton } from "@repo/ui";
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Skeleton } from '@repo/ui';
 
-import { useComments } from "../../hooks/useComments";
-import { CommentForm } from "./CommentForm";
-import { CommentItem } from "./CommentItem";
+import { useComments } from '../../hooks/useComments';
+import { CommentForm } from './CommentForm';
+import { CommentItem } from './CommentItem';
 
 export interface CommentThreadProps {
   ideaId: string;
@@ -18,17 +18,17 @@ export function CommentThread({ ideaId, ideaOwnerId }: CommentThreadProps) {
   const dateFormatter = useMemo(
     () =>
       new Intl.DateTimeFormat(i18n.language, {
-        dateStyle: "medium",
-        timeStyle: "short",
+        dateStyle: 'medium',
+        timeStyle: 'short',
       }),
-    [i18n.language],
+    [i18n.language]
   );
 
   return (
     <div className="flex flex-col gap-4">
       {query.isLoading ? (
         <div className="flex flex-col gap-4" role="status" aria-busy="true">
-          <span className="sr-only">{t("app.loading")}</span>
+          <span className="sr-only">{t('app.loading')}</span>
           {Array.from({ length: 3 }, (_, index) => (
             <div key={index} className="flex items-start gap-3">
               <Skeleton className="size-9 shrink-0 rounded-full" />
@@ -41,13 +41,9 @@ export function CommentThread({ ideaId, ideaOwnerId }: CommentThreadProps) {
           ))}
         </div>
       ) : query.isError ? (
-        <p className="text-sm text-[var(--color-danger)]">
-          {t("ideas.comments.loadError")}
-        </p>
+        <p className="text-sm text-[var(--color-danger)]">{t('ideas.comments.loadError')}</p>
       ) : (query.data ?? []).length === 0 ? (
-        <p className="text-sm text-[var(--color-muted)]">
-          {t("ideas.comments.empty")}
-        </p>
+        <p className="text-sm text-[var(--color-muted)]">{t('ideas.comments.empty')}</p>
       ) : (
         <ul className="flex flex-col divide-y divide-[var(--color-border)]">
           {(query.data ?? []).map((comment) => (

@@ -1,26 +1,26 @@
-import { lazy } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { lazy } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { ROUTES } from "@config/routes";
-import RootLayout from "@components/layout/RootLayout";
-import { AuthProvider } from "@features/auth/context/AuthProvider";
-import { ProtectedRoute } from "@features/auth/components/ProtectedRoute";
+import { ROUTES } from '@config/routes';
+import RootLayout from '@components/layout/RootLayout';
+import { AuthProvider } from '@features/auth/context/AuthProvider';
+import { ProtectedRoute } from '@features/auth/components/ProtectedRoute';
 
-const HomePage = lazy(() => import("@pages/HomePage"));
-const LoginPage = lazy(() => import("@pages/LoginPage"));
-const RegisterPage = lazy(() => import("@pages/RegisterPage"));
-const ForgotPasswordPage = lazy(() => import("@pages/ForgotPasswordPage"));
-const ResetPasswordPage = lazy(() => import("@pages/ResetPasswordPage"));
-const DashboardPage = lazy(() => import("@features/dashboard/pages/DashboardPage"));
-const IdeasPage = lazy(() => import("@features/ideas/pages/IdeasPage"));
-const CreateIdeaPage = lazy(() => import("@features/ideas/pages/CreateIdeaPage"));
-const RoadmapPage = lazy(() => import("@features/ideas/pages/RoadmapPage"));
-const TagsPage = lazy(() => import("@features/tags/pages/TagsPage"));
-const SharedIdeasPage = lazy(() => import("@features/ideas/pages/SharedIdeasPage"));
-const SettingsPage = lazy(() => import("@features/settings/pages/SettingsPage"));
-const IdeaDetailPage = lazy(() => import("@features/ideas/pages/IdeaDetailPage"));
-const IdeaTasksPage = lazy(() => import("@features/ideas/pages/IdeaTasksPage"));
-const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
+const HomePage = lazy(() => import('@pages/HomePage'));
+const LoginPage = lazy(() => import('@pages/LoginPage'));
+const RegisterPage = lazy(() => import('@pages/RegisterPage'));
+const ForgotPasswordPage = lazy(() => import('@pages/ForgotPasswordPage'));
+const ResetPasswordPage = lazy(() => import('@pages/ResetPasswordPage'));
+const DashboardPage = lazy(() => import('@features/dashboard/pages/DashboardPage'));
+const IdeasPage = lazy(() => import('@features/ideas/pages/IdeasPage'));
+const CreateIdeaPage = lazy(() => import('@features/ideas/pages/CreateIdeaPage'));
+const RoadmapPage = lazy(() => import('@features/ideas/pages/RoadmapPage'));
+const TagsPage = lazy(() => import('@features/tags/pages/TagsPage'));
+const SharedIdeasPage = lazy(() => import('@features/ideas/pages/SharedIdeasPage'));
+const SettingsPage = lazy(() => import('@features/settings/pages/SettingsPage'));
+const IdeaDetailPage = lazy(() => import('@features/ideas/pages/IdeaDetailPage'));
+const IdeaTasksPage = lazy(() => import('@features/ideas/pages/IdeaTasksPage'));
+const NotFoundPage = lazy(() => import('@pages/NotFoundPage'));
 
 export default function App() {
   return (

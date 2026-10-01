@@ -1,8 +1,8 @@
-import { access, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { access, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import path from 'node:path';
 
-import { env } from "../config/env";
-import { NotFoundError } from "../lib/errors";
+import { env } from '../config/env';
+import { NotFoundError } from '../lib/errors';
 
 /**
  * Low-level, storage-agnostic file read/write primitive.
@@ -25,7 +25,7 @@ export class LocalFileStore implements FileStore {
   private readonly root: string;
 
   constructor(root = env.STORAGE_PATH) {
-    this.root = path.resolve(root, "content");
+    this.root = path.resolve(root, 'content');
   }
 
   // Resolves a relative path under the storage root and rejects any attempt
@@ -33,21 +33,21 @@ export class LocalFileStore implements FileStore {
   private safeResolve(relPath: string): string {
     const full = path.resolve(this.root, relPath);
     if (full !== this.root && !full.startsWith(`${this.root}${path.sep}`)) {
-      throw new NotFoundError("Invalid path");
+      throw new NotFoundError('Invalid path');
     }
     return full;
   }
 
   async read(relPath: string): Promise<string> {
     try {
-      return await readFile(this.safeResolve(relPath), "utf8");
+      return await readFile(this.safeResolve(relPath), 'utf8');
     } catch {
-      throw new NotFoundError("File not found");
+      throw new NotFoundError('File not found');
     }
   }
 
   async write(relPath: string, content: string): Promise<void> {
-    await writeFile(this.safeResolve(relPath), content, "utf8");
+    await writeFile(this.safeResolve(relPath), content, 'utf8');
   }
 
   async exists(relPath: string): Promise<boolean> {

@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { deleteTag } from "../api/tags";
+import { deleteTag } from '../api/tags';
 
 export function useDeleteTag() {
   const queryClient = useQueryClient();
@@ -8,8 +8,8 @@ export function useDeleteTag() {
   return useMutation({
     mutationFn: deleteTag,
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["tags"] });
-      void queryClient.invalidateQueries({ queryKey: ["ideas"] });
+      void queryClient.invalidateQueries({ queryKey: ['tags'] });
+      void queryClient.invalidateQueries({ queryKey: ['ideas'] });
     },
   });
 }

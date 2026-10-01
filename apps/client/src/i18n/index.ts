@@ -1,12 +1,12 @@
-import i18n from "i18next";
-import LanguageDetector from "i18next-browser-languagedetector";
-import { initReactI18next } from "react-i18next";
+import i18n from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import { initReactI18next } from 'react-i18next';
 
-import { en } from "./locales/en";
-import { es } from "./locales/es";
-import { fr } from "./locales/fr";
+import { en } from './locales/en';
+import { es } from './locales/es';
+import { fr } from './locales/fr';
 
-export const LOCALES = ["en", "es", "fr"] as const;
+export const LOCALES = ['en', 'es', 'fr'] as const;
 export type Locale = (typeof LOCALES)[number];
 
 export const resources = {
@@ -15,18 +15,18 @@ export const resources = {
   fr: { translation: fr },
 };
 
-declare module "i18next" {
+declare module 'i18next' {
   interface CustomTypeOptions {
-    defaultNS: "translation";
+    defaultNS: 'translation';
     resources: {
       translation: typeof en;
     };
   }
 }
 
-declare module "react-i18next" {
+declare module 'react-i18next' {
   interface CustomTypeOptions {
-    defaultNS: "translation";
+    defaultNS: 'translation';
     resources: {
       translation: typeof en;
     };
@@ -38,13 +38,13 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: "en",
+    fallbackLng: 'en',
     supportedLngs: [...LOCALES],
     nonExplicitSupportedLngs: true,
     detection: {
-      order: ["localStorage", "navigator"],
-      caches: ["localStorage"],
-      lookupLocalStorage: "i18n.locale",
+      order: ['localStorage', 'navigator'],
+      caches: ['localStorage'],
+      lookupLocalStorage: 'i18n.locale',
     },
     interpolation: {
       escapeValue: false,

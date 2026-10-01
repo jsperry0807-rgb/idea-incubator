@@ -1,28 +1,28 @@
-import { useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { Button, Card, EmptyState, toast } from "@repo/ui";
+import { useMemo, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { Button, Card, EmptyState, toast } from '@repo/ui';
 
-import { useAuth } from "@features/auth/hooks/useAuth";
-import { ROUTES, ideaTasksPath } from "@config/routes";
-import { useIdea } from "../hooks/useIdea";
-import { useDeleteIdea } from "../hooks/useDeleteIdea";
-import { CommentThread } from "../components/comments/CommentThread";
-import { PlanningAccordion } from "../components/PlanningAccordion";
-import { PriorityDot } from "../components/PriorityDot";
-import { ShareModal } from "../components/sharing/ShareModal";
-import { StatusBadge } from "../components/StatusBadge";
-import { TagBadge } from "../components/TagBadge";
-import { TaskList } from "../components/TaskList";
-import { IdeaTagEditor } from "../components/IdeaTagEditor";
-import { IdeaStatusSelect } from "../components/IdeaStatusSelect";
-import { ProjectTypeSelect } from "../components/ProjectTypeSelect";
-import { WireframesSection } from "../components/wireframes/WireframesSection";
-import { IdeaDetailSkeleton } from "../components/skeletons";
+import { useAuth } from '@features/auth/hooks/useAuth';
+import { ROUTES, ideaTasksPath } from '@config/routes';
+import { useIdea } from '../hooks/useIdea';
+import { useDeleteIdea } from '../hooks/useDeleteIdea';
+import { CommentThread } from '../components/comments/CommentThread';
+import { PlanningAccordion } from '../components/PlanningAccordion';
+import { PriorityDot } from '../components/PriorityDot';
+import { ShareModal } from '../components/sharing/ShareModal';
+import { StatusBadge } from '../components/StatusBadge';
+import { TagBadge } from '../components/TagBadge';
+import { TaskList } from '../components/TaskList';
+import { IdeaTagEditor } from '../components/IdeaTagEditor';
+import { IdeaStatusSelect } from '../components/IdeaStatusSelect';
+import { ProjectTypeSelect } from '../components/ProjectTypeSelect';
+import { WireframesSection } from '../components/wireframes/WireframesSection';
+import { IdeaDetailSkeleton } from '../components/skeletons';
 
 export default function IdeaDetailPage() {
-  const { id = "" } = useParams<{ id: string }>();
+  const { id = '' } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
@@ -33,29 +33,26 @@ export default function IdeaDetailPage() {
   const deleteMutation = useDeleteIdea();
   const isLoading = ideaQuery.isLoading;
   const notFound =
-    (ideaQuery.error as { response?: { status?: number } } | undefined)
-      ?.response?.status === 404;
-  const isOwner = Boolean(
-    user && ideaQuery.data && ideaQuery.data.userId === user.id,
-  );
+    (ideaQuery.error as { response?: { status?: number } } | undefined)?.response?.status === 404;
+  const isOwner = Boolean(user && ideaQuery.data && ideaQuery.data.userId === user.id);
 
   async function handleDelete() {
     try {
       await deleteMutation.mutateAsync(id);
-      toast.success(t("ideas.detail.deleted"));
+      toast.success(t('ideas.detail.deleted'));
       navigate(ROUTES.IDEAS, { replace: true });
     } catch {
-      toast.error(t("ideas.detail.deleteError"));
+      toast.error(t('ideas.detail.deleteError'));
     }
   }
 
   const dateFormatter = useMemo(
     () =>
       new Intl.DateTimeFormat(i18n.language, {
-        dateStyle: "medium",
-        timeStyle: "short",
+        dateStyle: 'medium',
+        timeStyle: 'short',
       }),
-    [i18n.language],
+    [i18n.language]
   );
 
   return (
@@ -64,20 +61,20 @@ export default function IdeaDetailPage() {
         to={ROUTES.IDEAS}
         className="w-fit text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-fg)]"
       >
-        ← {t("ideas.detail.back")}
+        ← {t('ideas.detail.back')}
       </Link>
 
       {isLoading ? (
         <IdeaDetailSkeleton />
       ) : notFound ? (
         <EmptyState
-          title={t("ideas.detail.notFoundTitle")}
-          description={t("ideas.detail.notFoundDescription")}
+          title={t('ideas.detail.notFoundTitle')}
+          description={t('ideas.detail.notFoundDescription')}
         />
       ) : ideaQuery.error ? (
         <EmptyState
-          title={t("ideas.detail.loadError")}
-          description={t("ideas.detail.loadErrorDescription")}
+          title={t('ideas.detail.loadError')}
+          description={t('ideas.detail.loadErrorDescription')}
         />
       ) : ideaQuery.data ? (
         <article className="flex flex-col gap-5">
@@ -97,7 +94,7 @@ export default function IdeaDetailPage() {
                         isLoading={deleteMutation.isPending}
                         onClick={() => void handleDelete()}
                       >
-                        {t("ideas.detail.deleteConfirm")}
+                        {t('ideas.detail.deleteConfirm')}
                       </Button>
                       <Button
                         size="sm"
@@ -105,24 +102,16 @@ export default function IdeaDetailPage() {
                         onClick={() => setConfirmingDelete(false)}
                         disabled={deleteMutation.isPending}
                       >
-                        {t("ideas.detail.cancel")}
+                        {t('ideas.detail.cancel')}
                       </Button>
                     </>
                   ) : (
-                    <Button
-                      size="sm"
-                      variant="danger"
-                      onClick={() => setConfirmingDelete(true)}
-                    >
-                      {t("ideas.detail.delete")}
+                    <Button size="sm" variant="danger" onClick={() => setConfirmingDelete(true)}>
+                      {t('ideas.detail.delete')}
                     </Button>
                   )}
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => setShareOpen(true)}
-                  >
-                    {t("ideas.sharing.button")}
+                  <Button size="sm" variant="secondary" onClick={() => setShareOpen(true)}>
+                    {t('ideas.sharing.button')}
                   </Button>
                 </div>
               ) : null}
@@ -139,7 +128,7 @@ export default function IdeaDetailPage() {
             <dl className="grid grid-cols-1 gap-y-3 text-sm sm:grid-cols-2">
               <div className="flex flex-col gap-1">
                 <dt className="text-xs font-medium uppercase tracking-wide text-[var(--color-muted)]">
-                  {t("ideas.detail.status")}
+                  {t('ideas.detail.status')}
                 </dt>
                 <dd>
                   {isOwner ? (
@@ -151,7 +140,7 @@ export default function IdeaDetailPage() {
               </div>
               <div className="flex flex-col gap-1">
                 <dt className="text-xs font-medium uppercase tracking-wide text-[var(--color-muted)]">
-                  {t("ideas.detail.priority")}
+                  {t('ideas.detail.priority')}
                 </dt>
                 <dd className="flex items-center gap-2">
                   <PriorityDot priority={ideaQuery.data.priority} />
@@ -160,7 +149,7 @@ export default function IdeaDetailPage() {
               </div>
               <div className="flex flex-col gap-1">
                 <dt className="text-xs font-medium uppercase tracking-wide text-[var(--color-muted)]">
-                  {t("ideas.detail.projectType")}
+                  {t('ideas.detail.projectType')}
                 </dt>
                 <dd>
                   {isOwner ? (
@@ -172,7 +161,7 @@ export default function IdeaDetailPage() {
               </div>
               <div className="flex flex-col gap-1">
                 <dt className="text-xs font-medium uppercase tracking-wide text-[var(--color-muted)]">
-                  {t("ideas.detail.createdAt")}
+                  {t('ideas.detail.createdAt')}
                 </dt>
                 <dd className="text-[var(--color-fg)]">
                   {dateFormatter.format(new Date(ideaQuery.data.createdAt))}
@@ -180,7 +169,7 @@ export default function IdeaDetailPage() {
               </div>
               <div className="flex flex-col gap-1">
                 <dt className="text-xs font-medium uppercase tracking-wide text-[var(--color-muted)]">
-                  {t("ideas.detail.updatedAt")}
+                  {t('ideas.detail.updatedAt')}
                 </dt>
                 <dd className="text-[var(--color-fg)]">
                   {dateFormatter.format(new Date(ideaQuery.data.updatedAt))}
@@ -190,18 +179,15 @@ export default function IdeaDetailPage() {
           </Card>
 
           {isOwner ? (
-            <section
-              className="flex flex-col gap-2"
-              aria-labelledby="idea-tags-heading"
-            >
+            <section className="flex flex-col gap-2" aria-labelledby="idea-tags-heading">
               <h2 id="idea-tags-heading" className="text-sm font-medium">
-                {t("ideas.detail.tags")}
+                {t('ideas.detail.tags')}
               </h2>
               <IdeaTagEditor idea={ideaQuery.data} />
             </section>
           ) : ideaQuery.data.tags.length > 0 ? (
             <div className="flex flex-col gap-2">
-              <h2 className="text-sm font-medium">{t("ideas.detail.tags")}</h2>
+              <h2 className="text-sm font-medium">{t('ideas.detail.tags')}</h2>
               <div className="flex flex-wrap gap-1.5">
                 {ideaQuery.data.tags.map(({ tagId, tag }) => (
                   <TagBadge key={tagId} tag={tag} />
@@ -210,44 +196,33 @@ export default function IdeaDetailPage() {
             </div>
           ) : null}
 
-          {isOwner ? (
-            <WireframesSection ideaId={id} />
-          ) : null}
+          {isOwner ? <WireframesSection ideaId={id} /> : null}
 
-          <section
-            className="flex flex-col gap-3"
-            aria-labelledby="idea-planning-heading"
-          >
+          <section className="flex flex-col gap-3" aria-labelledby="idea-planning-heading">
             <h2 id="idea-planning-heading" className="text-sm font-medium">
-              {t("ideas.detail.planningTitle")}
+              {t('ideas.detail.planningTitle')}
             </h2>
             <PlanningAccordion ideaId={id} />
           </section>
 
-          <section
-            className="flex flex-col gap-3"
-            aria-labelledby="idea-tasks-heading"
-          >
+          <section className="flex flex-col gap-3" aria-labelledby="idea-tasks-heading">
             <div className="flex items-center justify-between gap-2">
               <h2 id="idea-tasks-heading" className="text-sm font-medium">
-                {t("ideas.detail.tasksTitle")}
+                {t('ideas.detail.tasksTitle')}
               </h2>
               <Link
                 to={ideaTasksPath(id)}
                 className="rounded border border-[var(--color-border)] px-2 py-1 text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-fg)]"
               >
-                {t("ideas.board.openBoard")}
+                {t('ideas.board.openBoard')}
               </Link>
             </div>
             <TaskList ideaId={id} />
           </section>
 
-          <section
-            className="flex flex-col gap-3"
-            aria-labelledby="idea-comments-heading"
-          >
+          <section className="flex flex-col gap-3" aria-labelledby="idea-comments-heading">
             <h2 id="idea-comments-heading" className="text-sm font-medium">
-              {t("ideas.detail.commentsTitle")}
+              {t('ideas.detail.commentsTitle')}
             </h2>
             <CommentThread ideaId={id} ideaOwnerId={ideaQuery.data.userId} />
           </section>

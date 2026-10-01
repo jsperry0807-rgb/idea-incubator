@@ -1,18 +1,11 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type {
-  CreateCommentInput,
-  UpdateCommentInput,
-} from "@repo/shared";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { CreateCommentInput, UpdateCommentInput } from '@repo/shared';
 
-import {
-  createComment,
-  deleteComment,
-  updateComment,
-} from "../api/comments";
+import { createComment, deleteComment, updateComment } from '../api/comments';
 
 export function useCommentMutations(ideaId: string) {
   const queryClient = useQueryClient();
-  const queryKey = ["ideas", ideaId, "comments"] as const;
+  const queryKey = ['ideas', ideaId, 'comments'] as const;
   const invalidate = () => void queryClient.invalidateQueries({ queryKey });
 
   const create = useMutation({

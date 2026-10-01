@@ -1,40 +1,39 @@
-import { Router, type Router as RouterType } from "express";
+import { Router, type Router as RouterType } from 'express';
 import {
   notificationIdParamsSchema,
   notificationListQuerySchema,
   type NotificationListQuery,
-} from "@repo/shared";
+} from '@repo/shared';
 
-import { validate } from "../middleware/validate";
-import { authenticate } from "../middleware/auth";
+import { validate } from '../middleware/validate';
+import { authenticate } from '../middleware/auth';
 import {
   listNotifications,
   markAllNotificationsRead,
   markNotificationRead,
-} from "../services/notification.service";
+} from '../services/notification.service';
 
 const router: RouterType = Router();
 
 router.use(authenticate);
 
-router.get(
-  "/",
-  validate({ query: notificationListQuerySchema }),
-  async (req, res, next) => {
-    try {
-      const result = await listNotifications(
-        req.userId!,
-        req.query as unknown as NotificationListQuery,
-      );
-      res.json({ data: result.items, meta: { unreadCount: result.unreadCount } });
-    } catch (err) {
-      next(err);
-    }
-  },
-);
+router.get('/', validate({ query: notificationListQuerySchema }), async (req, res, next) => {
+  try {
+    const result = await listNotifications(
+      req.userId!,
+      req.query as unknown as NotificationListQuery
+    );
+    res.json({
+      data: result.items,
+      meta: { unreadCount: result.unreadCount },
+    });
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.patch(
-  "/:id/read",
+  '/:id/read',
   validate({ params: notificationIdParamsSchema }),
   async (req, res, next) => {
     try {
@@ -43,10 +42,10 @@ router.patch(
     } catch (err) {
       next(err);
     }
-  },
+  }
 );
 
-router.post("/read-all", async (req, res, next) => {
+router.post('/read-all', async (req, res, next) => {
   try {
     res.json({ data: await markAllNotificationsRead(req.userId!) });
   } catch (err) {

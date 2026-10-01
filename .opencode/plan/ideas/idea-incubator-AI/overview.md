@@ -12,7 +12,7 @@ user is deciding, not guessing.
 The critical property is that questions are **generated on the fly from the
 user's specific idea**, never pulled from a static template. After every
 answer the agent re-evaluates which decision points were resolved, which were
-invalidated, and which *new* ones the answer just opened up — then branches.
+invalidated, and which _new_ ones the answer just opened up — then branches.
 When a user is visibly stuck on a decision, the agent produces a synthesized
 debate verdict (Recommendation, Key Tradeoffs, Strongest Disagreement) rather
 than silently picking for them.
@@ -52,13 +52,13 @@ grounded in a decision the user actually made.
 
 ## Key Screens
 
-| Screen | Purpose |
-| ------ | ------- |
-| Interview panel | Full-height panel on IdeaDetailPage: question card with trade-off option table, one question at a time, free-text fallback |
-| Synthesis card | Appears in-place when the user is stuck: Recommendation, Key Tradeoffs, Strongest Disagreement |
-| Decision log | Collapsible review of every decision made, its options, and what the chosen option opened or closed |
-| Plan review diff | Before writing, shows a diff of each section against existing markdown so hand-edits are never silently clobbered |
-| Tail collection | Optional flag-gated form for remaining structured data (budget, team, deadline) after decisions are resolved |
+| Screen           | Purpose                                                                                                                    |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Interview panel  | Full-height panel on IdeaDetailPage: question card with trade-off option table, one question at a time, free-text fallback |
+| Synthesis card   | Appears in-place when the user is stuck: Recommendation, Key Tradeoffs, Strongest Disagreement                             |
+| Decision log     | Collapsible review of every decision made, its options, and what the chosen option opened or closed                        |
+| Plan review diff | Before writing, shows a diff of each section against existing markdown so hand-edits are never silently clobbered          |
+| Tail collection  | Optional flag-gated form for remaining structured data (budget, team, deadline) after decisions are resolved               |
 
 ## Design Principles
 
@@ -84,7 +84,7 @@ grounded in a decision the user actually made.
 - Scope assumed: MVP — single interview per idea, no multi-user live collab
 - Engine assumed: hand-rolled pure reducer persisted in one Prisma table,
   **not** LangGraph. The graph is ~6 nodes; durable state is one row.
-- Synthesis assumed: the brainstorm-mcp *synthesis prompt* is ported and
+- Synthesis assumed: the brainstorm-mcp _synthesis prompt_ is ported and
   reimplemented against our own LLM client. The MCP server itself is **not**
   wired in — it is a stdio tool for coding agents, not a library or HTTP API.
 - Questioning assumed: hand-rolled. Chatfield is deliberately **excluded**
@@ -92,7 +92,7 @@ grounded in a decision the user actually made.
   which defeats dynamic decision-point discovery. It is tail-only, ~15
   fields, behind a feature flag.
 - Protocol assumed: the LotusADSP `brainstorming` skill contributes its
-  *principles* (priority tiers, minimum-viable-question test, question
+  _principles_ (priority tiers, minimum-viable-question test, question
   anatomy) and **not** its domain question banks, which cover only
   E-Commerce / Auth / Real-time / CMS and would reintroduce exactly the
   static templating this feature exists to avoid.

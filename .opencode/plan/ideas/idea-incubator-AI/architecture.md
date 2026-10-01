@@ -18,7 +18,7 @@ the graph would merely orchestrate.
 
 ## Core Principle: Directives, Not Side Effects
 
-The reducer never performs I/O. It returns *directives* describing what the
+The reducer never performs I/O. It returns _directives_ describing what the
 caller must fetch. The route resolves directives with LLM calls and feeds
 results back as events.
 
@@ -33,8 +33,7 @@ with no network access and no model mocks.
 ## State Shape
 
 ```ts
-type InterviewPhase =
-  | "CLASSIFY" | "ASK" | "SYNTHESIZE" | "READY" | "DONE";
+type InterviewPhase = 'CLASSIFY' | 'ASK' | 'SYNTHESIZE' | 'READY' | 'DONE';
 
 type InterviewState = {
   idea: {
@@ -44,28 +43,28 @@ type InterviewState = {
     projectType: IdeaProjectType;
   };
   domain: {
-    primary: string;          // "incremental-game", "b2b-saas", "physical-goods"
-    confidence: number;       // 0..1
-    signals: string[];        // evidence quoted from the user's own words
+    primary: string; // "incremental-game", "b2b-saas", "physical-goods"
+    confidence: number; // 0..1
+    signals: string[]; // evidence quoted from the user's own words
   };
   decisions: Record<string, Decision>;
-  open: DecisionPoint[];      // the frontier
-  asked: string[];            // point ids in order, for re-ask suppression
+  open: DecisionPoint[]; // the frontier
+  asked: string[]; // point ids in order, for re-ask suppression
   stuck: { pointId: string; attempts: number } | null;
   synthesis: Synthesis | null;
-  coverage: Record<PlanningSectionName, number>;  // 0..1 grounded-ness
+  coverage: Record<PlanningSectionName, number>; // 0..1 grounded-ness
   phase: InterviewPhase;
   turn: number;
 };
 
 type Decision = {
   pointId: string;
-  optionId: string;          // or "free-text"
+  optionId: string; // or "free-text"
   value: string;
-  openedPointIds: string[];  // what this answer made newly reachable
+  openedPointIds: string[]; // what this answer made newly reachable
   closedPointIds: string[];
   deferred: boolean;
-  at: string;                // ISO timestamp
+  at: string; // ISO timestamp
 };
 ```
 
@@ -75,17 +74,17 @@ append-only and is what makes re-asking mechanically impossible.
 ## Decision Point Model
 
 ```ts
-type Priority = "P0" | "P1" | "P2" | "P3";
+type Priority = 'P0' | 'P1' | 'P2' | 'P3';
 
 type DecisionPoint = {
-  id: string;                 // STABLE — the anti-template mechanism
+  id: string; // STABLE — the anti-template mechanism
   title: string;
-  why: string;                // the architectural consequence
+  why: string; // the architectural consequence
   priority: Priority;
-  eliminatesPaths: string[];  // MUST be non-empty — enforced, see below
+  eliminatesPaths: string[]; // MUST be non-empty — enforced, see below
   blocks: PlanningSectionName[];
-  opensWhen?: DecisionPoint[];  // reachable only via specific upstream answers
-  status: "open" | "resolved" | "deferred";
+  opensWhen?: DecisionPoint[]; // reachable only via specific upstream answers
+  status: 'open' | 'resolved' | 'deferred';
 };
 ```
 
@@ -109,17 +108,17 @@ function assertValidQuestion(point: DecisionPoint, question: Question): void {
 A question that cannot demonstrate it eliminated a path never reaches the
 user. This is the mechanical form of the "Minimum Viable Question" principle
 from the LotusADSP skill, and it is the reason we do not import that skill's
-domain question banks — the banks *are* static templates, and the validator
+domain question banks — the banks _are_ static templates, and the validator
 would reject their premise.
 
 ## Priority Tiers
 
-| Tier | Meaning | Gate |
-| ---- | ------- | ---- |
-| P0 | Cannot generate a valid plan without it | Must be resolved before `READY` |
-| P1 | Affects >30% of the implementation | Resolved or explicitly deferred |
-| P2 | Affects one specific feature or section | Optional |
-| P3 | Edge case, optimization, nice-to-have | Rarely asked |
+| Tier | Meaning                                 | Gate                            |
+| ---- | --------------------------------------- | ------------------------------- |
+| P0   | Cannot generate a valid plan without it | Must be resolved before `READY` |
+| P1   | Affects >30% of the implementation      | Resolved or explicitly deferred |
+| P2   | Affects one specific feature or section | Optional                        |
+| P3   | Edge case, optimization, nice-to-have   | Rarely asked                    |
 
 ## Node Flow
 

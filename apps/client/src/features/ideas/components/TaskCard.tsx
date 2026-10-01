@@ -1,9 +1,9 @@
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { useTranslation } from "react-i18next";
-import { TaskStatus, type Task } from "@repo/shared";
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { useTranslation } from 'react-i18next';
+import { TaskStatus, type Task } from '@repo/shared';
 
-import { useUpdateTask } from "../hooks/useUpdateTask";
+import { useUpdateTask } from '../hooks/useUpdateTask';
 
 type SortableResult = ReturnType<typeof useSortable>;
 
@@ -14,10 +14,10 @@ export interface TaskCardProps {
   overlay?: boolean;
 }
 
-const STATUS_ACCENT: Record<"TODO" | "IN_PROGRESS" | "DONE", string> = {
-  [TaskStatus.TODO]: "var(--color-muted)",
-  [TaskStatus.IN_PROGRESS]: "var(--color-warning)",
-  [TaskStatus.DONE]: "var(--color-success)",
+const STATUS_ACCENT: Record<'TODO' | 'IN_PROGRESS' | 'DONE', string> = {
+  [TaskStatus.TODO]: 'var(--color-muted)',
+  [TaskStatus.IN_PROGRESS]: 'var(--color-warning)',
+  [TaskStatus.DONE]: 'var(--color-success)',
 };
 
 function DragGlyph() {
@@ -39,8 +39,8 @@ function TaskCardBody({
 }: {
   task: Task;
   ideaId: string;
-  attributes?: SortableResult["attributes"];
-  listeners?: SortableResult["listeners"];
+  attributes?: SortableResult['attributes'];
+  listeners?: SortableResult['listeners'];
 }) {
   const { t } = useTranslation();
   const updateMutation = useUpdateTask(ideaId);
@@ -60,7 +60,7 @@ function TaskCardBody({
     >
       <button
         type="button"
-        aria-label={t("ideas.board.dragHandle")}
+        aria-label={t('ideas.board.dragHandle')}
         className="mt-0.5 shrink-0 cursor-grab touch-none text-[var(--color-muted)] transition-colors hover:text-[var(--color-fg)] active:cursor-grabbing"
         {...attributes}
         {...listeners}
@@ -76,11 +76,7 @@ function TaskCardBody({
         className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-[var(--color-accent)]"
       />
       <span
-        className={
-          isDone
-            ? "line-through text-[var(--color-muted)]"
-            : "text-[var(--color-fg)]"
-        }
+        className={isDone ? 'line-through text-[var(--color-muted)]' : 'text-[var(--color-fg)]'}
       >
         {task.title}
       </span>
@@ -89,14 +85,10 @@ function TaskCardBody({
 }
 
 export function TaskCard({ task, ideaId, overlay = false }: TaskCardProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: task.id, disabled: overlay });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: task.id,
+    disabled: overlay,
+  });
 
   if (overlay) {
     return (
@@ -113,19 +105,11 @@ export function TaskCard({ task, ideaId, overlay = false }: TaskCardProps) {
         transform: CSS.Transform.toString(transform),
         transition,
       }}
-      className={[
-        "list-none",
-        isDragging ? "relative z-10 opacity-40" : "",
-      ]
+      className={['list-none', isDragging ? 'relative z-10 opacity-40' : '']
         .filter(Boolean)
-        .join(" ")}
+        .join(' ')}
     >
-      <TaskCardBody
-        task={task}
-        ideaId={ideaId}
-        attributes={attributes}
-        listeners={listeners}
-      />
+      <TaskCardBody task={task} ideaId={ideaId} attributes={attributes} listeners={listeners} />
     </li>
   );
 }

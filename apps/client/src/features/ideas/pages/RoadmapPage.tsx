@@ -1,6 +1,6 @@
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
-import { KanbanBoard } from "../components/KanbanBoard";
+import { KanbanBoard } from '../components/KanbanBoard';
 
 export default function RoadmapPage() {
   const { t } = useTranslation();
@@ -8,10 +8,8 @@ export default function RoadmapPage() {
   return (
     <section className="flex h-full min-h-0 flex-col gap-5">
       <header className="text-center">
-        <h1 className="text-2xl font-extrabold">{t("ideas.roadmap.title")}</h1>
-        <p className="text-sm text-[var(--color-muted)]">
-          {t("ideas.roadmap.subtitle")}
-        </p>
+        <h1 className="text-2xl font-extrabold">{t('ideas.roadmap.title')}</h1>
+        <p className="text-sm text-[var(--color-muted)]">{t('ideas.roadmap.subtitle')}</p>
       </header>
 
       <KanbanBoard />

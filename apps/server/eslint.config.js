@@ -1,29 +1,29 @@
 // eslint.config.js
-import { defineConfig } from "eslint/config";
+import { defineConfig } from 'eslint/config';
 
-import { baseConfig } from "@repo/config/eslint.base";
+import { baseConfig } from '@repo/config/eslint.base';
 
 export default defineConfig([
   ...baseConfig({
-    env: "node",
+    env: 'node',
     // Prisma client output is machine-generated and not ours to lint.
-    ignores: ["src/generated/**"],
+    ignores: ['src/generated/**'],
   }),
   {
-    files: ["src/**/*.{ts,tsx}"],
+    files: ['src/**/*.{ts,tsx}'],
     rules: {
       // A server is expected to log to stdout for startup and diagnostics.
-      "no-console": "off",
+      'no-console': 'off',
       // Route handlers rely on `req.user!` after `requireAuth` has run; the
       // assertion is load-bearing and guarded by that middleware.
-      "@typescript-eslint/no-non-null-assertion": "off",
+      '@typescript-eslint/no-non-null-assertion': 'off',
     },
   },
   {
     // Tests may lean on assertion helpers and non-null access.
-    files: ["**/*.test.ts"],
+    files: ['**/*.test.ts'],
     rules: {
-      "@typescript-eslint/no-non-null-assertion": "off",
+      '@typescript-eslint/no-non-null-assertion': 'off',
     },
   },
 ]);

@@ -1,8 +1,8 @@
-import { useTranslation } from "react-i18next";
-import { Card } from "@repo/ui";
+import { useTranslation } from 'react-i18next';
+import { Card } from '@repo/ui';
 
-import { useDashboardStats } from "../hooks/useDashboardStats";
-import { StatsGridSkeleton } from "./skeletons";
+import { useDashboardStats } from '../hooks/useDashboardStats';
+import { StatsGridSkeleton } from './skeletons';
 
 interface StatCardProps {
   label: string;
@@ -15,9 +15,7 @@ function StatCard({ label, value }: StatCardProps) {
       <span className="text-xs font-medium uppercase tracking-wide text-[var(--color-muted)]">
         {label}
       </span>
-      <span className="text-3xl font-extrabold text-[var(--color-fg)]">
-        {value}
-      </span>
+      <span className="text-3xl font-extrabold text-[var(--color-fg)]">{value}</span>
     </Card>
   );
 }
@@ -31,11 +29,7 @@ export function StatsGrid() {
   }
 
   if (query.isError) {
-    return (
-      <p className="text-sm text-[var(--color-danger)]">
-        {t("dashboard.stats.loadError")}
-      </p>
-    );
+    return <p className="text-sm text-[var(--color-danger)]">{t('dashboard.stats.loadError')}</p>;
   }
 
   if (!query.data) {
@@ -45,10 +39,10 @@ export function StatsGrid() {
   const { totalIdeas, byStatus } = query.data;
 
   const stats: StatCardProps[] = [
-    { label: t("dashboard.stats.totalIdeas"), value: totalIdeas },
-    { label: t("dashboard.stats.inPlanning"), value: byStatus.PLANNING },
-    { label: t("dashboard.stats.planned"), value: byStatus.PLANNED },
-    { label: t("dashboard.stats.done"), value: byStatus.DONE },
+    { label: t('dashboard.stats.totalIdeas'), value: totalIdeas },
+    { label: t('dashboard.stats.inPlanning'), value: byStatus.PLANNING },
+    { label: t('dashboard.stats.planned'), value: byStatus.PLANNED },
+    { label: t('dashboard.stats.done'), value: byStatus.DONE },
   ];
 
   return (

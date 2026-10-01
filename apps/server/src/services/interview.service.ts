@@ -1,16 +1,16 @@
-import type { Prisma } from "../generated/prisma/client";
-import prisma from "../lib/prisma";
-import { ConflictError, NotFoundError } from "../lib/errors";
-import { assertIdeaOwnership } from "./idea.service";
-import { llm } from "./llm.service";
-import { storage } from "./storage.service";
-import { env } from "../config/env";
-import { InterviewAgent } from "../interview/graph";
-import { appendAssumption } from "../interview/assumptions";
-import { runLoop, type LoopTerminal } from "../interview/loop";
-import type { Answer, InterviewEvent } from "../interview/reducer";
-import { emptyCoverage, type InterviewState } from "../interview/state";
-import type { AnswerInterviewInput, SynthesisRequestInput } from "@repo/shared";
+import type { Prisma } from '../generated/prisma/client';
+import prisma from '../lib/prisma';
+import { ConflictError, NotFoundError } from '../lib/errors';
+import { assertIdeaOwnership } from './idea.service';
+import { llm } from './llm.service';
+import { storage } from './storage.service';
+import { env } from '../config/env';
+import { InterviewAgent } from '../interview/graph';
+import { appendAssumption } from '../interview/assumptions';
+import { runLoop, type LoopTerminal } from '../interview/loop';
+import type { Answer, InterviewEvent } from '../interview/reducer';
+import { emptyCoverage, type InterviewState } from '../interview/state';
+import type { AnswerInterviewInput, SynthesisRequestInput } from '@repo/shared';
 
 type JsonState = Prisma.InputJsonValue;
 
@@ -25,12 +25,12 @@ function createInitialState(
   ideaId: string,
   title: string | null,
   description: string | null,
-  projectType: Awaited<ReturnType<typeof assertIdeaOwnership>>,
+  projectType: Awaited<ReturnType<typeof assertIdeaOwnership>>
 ): InterviewState {
   return {
     idea: {
       id: ideaId,
-      title: title ?? "Untitled idea",
+      title: title ?? 'Untitled idea',
       description,
       projectType,
     },
@@ -42,7 +42,7 @@ function createInitialState(
     current: null,
     synthesis: null,
     coverage: emptyCoverage(),
-    phase: "CLASSIFY",
+    phase: 'CLASSIFY',
     turn: 0,
   };
 }
@@ -53,7 +53,7 @@ async function loadInterview(userId: string, ideaId: string) {
   });
 
   if (!interview) {
-    throw new NotFoundError("Interview not found. Start it with POST /interview.");
+    throw new NotFoundError('Interview not found. Start it with POST /interview.');
   }
 
   return interview.state as unknown as InterviewState;
@@ -73,7 +73,7 @@ function createAgent(locale: string): InterviewAgent {
 async function pump(
   agent: InterviewAgent,
   state: InterviewState,
-  initialEvents: InterviewEvent[],
+  initialEvents: InterviewEvent[]
 ): Promise<{ state: InterviewState; terminal: LoopTerminal }> {
   const { state: next, terminal } = await runLoop(agent, state, initialEvents);
   return { state: next, terminal };
@@ -88,7 +88,7 @@ async function pump(
 export async function startOrResumeInterview(
   userId: string,
   ideaId: string,
-  locale: string,
+  locale: string
 ): Promise<InterviewResult> {
   const projectType = await assertIdeaOwnership(userId, ideaId);
 
@@ -96,7 +96,7 @@ export async function startOrResumeInterview(
     where: { id: ideaId, userId },
     select: { id: true, title: true, description: true, projectType: true },
   });
-  if (!idea) throw new NotFoundError("Idea not found");
+  if (!idea) throw new NotFoundError('Idea not found');
 
   const existing = await prisma.interview.findFirst({
     where: { ideaId, userId },
@@ -105,9 +105,9 @@ export async function startOrResumeInterview(
   if (existing) {
     const state = existing.state as unknown as InterviewState;
     // Crash-safe resume: finish a START that never classified.
-    if (state.phase === "CLASSIFY" && state.turn === 0 && state.open.length === 0) {
+    if (state.phase === 'CLASSIFY' && state.turn === 0 && state.open.length === 0) {
       const agent = createAgent(locale);
-      const result = await pump(agent, state, [{ type: "START" }]);
+      const result = await pump(agent, state, [{ type: 'START' }]);
       const interview = await persist(ideaId, userId, result.state);
       return {
         interviewId: interview.id,
@@ -116,18 +116,18 @@ export async function startOrResumeInterview(
         terminal: result.terminal,
       };
     }
-    return { interviewId: existing.id, created: false, state, terminal: "none" };
+    return {
+      interviewId: existing.id,
+      created: false,
+      state,
+      terminal: 'none',
+    };
   }
 
-  const initialState = createInitialState(
-    idea.id,
-    idea.title,
-    idea.description,
-    projectType,
-  );
+  const initialState = createInitialState(idea.id, idea.title, idea.description, projectType);
 
   const agent = createAgent(locale);
-  const result = await pump(agent, initialState, [{ type: "START" }]);
+  const result = await pump(agent, initialState, [{ type: 'START' }]);
 
   const interview = await prisma.interview.create({
     data: {
@@ -146,23 +146,20 @@ export async function startOrResumeInterview(
   };
 }
 
-export async function getInterviewState(
-  userId: string,
-  ideaId: string,
-): Promise<InterviewResult> {
+export async function getInterviewState(userId: string, ideaId: string): Promise<InterviewResult> {
   await assertIdeaOwnership(userId, ideaId);
   const interview = await prisma.interview.findFirst({
     where: { ideaId, userId },
   });
   if (!interview) {
-    throw new NotFoundError("Interview not found. Start it with POST /interview.");
+    throw new NotFoundError('Interview not found. Start it with POST /interview.');
   }
   const state = interview.state as unknown as InterviewState;
   return {
     interviewId: interview.id,
     created: false,
     state,
-    terminal: "none",
+    terminal: 'none',
   };
 }
 
@@ -175,23 +172,23 @@ export async function submitAnswer(
   userId: string,
   ideaId: string,
   input: AnswerInterviewInput,
-  locale: string,
+  locale: string
 ): Promise<InterviewResult> {
   await assertIdeaOwnership(userId, ideaId);
   const state = await loadInterview(userId, ideaId);
 
-  if (state.phase !== "ASK" && state.phase !== "SYNTHESIZE") {
+  if (state.phase !== 'ASK' && state.phase !== 'SYNTHESIZE') {
     throw new ConflictError(
-      state.phase === "READY" || state.phase === "DONE"
-        ? "Interview already complete."
-        : `Cannot answer in phase ${state.phase}.`,
+      state.phase === 'READY' || state.phase === 'DONE'
+        ? 'Interview already complete.'
+        : `Cannot answer in phase ${state.phase}.`
     );
   }
   if (!state.current) {
-    throw new ConflictError("No question is currently being asked.");
+    throw new ConflictError('No question is currently being asked.');
   }
   if (state.current.point.id !== input.pointId) {
-    throw new ConflictError("Answer does not match the current question.");
+    throw new ConflictError('Answer does not match the current question.');
   }
 
   const answer: Answer = {
@@ -202,7 +199,7 @@ export async function submitAnswer(
   };
 
   const agent = createAgent(locale);
-  const result = await pump(agent, state, [{ type: "ANSWERED", answer }]);
+  const result = await pump(agent, state, [{ type: 'ANSWERED', answer }]);
   const interview = await persist(ideaId, userId, result.state);
 
   return {
@@ -216,19 +213,17 @@ export async function submitAnswer(
 export async function skipQuestion(
   userId: string,
   ideaId: string,
-  locale: string,
+  locale: string
 ): Promise<InterviewResult> {
   await assertIdeaOwnership(userId, ideaId);
   const state = await loadInterview(userId, ideaId);
 
-  if ((state.phase !== "ASK" && state.phase !== "SYNTHESIZE") || !state.current) {
-    throw new ConflictError("No question to skip.");
+  if ((state.phase !== 'ASK' && state.phase !== 'SYNTHESIZE') || !state.current) {
+    throw new ConflictError('No question to skip.');
   }
 
   const agent = createAgent(locale);
-  const result = await pump(agent, state, [
-    { type: "SKIPPED", pointId: state.current.point.id },
-  ]);
+  const result = await pump(agent, state, [{ type: 'SKIPPED', pointId: state.current.point.id }]);
   const interview = await persist(ideaId, userId, result.state);
 
   return {
@@ -244,22 +239,20 @@ export async function deferQuestion(
   ideaId: string,
   pointId: string,
   reason: string | undefined,
-  locale: string,
+  locale: string
 ): Promise<InterviewResult> {
   await assertIdeaOwnership(userId, ideaId);
   const state = await loadInterview(userId, ideaId);
 
-  if (state.phase !== "ASK" || !state.current) {
-    throw new ConflictError("No question to defer.");
+  if (state.phase !== 'ASK' || !state.current) {
+    throw new ConflictError('No question to defer.');
   }
   if (state.current.point.id !== pointId) {
-    throw new ConflictError("Defer does not match the current question.");
+    throw new ConflictError('Defer does not match the current question.');
   }
 
   const agent = createAgent(locale);
-  const result = await pump(agent, state, [
-    { type: "DEFERRED", pointId, reason },
-  ]);
+  const result = await pump(agent, state, [{ type: 'DEFERRED', pointId, reason }]);
   const interview = await persist(ideaId, userId, result.state);
 
   const point = result.state.decisions[pointId];
@@ -286,11 +279,11 @@ async function recordDeferral(
   ideaId: string,
   userId: string,
   pointTitle: string,
-  reason: string | undefined,
+  reason: string | undefined
 ): Promise<void> {
-  const existing = await storage.readIdeaSection(userId, ideaId, "overview.md");
+  const existing = await storage.readIdeaSection(userId, ideaId, 'overview.md');
   const next = appendAssumption(existing, pointTitle, reason);
-  await storage.writeIdeaSection(userId, ideaId, "overview.md", next);
+  await storage.writeIdeaSection(userId, ideaId, 'overview.md', next);
 }
 
 /**
@@ -301,24 +294,24 @@ export async function synthesizeInterview(
   userId: string,
   ideaId: string,
   input: SynthesisRequestInput,
-  locale: string,
+  locale: string
 ): Promise<InterviewResult> {
   await assertIdeaOwnership(userId, ideaId);
   const state = await loadInterview(userId, ideaId);
 
-  if (state.phase === "READY" || state.phase === "DONE") {
-    throw new ConflictError("Interview already complete.");
+  if (state.phase === 'READY' || state.phase === 'DONE') {
+    throw new ConflictError('Interview already complete.');
   }
   if (!state.open.some((p) => p.id === input.pointId)) {
-    throw new NotFoundError("Decision point is not open.");
+    throw new NotFoundError('Decision point is not open.');
   }
 
   const agent = createAgent(locale);
   const event = await agent.resolve(state, {
-    type: "synthesize",
+    type: 'synthesize',
     pointId: input.pointId,
   });
-  if (!event) throw new Error("Synthesis could not be produced.");
+  if (!event) throw new Error('Synthesis could not be produced.');
 
   const { state: next, terminal } = await runLoop(agent, state, [event]);
   const interview = await persist(ideaId, userId, next);
@@ -329,12 +322,12 @@ export async function synthesizeInterview(
 async function persist(
   ideaId: string,
   userId: string,
-  state: InterviewState,
+  state: InterviewState
 ): Promise<{ id: string }> {
   const interview = await prisma.interview.findFirst({
     where: { ideaId, userId },
   });
-  if (!interview) throw new NotFoundError("Interview not found.");
+  if (!interview) throw new NotFoundError('Interview not found.');
 
   await prisma.interview.update({
     where: { id: interview.id },

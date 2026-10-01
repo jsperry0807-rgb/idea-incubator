@@ -1,7 +1,7 @@
-import { z } from "zod";
-import { cidSchema } from "./common";
+import { z } from 'zod';
+import { cidSchema } from './common';
 
-const commentContentSchema = z.string().trim().min(1, "Comment cannot be empty").max(5000);
+const commentContentSchema = z.string().trim().min(1, 'Comment cannot be empty').max(5000);
 
 export const createCommentSchema = z.object({
   content: commentContentSchema,

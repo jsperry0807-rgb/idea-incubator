@@ -1,17 +1,17 @@
-import { useTranslation } from "react-i18next";
-import { Button, Modal } from "@repo/ui";
+import { useTranslation } from 'react-i18next';
+import { Button, Modal } from '@repo/ui';
 
 interface ShortcutRow {
-  labelKey: "search" | "create" | "save" | "close" | "help";
+  labelKey: 'search' | 'create' | 'save' | 'close' | 'help';
   keys: string[];
 }
 
 const SHORTCUTS: ShortcutRow[] = [
-  { labelKey: "search", keys: ["/"] },
-  { labelKey: "create", keys: ["n"] },
-  { labelKey: "save", keys: ["⌘/Ctrl", "Enter"] },
-  { labelKey: "close", keys: ["Esc"] },
-  { labelKey: "help", keys: ["?"] },
+  { labelKey: 'search', keys: ['/'] },
+  { labelKey: 'create', keys: ['n'] },
+  { labelKey: 'save', keys: ['⌘/Ctrl', 'Enter'] },
+  { labelKey: 'close', keys: ['Esc'] },
+  { labelKey: 'help', keys: ['?'] },
 ];
 
 export interface ShortcutsHelpModalProps {
@@ -26,10 +26,10 @@ export function ShortcutsHelpModal({ open, onClose }: ShortcutsHelpModalProps) {
     <Modal
       open={open}
       onClose={onClose}
-      title={t("shortcuts.title")}
+      title={t('shortcuts.title')}
       footer={
         <Button variant="ghost" onClick={onClose}>
-          {t("shortcuts.close")}
+          {t('shortcuts.close')}
         </Button>
       }
     >

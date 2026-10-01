@@ -1,13 +1,13 @@
-import type { NextFunction, Request, Response } from "express";
-import type { ZodType } from "zod";
+import type { NextFunction, Request, Response } from 'express';
+import type { ZodType } from 'zod';
 
-import { ValidationError } from "../lib/errors";
+import { ValidationError } from '../lib/errors';
 
-type Source = "body" | "query" | "params";
+type Source = 'body' | 'query' | 'params';
 
 type SourceSchema = { [K in Source]?: ZodType };
 
-const SOURCES: Source[] = ["body", "query", "params"];
+const SOURCES: Source[] = ['body', 'query', 'params'];
 
 function setSafe(target: Record<string, unknown>, key: string, value: unknown) {
   try {
@@ -39,8 +39,8 @@ export function validate(sourceConfig: ZodType | SourceSchema) {
               source,
               fields: result.error.flatten().fieldErrors,
             },
-            `Validation failed for ${source}`,
-          ),
+            `Validation failed for ${source}`
+          )
         );
         return;
       }

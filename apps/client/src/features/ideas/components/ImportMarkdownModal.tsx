@@ -1,10 +1,10 @@
-import { useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import type { PlanningSectionName } from "@repo/shared";
-import { Button, Modal } from "@repo/ui";
+import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import type { PlanningSectionName } from '@repo/shared';
+import { Button, Modal } from '@repo/ui';
 
 const MAX_SIZE_BYTES = 500 * 1024;
-const ACCEPTED_EXTENSIONS = [".md", ".markdown"];
+const ACCEPTED_EXTENSIONS = ['.md', '.markdown'];
 
 export interface ImportMarkdownModalProps {
   open: boolean;
@@ -44,12 +44,12 @@ export function ImportMarkdownModal({
     const name = next.name.toLowerCase();
     if (!ACCEPTED_EXTENSIONS.some((ext) => name.endsWith(ext))) {
       setFile(null);
-      setError(t("ideas.planning.importInvalidType"));
+      setError(t('ideas.planning.importInvalidType'));
       return;
     }
     if (next.size > MAX_SIZE_BYTES) {
       setFile(null);
-      setError(t("ideas.planning.importTooLarge"));
+      setError(t('ideas.planning.importTooLarge'));
       return;
     }
 
@@ -67,7 +67,7 @@ export function ImportMarkdownModal({
       await onImport(content, file.name);
       onClose();
     } catch {
-      setError(t("ideas.planning.importError"));
+      setError(t('ideas.planning.importError'));
     } finally {
       setImporting(false);
     }
@@ -77,20 +77,20 @@ export function ImportMarkdownModal({
     <Modal
       open={open}
       onClose={onClose}
-      title={t("ideas.planning.importTitle")}
+      title={t('ideas.planning.importTitle')}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={importing}>
-            {t("ideas.planning.cancel")}
+            {t('ideas.planning.cancel')}
           </Button>
           <Button onClick={() => void handleImport()} disabled={!file || importing}>
-            {importing ? t("ideas.planning.importing") : t("ideas.planning.import")}
+            {importing ? t('ideas.planning.importing') : t('ideas.planning.import')}
           </Button>
         </>
       }
     >
       <p className="text-sm text-[var(--color-muted)]">
-        {t("ideas.planning.importDescription", {
+        {t('ideas.planning.importDescription', {
           section: t(`ideas.planning.sections.${section}`),
         })}
       </p>
@@ -102,7 +102,7 @@ export function ImportMarkdownModal({
         className="hidden"
         onChange={(event) => {
           acceptFile(event.target.files?.[0]);
-          event.target.value = "";
+          event.target.value = '';
         }}
       />
 
@@ -120,26 +120,22 @@ export function ImportMarkdownModal({
           acceptFile(event.dataTransfer.files?.[0]);
         }}
         className={[
-          "flex w-full flex-col items-center gap-1 rounded-md border-2 border-dashed px-4 py-6 text-sm transition-colors duration-150",
+          'flex w-full flex-col items-center gap-1 rounded-md border-2 border-dashed px-4 py-6 text-sm transition-colors duration-150',
           dragOver
-            ? "border-[var(--color-accent)] bg-[var(--color-accent)]/10"
-            : "border-[var(--color-border)] hover:bg-[var(--color-muted)]/10",
-        ].join(" ")}
+            ? 'border-[var(--color-accent)] bg-[var(--color-accent)]/10'
+            : 'border-[var(--color-border)] hover:bg-[var(--color-muted)]/10',
+        ].join(' ')}
       >
         <FileMarkdownIcon className="size-8 text-[var(--color-muted)]" />
-        <span className="text-[var(--color-fg)]">
-          {t("ideas.planning.dropzoneText")}
-        </span>
+        <span className="text-[var(--color-fg)]">{t('ideas.planning.dropzoneText')}</span>
         <span className="text-xs text-[var(--color-muted)]">
-          {t("ideas.planning.dropzoneHint")}
+          {t('ideas.planning.dropzoneHint')}
         </span>
       </button>
 
       {file ? (
         <div className="flex items-center justify-between gap-2 rounded-md border border-[var(--color-border)] px-3 py-2 text-sm">
-          <span className="min-w-0 truncate font-mono text-[var(--color-fg)]">
-            {file.name}
-          </span>
+          <span className="min-w-0 truncate font-mono text-[var(--color-fg)]">{file.name}</span>
           <span className="shrink-0 text-xs text-[var(--color-muted)]">
             {(file.size / 1024).toFixed(1)} KB
           </span>
@@ -147,16 +143,14 @@ export function ImportMarkdownModal({
             type="button"
             onClick={() => setFile(null)}
             className="shrink-0 text-[var(--color-muted)] transition-colors hover:text-[var(--color-danger)]"
-            aria-label={t("ideas.planning.removeFile")}
+            aria-label={t('ideas.planning.removeFile')}
           >
             ✕
           </button>
         </div>
       ) : null}
 
-      {error ? (
-        <p className="text-sm text-[var(--color-danger)]">{error}</p>
-      ) : null}
+      {error ? <p className="text-sm text-[var(--color-danger)]">{error}</p> : null}
     </Modal>
   );
 }

@@ -1,17 +1,11 @@
-import { useTranslation } from "react-i18next";
-import { useDraggable, useDroppable } from "@dnd-kit/core";
-import type { IdeaStatus, PipelineIdea } from "@repo/shared";
+import { useTranslation } from 'react-i18next';
+import { useDraggable, useDroppable } from '@dnd-kit/core';
+import type { IdeaStatus, PipelineIdea } from '@repo/shared';
 
-import { KanbanCard } from "./KanbanCard";
+import { KanbanCard } from './KanbanCard';
 
 function DraggableKanbanCard({ idea }: { idea: PipelineIdea }) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    isDragging,
-  } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: idea.id,
     data: { idea },
   });
@@ -49,13 +43,13 @@ export function KanbanColumn({ status, ideas }: KanbanColumnProps) {
       ref={setNodeRef}
       aria-label={t(`ideas.status.${status}`)}
       className={[
-        "flex h-full min-h-0 min-w-64 flex-1 snap-start flex-col gap-2 p-2 transition-colors",
+        'flex h-full min-h-0 min-w-64 flex-1 snap-start flex-col gap-2 p-2 transition-colors',
         isOver
-          ? "rounded-[var(--radius)] bg-[var(--color-accent)]/5 ring-2 ring-[var(--color-accent)]/40"
-          : "",
+          ? 'rounded-[var(--radius)] bg-[var(--color-accent)]/5 ring-2 ring-[var(--color-accent)]/40'
+          : '',
       ]
         .filter(Boolean)
-        .join(" ")}
+        .join(' ')}
     >
       <header className="flex shrink-0 items-center justify-between px-1">
         <h3 className="text-sm font-semibold text-[var(--color-fg)]">
@@ -68,7 +62,7 @@ export function KanbanColumn({ status, ideas }: KanbanColumnProps) {
 
       {ideas.length === 0 ? (
         <p className="rounded-[var(--radius)] border border-dashed border-[var(--color-border-strong)] bg-[var(--color-card)]/50 p-3 text-xs text-[var(--color-muted)]">
-          {t("ideas.pipeline.emptyColumn")}
+          {t('ideas.pipeline.emptyColumn')}
         </p>
       ) : (
         <ul className="kanban-cards flex min-h-0 flex-1 flex-col gap-2 overflow-x-clip overflow-y-auto">

@@ -12,40 +12,40 @@ export class AppError extends Error {
     public statusCode: number,
     public code: string,
     message: string,
-    public details?: unknown[],
+    public details?: unknown[]
   ) {
     super(message);
-    this.name = "AppError";
+    this.name = 'AppError';
   }
 }
 
 export class NotFoundError extends AppError {
   constructor(resource: string) {
-    super(404, "NOT_FOUND", `${resource} not found`);
+    super(404, 'NOT_FOUND', `${resource} not found`);
   }
 }
 
 export class ForbiddenError extends AppError {
-  constructor(message = "You do not have permission to perform this action") {
-    super(403, "FORBIDDEN", message);
+  constructor(message = 'You do not have permission to perform this action') {
+    super(403, 'FORBIDDEN', message);
   }
 }
 
 export class ConflictError extends AppError {
   constructor(message: string) {
-    super(409, "CONFLICT", message);
+    super(409, 'CONFLICT', message);
   }
 }
 
 export class ValidationError extends AppError {
   constructor(details: unknown[]) {
-    super(422, "VALIDATION_ERROR", "Invalid input", details);
+    super(422, 'VALIDATION_ERROR', 'Invalid input', details);
   }
 }
 
 export class UnauthorizedError extends AppError {
-  constructor(message = "Authentication required") {
-    super(401, "UNAUTHORIZED", message);
+  constructor(message = 'Authentication required') {
+    super(401, 'UNAUTHORIZED', message);
   }
 }
 ```
@@ -55,12 +55,7 @@ export class UnauthorizedError extends AppError {
 ```ts
 // apps/server/src/middleware/errorHandler.ts
 
-export function errorHandler(
-  err: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
+export function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
   // Known application errors
   if (err instanceof AppError) {
     return res.status(err.statusCode).json({
@@ -73,11 +68,11 @@ export function errorHandler(
   }
 
   // Unknown errors (log for debugging, return generic message)
-  console.error("Unhandled error:", err);
+  console.error('Unhandled error:', err);
   return res.status(500).json({
     error: {
-      code: "INTERNAL_ERROR",
-      message: "An unexpected error occurred",
+      code: 'INTERNAL_ERROR',
+      message: 'An unexpected error occurred',
     },
   });
 }
@@ -127,7 +122,7 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const { data } = await axiosInstance.post("/auth/refresh");
+        const { data } = await axiosInstance.post('/auth/refresh');
         const newToken = data.data.accessToken;
         setAccessToken(newToken); // Update in-memory token
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
@@ -135,13 +130,13 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         // Refresh failed -> force logout
         clearAuth();
-        window.location.href = "/login";
+        window.location.href = '/login';
         return Promise.reject(refreshError);
       }
     }
 
     return Promise.reject(error);
-  },
+  }
 );
 ```
 
@@ -154,7 +149,7 @@ onError: (error) => {
     // Validation errors shown inline in forms
     return;
   }
-  toast.error(error.response?.data?.error?.message || "Something went wrong");
+  toast.error(error.response?.data?.error?.message || 'Something went wrong');
 };
 ```
 
@@ -166,7 +161,7 @@ React Hook Form + Zod shows field-level errors:
 <Input
   label="Email"
   error={errors.email?.message} // "Invalid email address"
-  {...register("email")}
+  {...register('email')}
 />
 ```
 
@@ -186,7 +181,7 @@ class ErrorBoundary extends React.Component<Props, State> {
           icon={<AlertTriangle />}
           title="Something went wrong"
           description="An unexpected error occurred. Please try refreshing the page."
-          action={{ label: "Refresh", onClick: () => window.location.reload() }}
+          action={{ label: 'Refresh', onClick: () => window.location.reload() }}
         />
       );
     }

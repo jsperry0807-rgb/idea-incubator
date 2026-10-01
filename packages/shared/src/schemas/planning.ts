@@ -1,20 +1,20 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const PLANNING_SECTION_NAMES = [
-  "overview",
-  "tech-stack",
-  "features",
-  "timeline",
-  "risks",
-  "pages",
-  "content",
-  "seo",
-  "mechanics",
-  "progression",
-  "art-audio",
-  "playtest",
-  "supply-chain",
-  "unit-economics",
+  'overview',
+  'tech-stack',
+  'features',
+  'timeline',
+  'risks',
+  'pages',
+  'content',
+  'seo',
+  'mechanics',
+  'progression',
+  'art-audio',
+  'playtest',
+  'supply-chain',
+  'unit-economics',
 ] as const;
 
 export const planningSectionSchema = z.enum(PLANNING_SECTION_NAMES);

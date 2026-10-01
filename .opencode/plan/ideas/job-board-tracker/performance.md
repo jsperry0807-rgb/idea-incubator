@@ -18,8 +18,8 @@
 React Router lazy loading is already in place:
 
 ```tsx
-const DashboardPage = React.lazy(() => import("./pages/DashboardPage"));
-const IdeasPage = React.lazy(() => import("./pages/IdeasPage"));
+const DashboardPage = React.lazy(() => import('./pages/DashboardPage'));
+const IdeasPage = React.lazy(() => import('./pages/IdeasPage'));
 // ...
 ```
 
@@ -51,21 +51,21 @@ const IdeasPage = React.lazy(() => import("./pages/IdeasPage"));
 
 // Ideas list: refetch on window focus
 useQuery({
-  queryKey: ["ideas", filters],
+  queryKey: ['ideas', filters],
   queryFn: () => fetchIdeas(filters),
   staleTime: 30_000, // 30 seconds
 });
 
 // Tags: rarely change, cache longer
 useQuery({
-  queryKey: ["tags"],
+  queryKey: ['tags'],
   queryFn: fetchTags,
   staleTime: 5 * 60_000, // 5 minutes
 });
 
 // Pipeline: moderate cache
 useQuery({
-  queryKey: ["pipeline"],
+  queryKey: ['pipeline'],
   queryFn: fetchPipeline,
   staleTime: 60_000, // 1 minute
 });
@@ -95,19 +95,17 @@ const queryClient = useQueryClient();
 useMutation({
   mutationFn: ({ id, status }) => patchIdeaStatus(id, status),
   onMutate: async ({ id, status }) => {
-    await queryClient.cancelQueries({ queryKey: ["pipeline"] });
-    const previous = queryClient.getQueryData(["pipeline"]);
-    queryClient.setQueryData(["pipeline"], (old) =>
-      moveToStatus(old, id, status),
-    );
+    await queryClient.cancelQueries({ queryKey: ['pipeline'] });
+    const previous = queryClient.getQueryData(['pipeline']);
+    queryClient.setQueryData(['pipeline'], (old) => moveToStatus(old, id, status));
     return { previous };
   },
   onError: (err, vars, context) => {
-    queryClient.setQueryData(["pipeline"], context.previous);
-    toast.error("Failed to move idea");
+    queryClient.setQueryData(['pipeline'], context.previous);
+    toast.error('Failed to move idea');
   },
   onSettled: () => {
-    queryClient.invalidateQueries({ queryKey: ["pipeline"] });
+    queryClient.invalidateQueries({ queryKey: ['pipeline'] });
   },
 });
 ```
@@ -157,7 +155,7 @@ Already defined in Prisma schema:
 ### Response Compression
 
 ```ts
-import compression from "compression";
+import compression from 'compression';
 app.use(compression()); // Gzip responses in production
 ```
 
@@ -167,8 +165,8 @@ app.use(compression()); // Gzip responses in production
 
 ```tsx
 // Lazy load heavy components (Recharts, Markdown editor)
-const RechartsBar = React.lazy(() => import("./components/StatsChart"));
-const MarkdownEditor = React.lazy(() => import("./components/MarkdownEditor"));
+const RechartsBar = React.lazy(() => import('./components/StatsChart'));
+const MarkdownEditor = React.lazy(() => import('./components/MarkdownEditor'));
 ```
 
 ---

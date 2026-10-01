@@ -1,19 +1,14 @@
-import prisma from "../lib/prisma";
-import { NotFoundError } from "../lib/errors";
-import type {
-  CreateTaskInput,
-  Task,
-  TaskStatus,
-  UpdateTaskInput,
-} from "@repo/shared";
-import { assertIdeaOwnership } from "./idea.service";
+import prisma from '../lib/prisma';
+import { NotFoundError } from '../lib/errors';
+import type { CreateTaskInput, Task, TaskStatus, UpdateTaskInput } from '@repo/shared';
+import { assertIdeaOwnership } from './idea.service';
 
 export async function listTasks(userId: string, ideaId: string): Promise<Task[]> {
   await assertIdeaOwnership(userId, ideaId);
 
   const tasks = await prisma.task.findMany({
     where: { ideaId },
-    orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
+    orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
   });
 
   return tasks.map(toTaskDto);
@@ -22,7 +17,7 @@ export async function listTasks(userId: string, ideaId: string): Promise<Task[]>
 export async function createTask(
   userId: string,
   ideaId: string,
-  input: CreateTaskInput,
+  input: CreateTaskInput
 ): Promise<Task> {
   await assertIdeaOwnership(userId, ideaId);
 
@@ -30,7 +25,7 @@ export async function createTask(
   if (sortOrder === undefined) {
     const last = await prisma.task.findFirst({
       where: { ideaId },
-      orderBy: { sortOrder: "desc" },
+      orderBy: { sortOrder: 'desc' },
       select: { sortOrder: true },
     });
     sortOrder = (last?.sortOrder ?? -1) + 1;
@@ -41,8 +36,8 @@ export async function createTask(
       ideaId,
       title: input.title,
       milestone: input.milestone ?? null,
-      status: input.status ?? "TODO",
-      completed: input.status === "DONE",
+      status: input.status ?? 'TODO',
+      completed: input.status === 'DONE',
       sortOrder,
     },
   });
@@ -54,7 +49,7 @@ export async function updateTask(
   userId: string,
   ideaId: string,
   taskId: string,
-  input: UpdateTaskInput,
+  input: UpdateTaskInput
 ): Promise<Task> {
   await assertIdeaOwnership(userId, ideaId);
 
@@ -64,7 +59,7 @@ export async function updateTask(
   });
 
   if (!existing) {
-    throw new NotFoundError("Task not found");
+    throw new NotFoundError('Task not found');
   }
 
   const task = await prisma.task.update({
@@ -76,10 +71,10 @@ export async function updateTask(
       // `status` is the source of truth; `completed` is kept in sync because
       // dashboard stats and idea summaries still read it directly.
       ...(input.status !== undefined
-        ? { status: input.status, completed: input.status === "DONE" }
+        ? { status: input.status, completed: input.status === 'DONE' }
         : input.completed !== undefined
           ? {
-              status: input.completed ? ("DONE" as const) : ("TODO" as const),
+              status: input.completed ? ('DONE' as const) : ('TODO' as const),
               completed: input.completed,
             }
           : {}),
@@ -89,11 +84,7 @@ export async function updateTask(
   return toTaskDto(task);
 }
 
-export async function deleteTask(
-  userId: string,
-  ideaId: string,
-  taskId: string,
-): Promise<void> {
+export async function deleteTask(userId: string, ideaId: string, taskId: string): Promise<void> {
   await assertIdeaOwnership(userId, ideaId);
 
   const existing = await prisma.task.findFirst({
@@ -102,7 +93,7 @@ export async function deleteTask(
   });
 
   if (!existing) {
-    throw new NotFoundError("Task not found");
+    throw new NotFoundError('Task not found');
   }
 
   await prisma.task.delete({ where: { id: taskId } });

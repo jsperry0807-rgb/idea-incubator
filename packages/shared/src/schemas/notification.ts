@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { cidSchema } from "./common";
+import { z } from 'zod';
+import { cidSchema } from './common';
 
 export const notificationListQuerySchema = z.object({
   unread: z.coerce.boolean().optional(),

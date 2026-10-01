@@ -22,39 +22,56 @@ Is it auth (user + token)?         → React Context
 
 ```ts
 // Ideas
-['ideas']                          // list with filters
-['ideas', { status, priority, tag, search, page, sort }]
-['idea', ideaId]                   // single idea
-['pipeline']                       // kanban data
-
-// Planning
-['planning', ideaId, section]      // single section content
-
-// Tasks
-['tasks', ideaId]                  // task list
-
-// Comments
-['comments', ideaId]               // comment list
-
-// Shares
-['shares', ideaId]                 // share list
-['shared-with-me']                 // ideas shared with user
-
-// Tags
-['tags']                           // user's tags
-
-// Dashboard
-['dashboard', 'stats']             // aggregate stats
-['dashboard', 'activity']          // recent activity
-
-// Notifications
-['notifications']                  // notification list
-['notifications', 'unread-count']  // unread count for bell badge
+[
+  'ideas',
+] // list with filters
+[('ideas', { status, priority, tag, search, page, sort })][
+  ('idea', ideaId)
+] // single idea
+[
+  'pipeline'
+] // kanban data
+[
+  // Planning
+  ('planning', ideaId, section)
+] // single section content
+[
+  // Tasks
+  ('tasks', ideaId)
+] // task list
+[
+  // Comments
+  ('comments', ideaId)
+] // comment list
+[
+  // Shares
+  ('shares', ideaId)
+] // share list
+[
+  'shared-with-me'
+] // ideas shared with user
+[
+  // Tags
+  'tags'
+] // user's tags
+[
+  // Dashboard
+  ('dashboard', 'stats')
+] // aggregate stats
+[
+  ('dashboard', 'activity')
+] // recent activity
+[
+  // Notifications
+  'notifications'
+] // notification list
+[('notifications', 'unread-count')]; // unread count for bell badge
 ```
 
 ### Mutations
 
 Every create/update/delete is a mutation with:
+
 - **Optimistic updates** where safe (Kanban drag, task checkbox, status change)
 - **Invalidation** of related queries on success
 - **Toast notifications** on error
@@ -117,11 +134,13 @@ interface UIState {
 **Purpose:** Auth state only (user, login, logout, refresh).
 
 **Why Context for auth but not other state?**
+
 - Auth changes infrequently (login/logout only)
 - Nearly every component needs it (layout, protected routes, header)
 - No performance concerns (rare re-renders)
 
 **Why NOT Context for ideas/dashboard/etc?**
+
 - High-frequency updates cause unnecessary re-renders
 - No built-in caching or background refetch
 - TanStack Query handles all of this better
@@ -149,16 +168,16 @@ interface AuthContextValue {
 
 ### Forms in the App
 
-| Form | Location | Fields |
-|------|----------|--------|
-| Login | `feature/auth/` | email, password |
-| Register | `feature/auth/` | name, email, password, confirmPassword |
-| Create Idea | `feature/ideas/` | title, description, status, priority, tagIds |
-| Edit Idea | `feature/ideas/` | title, description, status, priority, tagIds |
-| Add Comment | `feature/idea-detail/` | content |
-| Add Task | `feature/idea-detail/` | title, milestone |
-| Share Idea | `feature/collaboration/` | email, role |
-| Create Tag | `feature/tags/` | name, color |
+| Form        | Location                 | Fields                                       |
+| ----------- | ------------------------ | -------------------------------------------- |
+| Login       | `feature/auth/`          | email, password                              |
+| Register    | `feature/auth/`          | name, email, password, confirmPassword       |
+| Create Idea | `feature/ideas/`         | title, description, status, priority, tagIds |
+| Edit Idea   | `feature/ideas/`         | title, description, status, priority, tagIds |
+| Add Comment | `feature/idea-detail/`   | content                                      |
+| Add Task    | `feature/idea-detail/`   | title, milestone                             |
+| Share Idea  | `feature/collaboration/` | email, role                                  |
+| Create Tag  | `feature/tags/`          | name, color                                  |
 
 ### Pattern
 
@@ -170,7 +189,11 @@ const schema = z.object({
 });
 
 function CreateIdeaForm() {
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(schema),
     defaultValues: { status: 'IDEA' },
   });

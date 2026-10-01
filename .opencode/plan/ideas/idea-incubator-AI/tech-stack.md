@@ -2,36 +2,36 @@
 
 ## Core Stack
 
-| Layer | Technology | Notes |
-| ----- | ---------- | ----- |
-| Frontend | React 19 + Vite 8 | Existing SPA; no framework change |
-| Routing | React Router 7 | Interview panel mounts inside existing IdeaDetailPage |
-| Server state | TanStack Query 5 | `usePlanningSection` pattern reused for interview state |
-| HTTP | Axios | Existing instance; needs a separate streaming path (see Notes) |
-| Backend | Express 5 | REST API; no framework change |
-| Validation | Zod 4 | Interview contracts live in `packages/shared`, mirroring `planning.ts` |
-| Database | PostgreSQL | One new `Interview` table |
-| ORM | Prisma 7 (pg adapter) | Migration only; no existing model changes beyond the enum |
-| Auth | `jose` JWT + `assertIdeaOwnership` | No new auth surface |
-| Storage | `LocalFileStore` (existing) | Plan output reuses the planning write path |
-| i18n | i18next (en / es / fr) | All three locales required |
-| UI | `@repo/ui` | Reuse `Card`, `Button`, `Badge`, `Spinner`, `Modal` |
+| Layer        | Technology                         | Notes                                                                  |
+| ------------ | ---------------------------------- | ---------------------------------------------------------------------- |
+| Frontend     | React 19 + Vite 8                  | Existing SPA; no framework change                                      |
+| Routing      | React Router 7                     | Interview panel mounts inside existing IdeaDetailPage                  |
+| Server state | TanStack Query 5                   | `usePlanningSection` pattern reused for interview state                |
+| HTTP         | Axios                              | Existing instance; needs a separate streaming path (see Notes)         |
+| Backend      | Express 5                          | REST API; no framework change                                          |
+| Validation   | Zod 4                              | Interview contracts live in `packages/shared`, mirroring `planning.ts` |
+| Database     | PostgreSQL                         | One new `Interview` table                                              |
+| ORM          | Prisma 7 (pg adapter)              | Migration only; no existing model changes beyond the enum              |
+| Auth         | `jose` JWT + `assertIdeaOwnership` | No new auth surface                                                    |
+| Storage      | `LocalFileStore` (existing)        | Plan output reuses the planning write path                             |
+| i18n         | i18next (en / es / fr)             | All three locales required                                             |
+| UI           | `@repo/ui`                         | Reuse `Card`, `Button`, `Badge`, `Spinner`, `Modal`                    |
 
 ## New Additions
 
-| Technology | Why | Risk |
-| ---------- | --- | ---- |
-| Provider LLM client (own thin wrapper) | Interview needs structured JSON *and* prose from one call; no existing dependency covers this | Low — internal interface, provider swappable behind `LlmClient` |
-| `vitest` | Zero tests exist today; the reducer is pure and is the highest-value first test target | Low — dev dependency only |
-| `msw` | Mock LLM HTTP in integration tests without a real key | Low — dev dependency only |
-| `zod-to-json-schema` (or hand-rolled) | Sending Zod contracts to the provider for structured output | Low |
+| Technology                             | Why                                                                                           | Risk                                                            |
+| -------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| Provider LLM client (own thin wrapper) | Interview needs structured JSON _and_ prose from one call; no existing dependency covers this | Low — internal interface, provider swappable behind `LlmClient` |
+| `vitest`                               | Zero tests exist today; the reducer is pure and is the highest-value first test target        | Low — dev dependency only                                       |
+| `msw`                                  | Mock LLM HTTP in integration tests without a real key                                         | Low — dev dependency only                                       |
+| `zod-to-json-schema` (or hand-rolled)  | Sending Zod contracts to the provider for structured output                                   | Low                                                             |
 
 **Deliberately not added:**
 
-| Not adding | Why |
-| ----------- | --- |
-| LangGraph / LangChain | ~6-node machine; durable state is one Postgres row. See `architecture.md` |
-| `brainstorm-mcp` | stdio MCP server for coding agents, not a library or HTTP API. Its synthesis *prompt* is ported instead |
+| Not adding               | Why                                                                                                                               |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| LangGraph / LangChain    | ~6-node machine; durable state is one Postgres row. See `architecture.md`                                                         |
+| `brainstorm-mcp`         | stdio MCP server for coding agents, not a library or HTTP API. Its synthesis _prompt_ is ported instead                           |
 | `chatfield` (Python pkg) | Requires a schema known up front, which defeats dynamic decision discovery. Tail-only, flag-gated, deferred past the core feature |
 
 ## Database Choice

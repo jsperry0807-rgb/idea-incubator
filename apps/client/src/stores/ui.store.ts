@@ -1,24 +1,26 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
-type Theme = "light" | "dark" | "system";
+type Theme = 'light' | 'dark' | 'system';
 
-const THEME_STORAGE_KEY = "app.theme";
+const THEME_STORAGE_KEY = 'app.theme';
 
 function getInitialTheme(): Theme {
-  const stored = typeof window !== "undefined" ? window.localStorage.getItem(THEME_STORAGE_KEY) : null;
-  if (stored === "light" || stored === "dark" || stored === "system") {
+  const stored =
+    typeof window !== 'undefined' ? window.localStorage.getItem(THEME_STORAGE_KEY) : null;
+  if (stored === 'light' || stored === 'dark' || stored === 'system') {
     return stored;
   }
-  return "system";
+  return 'system';
 }
 
-export type IdeasViewMode = "grid" | "list";
+export type IdeasViewMode = 'grid' | 'list';
 
-const VIEW_MODE_STORAGE_KEY = "app.ideasView";
+const VIEW_MODE_STORAGE_KEY = 'app.ideasView';
 
 function getInitialViewMode(): IdeasViewMode {
-  const stored = typeof window !== "undefined" ? window.localStorage.getItem(VIEW_MODE_STORAGE_KEY) : null;
-  return stored === "list" ? "list" : "grid";
+  const stored =
+    typeof window !== 'undefined' ? window.localStorage.getItem(VIEW_MODE_STORAGE_KEY) : null;
+  return stored === 'list' ? 'list' : 'grid';
 }
 
 interface ModalState {
@@ -48,14 +50,15 @@ interface UIState {
 function applyTheme(theme: Theme) {
   const root = document.documentElement;
   const resolvedDark =
-    theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    theme === 'dark' ||
+    (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   if (resolvedDark) {
-    root.classList.add("dark");
-    root.setAttribute("data-theme", "dark");
+    root.classList.add('dark');
+    root.setAttribute('data-theme', 'dark');
   } else {
-    root.classList.remove("dark");
-    root.setAttribute("data-theme", "light");
+    root.classList.remove('dark');
+    root.setAttribute('data-theme', 'light');
   }
 
   try {
@@ -76,13 +79,13 @@ export const useUIStore = create<UIState>((set, get) => ({
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
 
   setTheme: (theme) => {
-    if (typeof window !== "undefined") applyTheme(theme);
+    if (typeof window !== 'undefined') applyTheme(theme);
     set({ theme });
   },
 
   toggleTheme: () => {
     const current = get().theme;
-    const next: Theme = current === "system" ? "dark" : current === "dark" ? "light" : "dark";
+    const next: Theme = current === 'system' ? 'dark' : current === 'dark' ? 'light' : 'dark';
     get().setTheme(next);
   },
 
@@ -90,7 +93,7 @@ export const useUIStore = create<UIState>((set, get) => ({
   closeModal: () => set({ modal: { isOpen: false, contentId: null } }),
 
   setIdeasViewMode: (mode) => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       try {
         window.localStorage.setItem(VIEW_MODE_STORAGE_KEY, mode);
       } catch {
@@ -101,18 +104,16 @@ export const useUIStore = create<UIState>((set, get) => ({
   },
 
   toggleIdeasViewMode: () => {
-    const next: IdeasViewMode = get().ideasViewMode === "grid" ? "list" : "grid";
+    const next: IdeasViewMode = get().ideasViewMode === 'grid' ? 'list' : 'grid';
     get().setIdeasViewMode(next);
   },
 }));
 
-if (typeof window !== "undefined") {
+if (typeof window !== 'undefined') {
   applyTheme(useUIStore.getState().theme);
-  window
-    .matchMedia("(prefers-color-scheme: dark)")
-    .addEventListener("change", () => {
-      if (useUIStore.getState().theme === "system") {
-        applyTheme("system");
-      }
-    });
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (useUIStore.getState().theme === 'system') {
+      applyTheme('system');
+    }
+  });
 }

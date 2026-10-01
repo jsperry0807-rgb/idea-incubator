@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { PLANNING_SECTION_NAMES, type PlanningSectionName } from "@repo/shared";
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { PLANNING_SECTION_NAMES, type PlanningSectionName } from '@repo/shared';
 
-import { PlanningSection } from "./PlanningSection";
+import { PlanningSection } from './PlanningSection';
 
 export interface PlanningAccordionProps {
   ideaId: string;
@@ -10,9 +10,7 @@ export interface PlanningAccordionProps {
 
 export function PlanningAccordion({ ideaId }: PlanningAccordionProps) {
   const { t } = useTranslation();
-  const [requested, setRequested] = useState<
-    Partial<Record<PlanningSectionName, boolean>>
-  >({});
+  const [requested, setRequested] = useState<Partial<Record<PlanningSectionName, boolean>>>({});
 
   return (
     <div className="flex flex-col items-stretch gap-2">
@@ -22,9 +20,7 @@ export function PlanningAccordion({ ideaId }: PlanningAccordionProps) {
           className="group rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-bg)]"
           onToggle={(event) => {
             if (event.currentTarget.open) {
-              setRequested((prev) =>
-                prev[section] ? prev : { ...prev, [section]: true },
-              );
+              setRequested((prev) => (prev[section] ? prev : { ...prev, [section]: true }));
             }
           }}
         >
@@ -32,9 +28,7 @@ export function PlanningAccordion({ ideaId }: PlanningAccordionProps) {
             {t(`ideas.planning.sections.${section}`)}
             <ChevronDown className="text-[var(--color-muted)] transition-transform duration-150 group-open:rotate-180" />
           </summary>
-          {requested[section] ? (
-            <PlanningSection ideaId={ideaId} section={section} />
-          ) : null}
+          {requested[section] ? <PlanningSection ideaId={ideaId} section={section} /> : null}
         </details>
       ))}
     </div>

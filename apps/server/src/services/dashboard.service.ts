@@ -3,14 +3,14 @@ import {
   type ActivityItem,
   type DashboardStats,
   type IdeaStatus,
-} from "@repo/shared";
+} from '@repo/shared';
 
-import prisma from "../lib/prisma";
+import prisma from '../lib/prisma';
 
 export async function getStats(userId: string): Promise<DashboardStats> {
   const [statusRows, totalTasks, completedTasks] = await prisma.$transaction([
     prisma.idea.groupBy({
-      by: ["status"],
+      by: ['status'],
       where: { userId },
       _count: { id: true },
     }),
@@ -24,9 +24,10 @@ export async function getStats(userId: string): Promise<DashboardStats> {
     }),
   ]);
 
-  const byStatus = Object.fromEntries(
-    IDEA_STATUS_VALUES.map((status) => [status, 0]),
-  ) as Record<IdeaStatus, number>;
+  const byStatus = Object.fromEntries(IDEA_STATUS_VALUES.map((status) => [status, 0])) as Record<
+    IdeaStatus,
+    number
+  >;
 
   let totalIdeas = 0;
   for (const row of statusRows) {
@@ -57,7 +58,7 @@ export async function getActivity(userId: string): Promise<ActivityItem[]> {
         ideaId: true,
         idea: { select: { title: true } },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: 'desc' },
     }),
     prisma.share.findMany({
       where: { idea: { userId } },
@@ -68,7 +69,7 @@ export async function getActivity(userId: string): Promise<ActivityItem[]> {
         ideaId: true,
         idea: { select: { title: true } },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: 'desc' },
     }),
   ]);
 
@@ -77,7 +78,7 @@ export async function getActivity(userId: string): Promise<ActivityItem[]> {
   for (const idea of ideas) {
     items.push({
       id: `idea:${idea.id}`,
-      type: "IDEA_CREATED",
+      type: 'IDEA_CREATED',
       ideaId: idea.id,
       ideaTitle: idea.title,
       createdAt: idea.createdAt.toISOString(),
@@ -86,7 +87,7 @@ export async function getActivity(userId: string): Promise<ActivityItem[]> {
     if (idea.updatedAt.getTime() > idea.createdAt.getTime() + 1000) {
       items.push({
         id: `idea-updated:${idea.id}`,
-        type: "IDEA_UPDATED",
+        type: 'IDEA_UPDATED',
         ideaId: idea.id,
         ideaTitle: idea.title,
         createdAt: idea.updatedAt.toISOString(),
@@ -97,7 +98,7 @@ export async function getActivity(userId: string): Promise<ActivityItem[]> {
   for (const comment of comments) {
     items.push({
       id: `comment:${comment.id}`,
-      type: "COMMENT",
+      type: 'COMMENT',
       ideaId: comment.ideaId,
       ideaTitle: comment.idea.title,
       createdAt: comment.createdAt.toISOString(),
@@ -108,7 +109,7 @@ export async function getActivity(userId: string): Promise<ActivityItem[]> {
   for (const share of shares) {
     items.push({
       id: `share:${share.id}`,
-      type: "SHARE",
+      type: 'SHARE',
       ideaId: share.ideaId,
       ideaTitle: share.idea.title,
       createdAt: share.createdAt.toISOString(),

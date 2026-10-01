@@ -1,9 +1,9 @@
-import { InterviewAgent } from "../graph";
-import { runLoop } from "../loop";
-import { advance, type Answer, type InterviewEvent } from "../reducer";
-import { emptyCoverage, type InterviewPhase, type InterviewState } from "../state";
-import { ScriptedTraceClient, type TraceScript } from "./scripted-client";
-import type { SeedIdea } from "./index";
+import { InterviewAgent } from '../graph';
+import { runLoop } from '../loop';
+import { advance, type Answer, type InterviewEvent } from '../reducer';
+import { emptyCoverage, type InterviewPhase, type InterviewState } from '../state';
+import { ScriptedTraceClient, type TraceScript } from './scripted-client';
+import type { SeedIdea } from './index';
 
 /**
  * Golden-trace driver: replays a fixed sequence of user turns through the real
@@ -12,9 +12,9 @@ import type { SeedIdea } from "./index";
  */
 
 export type UserTurn =
-  | { kind: "answer"; optionId: string; freeText?: string | null }
-  | { kind: "skip" }
-  | { kind: "defer"; reason?: string };
+  | { kind: 'answer'; optionId: string; freeText?: string | null }
+  | { kind: 'skip' }
+  | { kind: 'defer'; reason?: string };
 
 export interface TraceRecord {
   /** Point label per asked question, in ask order. */
@@ -49,24 +49,24 @@ export function initialState(seed: SeedIdea): InterviewState {
     current: null,
     synthesis: null,
     coverage: emptyCoverage(),
-    phase: "CLASSIFY",
+    phase: 'CLASSIFY',
     turn: 0,
   };
 }
 
 /** Strips the id hash so traces read in terms of the authored labels. */
 function labelOf(id: string): string {
-  return id.replace(/-[a-f0-9]{4}$/, "");
+  return id.replace(/-[a-f0-9]{4}$/, '');
 }
 
 export async function runTrace(
   seed: SeedIdea,
   script: TraceScript,
   turns: UserTurn[],
-  opts: { locale?: string; synthesisModel?: string } = {},
+  opts: { locale?: string; synthesisModel?: string } = {}
 ): Promise<TraceRecord> {
   const client = new ScriptedTraceClient(script);
-  const agent = new InterviewAgent(client, opts.locale ?? "en", {
+  const agent = new InterviewAgent(client, opts.locale ?? 'en', {
     ...(opts.synthesisModel ? { synthesisModel: opts.synthesisModel } : {}),
   });
 
@@ -84,7 +84,7 @@ export async function runTrace(
   let state = initialState(seed);
 
   // Opening move: classify, then the first question renders.
-  const opened = await runLoop(agent, state, [{ type: "START" }]);
+  const opened = await runLoop(agent, state, [{ type: 'START' }]);
   state = opened.state;
   record.askedLabels.push(labelOf(state.current!.point.id));
 
@@ -93,10 +93,10 @@ export async function runTrace(
     if (!point) break;
 
     const events: InterviewEvent[] =
-      turn.kind === "answer"
+      turn.kind === 'answer'
         ? [
             {
-              type: "ANSWERED",
+              type: 'ANSWERED',
               answer: {
                 pointId: point.id,
                 optionId: turn.optionId,
@@ -105,9 +105,9 @@ export async function runTrace(
               } satisfies Answer,
             },
           ]
-        : turn.kind === "skip"
-          ? [{ type: "SKIPPED", pointId: point.id }]
-          : [{ type: "DEFERRED", pointId: point.id, reason: turn.reason }];
+        : turn.kind === 'skip'
+          ? [{ type: 'SKIPPED', pointId: point.id }]
+          : [{ type: 'DEFERRED', pointId: point.id, reason: turn.reason }];
 
     const result = await runLoop(agent, state, events);
     state = result.state;

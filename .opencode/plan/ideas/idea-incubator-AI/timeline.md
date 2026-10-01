@@ -2,14 +2,14 @@
 
 ## Phases
 
-| Phase | Weeks | Focus |
-| ----- | ----- | ---- |
-| 11 | 23–24 | Project types (`SAAS` / `PHYSICAL`), reclassification, interview contracts, LLM client |
-| 12 | 25–27 | Pure reducer engine, prompts, graph loop, interview routes |
-| 13 | 28–29 | Golden traces, stuck detection, synthesis node |
-| 14 | 30–31 | Plan generation, diff preview, Task rows |
-| 15 | 32–33 | Client interview panel, decision log, plan review |
-| 16 | 34 | Tests, CI fixes, tail collection behind flag |
+| Phase | Weeks | Focus                                                                                  |
+| ----- | ----- | -------------------------------------------------------------------------------------- |
+| 11    | 23–24 | Project types (`SAAS` / `PHYSICAL`), reclassification, interview contracts, LLM client |
+| 12    | 25–27 | Pure reducer engine, prompts, graph loop, interview routes                             |
+| 13    | 28–29 | Golden traces, stuck detection, synthesis node                                         |
+| 14    | 30–31 | Plan generation, diff preview, Task rows                                               |
+| 15    | 32–33 | Client interview panel, decision log, plan review                                      |
+| 16    | 34    | Tests, CI fixes, tail collection behind flag                                           |
 
 **Total: ~12 weeks** (weeks 23–34, continuing from Phase 10 at week 22)
 

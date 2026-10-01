@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Button, Modal } from "@repo/ui";
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Button, Modal } from '@repo/ui';
 
-import { InviteForm } from "./InviteForm";
-import { ShareList } from "./ShareList";
+import { InviteForm } from './InviteForm';
+import { ShareList } from './ShareList';
 
 export interface ShareModalProps {
   open: boolean;
@@ -28,28 +28,28 @@ export function ShareModal({ open, onClose, ideaId, ideaTitle }: ShareModalProps
     <Modal
       open={open}
       onClose={onClose}
-      title={t("ideas.sharing.title")}
+      title={t('ideas.sharing.title')}
       footer={
         <Button variant="ghost" onClick={onClose}>
-          {t("ideas.sharing.cancel")}
+          {t('ideas.sharing.cancel')}
         </Button>
       }
     >
       <p className="mb-4 text-sm text-[var(--color-muted)]">
-        {t("ideas.sharing.subtitle", { idea: ideaTitle })}
+        {t('ideas.sharing.subtitle', { idea: ideaTitle })}
       </p>
 
       <div key={resetKey} className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
           <h3 className="text-xs font-medium uppercase tracking-wide text-[var(--color-muted)]">
-            {t("ideas.sharing.inviteTitle")}
+            {t('ideas.sharing.inviteTitle')}
           </h3>
           <InviteForm ideaId={ideaId} />
         </div>
 
         <div className="flex flex-col gap-2 border-t border-[var(--color-border)] pt-4">
           <h3 className="text-xs font-medium uppercase tracking-wide text-[var(--color-muted)]">
-            {t("ideas.sharing.accessListTitle")}
+            {t('ideas.sharing.accessListTitle')}
           </h3>
           <ShareList ideaId={ideaId} />
         </div>

@@ -1,19 +1,19 @@
-import { useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { toast } from "@repo/ui";
-import type { Comment } from "@repo/shared";
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast } from '@repo/ui';
+import type { Comment } from '@repo/shared';
 
-import { useAuth } from "@features/auth/hooks/useAuth";
-import { useCommentMutations } from "../../hooks/useCommentMutations";
-import { CommentForm } from "./CommentForm";
+import { useAuth } from '@features/auth/hooks/useAuth';
+import { useCommentMutations } from '../../hooks/useCommentMutations';
+import { CommentForm } from './CommentForm';
 
 const AVATAR_COLORS = [
-  "bg-[var(--color-accent)]/15 text-[var(--color-accent)]",
-  "bg-[var(--color-info)]/15 text-[var(--color-info)]",
-  "bg-[var(--color-success)]/15 text-[var(--color-success)]",
-  "bg-[var(--color-warning)]/15 text-[var(--color-warning)]",
-  "bg-[var(--color-danger)]/15 text-[var(--color-danger)]",
-  "bg-[var(--color-accent-cta)]/15 text-[var(--color-accent-cta)]",
+  'bg-[var(--color-accent)]/15 text-[var(--color-accent)]',
+  'bg-[var(--color-info)]/15 text-[var(--color-info)]',
+  'bg-[var(--color-success)]/15 text-[var(--color-success)]',
+  'bg-[var(--color-warning)]/15 text-[var(--color-warning)]',
+  'bg-[var(--color-danger)]/15 text-[var(--color-danger)]',
+  'bg-[var(--color-accent-cta)]/15 text-[var(--color-accent-cta)]',
 ];
 
 function initials(name: string): string {
@@ -21,16 +21,15 @@ function initials(name: string): string {
     .split(/\s+/)
     .filter(Boolean)
     .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
+    .map((part) => part[0]?.toUpperCase() ?? '')
+    .join('');
 }
 
 function CommentAvatar({ comment }: { comment: Comment }) {
   const name = comment.user?.name ?? comment.userId;
   const color =
     AVATAR_COLORS[
-      [...name].reduce((acc, char) => acc + char.charCodeAt(0), 0) %
-        AVATAR_COLORS.length
+      [...name].reduce((acc, char) => acc + char.charCodeAt(0), 0) % AVATAR_COLORS.length
     ];
 
   if (comment.user?.avatarUrl) {
@@ -60,12 +59,7 @@ export interface CommentItemProps {
   dateFormatter: Intl.DateTimeFormat;
 }
 
-export function CommentItem({
-  comment,
-  ideaId,
-  ideaOwnerId,
-  dateFormatter,
-}: CommentItemProps) {
+export function CommentItem({ comment, ideaId, ideaOwnerId, dateFormatter }: CommentItemProps) {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { update, remove } = useCommentMutations(ideaId);
@@ -80,14 +74,14 @@ export function CommentItem({
 
   const dateLabel = useMemo(
     () => dateFormatter.format(new Date(comment.createdAt)),
-    [dateFormatter, comment.createdAt],
+    [dateFormatter, comment.createdAt]
   );
 
   async function handleDelete() {
     try {
       await remove.mutateAsync(comment.id);
     } catch {
-      toast.error(t("ideas.comments.deleteError"));
+      toast.error(t('ideas.comments.deleteError'));
     }
   }
 
@@ -98,13 +92,11 @@ export function CommentItem({
       <CommentAvatar comment={comment} />
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-baseline gap-x-2 text-sm">
-          <span className="font-medium text-[var(--color-fg)]">
-            {comment.user?.name}
-          </span>
+          <span className="font-medium text-[var(--color-fg)]">{comment.user?.name}</span>
           <time className="text-xs text-[var(--color-muted)]">{dateLabel}</time>
           {edited ? (
             <span className="text-xs italic text-[var(--color-muted)]">
-              {t("ideas.comments.edited")}
+              {t('ideas.comments.edited')}
             </span>
           ) : null}
         </div>
@@ -115,7 +107,7 @@ export function CommentItem({
               ideaId={ideaId}
               commentId={comment.id}
               initialValue={comment.content}
-              submitLabel={t("ideas.comments.save")}
+              submitLabel={t('ideas.comments.save')}
               onCancel={() => setEditing(false)}
             />
           </div>
@@ -134,7 +126,7 @@ export function CommentItem({
                 disabled={busy}
                 className="text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-accent)] disabled:pointer-events-none disabled:opacity-50"
               >
-                {t("ideas.comments.edit")}
+                {t('ideas.comments.edit')}
               </button>
             ) : null}
             {canDelete ? (
@@ -146,7 +138,7 @@ export function CommentItem({
                     disabled={busy}
                     className="text-xs font-medium text-[var(--color-danger)] transition-colors hover:opacity-80 disabled:pointer-events-none disabled:opacity-50"
                   >
-                    {t("ideas.comments.deleteConfirm")}
+                    {t('ideas.comments.deleteConfirm')}
                   </button>
                   <button
                     type="button"
@@ -154,7 +146,7 @@ export function CommentItem({
                     disabled={busy}
                     className="text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-fg)] disabled:pointer-events-none disabled:opacity-50"
                   >
-                    {t("ideas.comments.cancel")}
+                    {t('ideas.comments.cancel')}
                   </button>
                 </>
               ) : (
@@ -164,7 +156,7 @@ export function CommentItem({
                   disabled={busy}
                   className="text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-danger)] disabled:pointer-events-none disabled:opacity-50"
                 >
-                  {t("ideas.comments.delete")}
+                  {t('ideas.comments.delete')}
                 </button>
               )
             ) : null}
