@@ -12,6 +12,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r --if-present test",
     "clean": "pnpm -r clean"
   },
   "devEngines": {
