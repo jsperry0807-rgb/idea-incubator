@@ -87,7 +87,7 @@ model Idea {
   id          String       @id @default(cuid())
   userId      String
   title       String
-  slug        String       @unique
+  slug        String
   description String?
   status      IdeaStatus   @default(IDEA)
   priority    IdeaPriority @default(NONE)
@@ -102,7 +102,11 @@ model Idea {
   shares  Share[]
   interviews Interview[]
 
-  @@index([userId, status])
+  // Slugs are display identifiers, not routing keys: nothing resolves an idea by
+// slug. Uniqueness is therefore per-user, matching the collision probe in
+// idea.service.ts, so two users can each own a "cookie-tycoon".
+@@unique([userId, slug])
+@@index([userId, status])
   @@index([userId, createdAt(sort: Desc)])
   @@map("ideas")
 }

@@ -1,6 +1,7 @@
 import type { Prisma } from '../generated/prisma/client';
+import { Prisma as PrismaNS } from '../generated/prisma/client';
 import prisma from '../lib/prisma';
-import { NotFoundError } from '../lib/errors';
+import { ConflictError, NotFoundError } from '../lib/errors';
 import { ensureUniqueSlug, slugify } from '../lib/slug';
 import { sectionsForType } from '../lib/planningTemplates';
 import { storage } from './storage.service';
@@ -171,26 +172,29 @@ export async function getPipeline(userId: string): Promise<IdeaPipeline> {
 }
 
 export async function createIdea(userId: string, input: CreateIdeaInput) {
-  const slug = await generateUniqueSlug(userId, input.title);
   const projectType = input.projectType ?? 'SOFTWARE';
 
-  const idea = await prisma.idea.create({
-    data: {
-      userId,
-      title: input.title,
-      slug,
-      description: input.description ?? null,
-      status: input.status ?? 'IDEA',
-      priority: input.priority ?? 'NONE',
-      projectType,
-      tags: input.tagIds?.length
-        ? {
-            create: input.tagIds.map((tagId) => ({ tagId })),
-          }
-        : undefined,
-    },
-    include: IDEA_INCLUDE,
-  });
+  const idea = await withSlugCollisionRetry(
+    () => generateUniqueSlug(userId, input.title),
+    (slug) =>
+      prisma.idea.create({
+        data: {
+          userId,
+          title: input.title,
+          slug,
+          description: input.description ?? null,
+          status: input.status ?? 'IDEA',
+          priority: input.priority ?? 'NONE',
+          projectType,
+          tags: input.tagIds?.length
+            ? {
+                create: input.tagIds.map((tagId) => ({ tagId })),
+              }
+            : undefined,
+        },
+        include: IDEA_INCLUDE,
+      })
+  );
 
   try {
     await storage.createIdeaFolder(userId, idea.id, projectType);
@@ -212,14 +216,10 @@ export async function updateIdea(userId: string, id: string, input: UpdateIdeaIn
     throw new NotFoundError('Idea not found');
   }
 
-  let slug: string | undefined;
-  if (input.title && input.title !== existing.title) {
-    slug = await generateUniqueSlug(userId, input.title, existing.id);
-  }
+  const renamesSlug = Boolean(input.title && input.title !== existing.title);
 
   const data: Prisma.IdeaUpdateInput = {
     ...(input.title !== undefined ? { title: input.title } : {}),
-    ...(slug !== undefined ? { slug } : {}),
     ...(input.description !== undefined ? { description: input.description ?? null } : {}),
     ...(input.status !== undefined ? { status: input.status } : {}),
     ...(input.priority !== undefined ? { priority: input.priority } : {}),
@@ -233,11 +233,13 @@ export async function updateIdea(userId: string, id: string, input: UpdateIdeaIn
     };
   }
 
-  const idea = await prisma.idea.update({
-    where: { id },
-    data,
-    include: IDEA_INCLUDE,
-  });
+  const idea = renamesSlug
+    ? await withSlugCollisionRetry(
+        () => generateUniqueSlug(userId, input.title!, existing.id),
+        (slug) =>
+          prisma.idea.update({ where: { id }, data: { ...data, slug }, include: IDEA_INCLUDE })
+      )
+    : await prisma.idea.update({ where: { id }, data, include: IDEA_INCLUDE });
 
   if (input.projectType && input.projectType !== existing.projectType) {
     await scaffoldSectionsForType(userId, id, input.projectType).catch(() => {});
@@ -295,6 +297,37 @@ async function generateUniqueSlug(
     base,
     collisions.map((c) => c.slug)
   );
+}
+
+/** Prisma's unique-constraint violation. */
+function isUniqueViolation(err: unknown): boolean {
+  return err instanceof PrismaNS.PrismaClientKnownRequestError && err.code === 'P2002';
+}
+
+/**
+ * Resolves a slug and retries once per collision.
+ *
+ * The probe in {@link generateUniqueSlug} and the write are not atomic, so two
+ * concurrent creates can both settle on the same slug. That surfaces as P2002,
+ * which the error handler does not translate and would otherwise reach the
+ * client as a 500. Re-running the probe picks up the row the winner just wrote.
+ */
+const SLUG_COLLISION_RETRIES = 3;
+
+async function withSlugCollisionRetry<T>(
+  pickSlug: () => Promise<string>,
+  write: (slug: string) => Promise<T>
+): Promise<T> {
+  for (let attempt = 0; attempt <= SLUG_COLLISION_RETRIES; attempt++) {
+    const slug = await pickSlug();
+    try {
+      return await write(slug);
+    } catch (err) {
+      if (!isUniqueViolation(err)) throw err;
+    }
+  }
+
+  throw new ConflictError('Could not allocate a unique slug; please retry with a different title.');
 }
 
 export function toIdeaTags(ideaTags: { tagId: string; tag: Tag }[]) {
