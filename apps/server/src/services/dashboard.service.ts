@@ -43,11 +43,19 @@ export async function getStats(userId: string): Promise<DashboardStats> {
   };
 }
 
+/** The dashboard shows this many activity items. */
+const ACTIVITY_LIMIT = 10;
+
 export async function getActivity(userId: string): Promise<ActivityItem[]> {
+  // Each source is capped at the same limit as the final result. Without the cap
+  // this pulled three entire tables to return ten rows; with it, any row that
+  // could reach the final top-10 is still among its own source's newest rows.
   const [ideas, comments, shares] = await prisma.$transaction([
     prisma.idea.findMany({
       where: { userId },
       select: { id: true, title: true, createdAt: true, updatedAt: true },
+      orderBy: { createdAt: 'desc' },
+      take: ACTIVITY_LIMIT,
     }),
     prisma.comment.findMany({
       where: { idea: { userId } },
@@ -59,6 +67,7 @@ export async function getActivity(userId: string): Promise<ActivityItem[]> {
         idea: { select: { title: true } },
       },
       orderBy: { createdAt: 'desc' },
+      take: ACTIVITY_LIMIT,
     }),
     prisma.share.findMany({
       where: { idea: { userId } },
@@ -70,6 +79,7 @@ export async function getActivity(userId: string): Promise<ActivityItem[]> {
         idea: { select: { title: true } },
       },
       orderBy: { createdAt: 'desc' },
+      take: ACTIVITY_LIMIT,
     }),
   ]);
 
@@ -118,5 +128,5 @@ export async function getActivity(userId: string): Promise<ActivityItem[]> {
   }
 
   items.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-  return items.slice(0, 10);
+  return items.slice(0, ACTIVITY_LIMIT);
 }

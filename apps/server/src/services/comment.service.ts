@@ -4,6 +4,9 @@ import { assertIdeaAccess } from './idea.service';
 import { createNotification } from './notification.service';
 import type { Comment, CreateCommentInput, UpdateCommentInput } from '@repo/shared';
 
+/** Page size for a comment thread. Threads are read, not browsed, so this is generous. */
+const COMMENT_PAGE_SIZE = 100;
+
 export async function listComments(userId: string, ideaId: string): Promise<Comment[]> {
   await assertIdeaAccess(userId, ideaId);
 
@@ -13,6 +16,7 @@ export async function listComments(userId: string, ideaId: string): Promise<Comm
       user: { select: { id: true, name: true, avatarUrl: true } },
     },
     orderBy: { createdAt: 'desc' },
+    take: COMMENT_PAGE_SIZE,
   });
 
   return comments.map(toCommentDto);
@@ -23,24 +27,17 @@ export async function createComment(
   ideaId: string,
   input: CreateCommentInput
 ): Promise<Comment> {
-  const idea = await prisma.idea.findFirst({
+  // The shared helper, rather than the hand-rolled copy this used to carry. The
+  // copy had already drifted from it, so the two access paths could disagree.
+  await assertIdeaAccess(userId, ideaId);
+
+  const owner = await prisma.idea.findFirst({
     where: { id: ideaId },
     select: { id: true, userId: true, title: true },
   });
 
-  if (!idea) {
+  if (!owner) {
     throw new NotFoundError('Idea not found');
-  }
-
-  if (idea.userId !== userId) {
-    const share = await prisma.share.findUnique({
-      where: { ideaId_userId: { ideaId, userId } },
-      select: { id: true },
-    });
-
-    if (!share) {
-      throw new NotFoundError('Idea not found');
-    }
   }
 
   const comment = await prisma.comment.create({
@@ -54,17 +51,17 @@ export async function createComment(
     },
   });
 
-  if (idea.userId !== userId) {
+  if (owner.userId !== userId) {
     const commenter = await prisma.user.findUnique({
       where: { id: userId },
       select: { name: true },
     });
 
     await createNotification({
-      userId: idea.userId,
+      userId: owner.userId,
       type: 'COMMENT',
-      message: `${commenter?.name} commented on "${idea.title}"`,
-      ideaId: idea.id,
+      message: `${commenter?.name} commented on "${owner.title}"`,
+      ideaId: owner.id,
     });
   }
 

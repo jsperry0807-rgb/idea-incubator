@@ -15,10 +15,17 @@ export async function listNotifications(
   userId: string,
   query: NotificationListQuery
 ): Promise<{ items: Notification[]; unreadCount: number }> {
+  // Bounded. This returned every notification a user had ever received, which
+  // grows without limit for an account that has been active for long enough.
+  const pageSize = query.pageSize ?? 20;
+  const page = query.page ?? 1;
+
   const [notifications, unreadCount] = await prisma.$transaction([
     prisma.notification.findMany({
       where: { userId, ...(query.unread ? { read: false } : {}) },
       orderBy: { createdAt: 'desc' },
+      take: pageSize,
+      skip: (page - 1) * pageSize,
     }),
     prisma.notification.count({
       where: { userId, read: false },
