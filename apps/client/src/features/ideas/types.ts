@@ -13,7 +13,7 @@ export interface SortOption {
 }
 
 export interface IdeaFilters {
-  status?: string;
+  status?: IdeaStatus;
   priority?: IdeaPriority | '';
   tagId?: string;
   search?: string;
@@ -54,7 +54,7 @@ export const SORT_OPTIONS: SortOption[] = [
   },
 ];
 
-export const STATUS_TABS: Array<IdeaStatus | 'ALL'> = [
+export const STATUS_FILTERS: Array<IdeaStatus | 'ALL'> = [
   'ALL',
   'IDEA',
   'PLANNING',

@@ -2,7 +2,7 @@ import type { IdeaPriority, Tag } from '@repo/shared';
 import { IDEA_PRIORITY_VALUES } from '@repo/shared';
 import { useTranslation } from 'react-i18next';
 
-import { SORT_OPTIONS, STATUS_TABS, type IdeaFilters } from '../types';
+import { SORT_OPTIONS, STATUS_FILTERS, type IdeaFilters } from '../types';
 
 interface IdeaFiltersProps {
   filters: IdeaFilters;
@@ -18,16 +18,18 @@ export function IdeaFilters({ filters, tags, onChange }: IdeaFiltersProps) {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap gap-2" role="tablist" aria-label={t('ideas.filter.status')}>
-        {STATUS_TABS.map((tab) => {
-          const active = filters.status === tab || (tab === 'ALL' && !filters.status);
+      {/* These filter the list below rather than switch between panels, so they are
+          toggle buttons in a labelled group. The previous tablist/tab roles promised
+          aria-controls, arrow-key navigation and a tabpanel that never existed. */}
+      <div className="flex flex-wrap gap-2" role="group" aria-label={t('ideas.filter.status')}>
+        {STATUS_FILTERS.map((status) => {
+          const active = filters.status === status || (status === 'ALL' && !filters.status);
           return (
             <button
-              key={tab}
+              key={status}
               type="button"
-              role="tab"
-              aria-selected={active}
-              onClick={() => onChange({ status: tab === 'ALL' ? undefined : tab })}
+              aria-pressed={active}
+              onClick={() => onChange({ status: status === 'ALL' ? undefined : status })}
               className={[
                 'rounded-full border px-3 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]',
                 active
@@ -35,7 +37,7 @@ export function IdeaFilters({ filters, tags, onChange }: IdeaFiltersProps) {
                   : 'border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-muted)] hover:text-[var(--color-fg)]',
               ].join(' ')}
             >
-              {t(`ideas.status.${tab}`)}
+              {t(`ideas.status.${status}`)}
             </button>
           );
         })}
