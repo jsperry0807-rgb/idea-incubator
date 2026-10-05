@@ -44,11 +44,11 @@ export default function IdeasPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Link to={ROUTES.NEW_IDEA}>
-            <Button variant="primary" size="sm">
+          <Button asChild variant="primary" size="sm">
+            <Link to={ROUTES.NEW_IDEA} className="no-underline hover:no-underline">
               {t('ideas.create.newIdeaButton')}
-            </Button>
-          </Link>
+            </Link>
+          </Button>
           <button
             type="button"
             onClick={toggleViewMode}

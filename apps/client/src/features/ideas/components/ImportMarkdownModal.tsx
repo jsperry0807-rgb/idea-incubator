@@ -78,6 +78,7 @@ export function ImportMarkdownModal({
       open={open}
       onClose={onClose}
       title={t('ideas.planning.importTitle')}
+      closeLabel={t('app.close')}
       footer={
         <>
           <Button variant="ghost" onClick={onClose} disabled={importing}>

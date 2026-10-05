@@ -27,6 +27,7 @@ export function ShortcutsHelpModal({ open, onClose }: ShortcutsHelpModalProps) {
       open={open}
       onClose={onClose}
       title={t('shortcuts.title')}
+      closeLabel={t('app.close')}
       footer={
         <Button variant="ghost" onClick={onClose}>
           {t('shortcuts.close')}

@@ -252,7 +252,7 @@ export function CreateIdeaForm() {
 
         {tagsQuery.isLoading ? (
           <div className="flex justify-center py-4">
-            <Spinner />
+            <Spinner label={t('app.loading')} />
           </div>
         ) : (tagsQuery.data ?? []).length === 0 ? (
           <p className="text-sm text-[var(--color-muted)]">{t('ideas.create.tagsEmpty')}</p>

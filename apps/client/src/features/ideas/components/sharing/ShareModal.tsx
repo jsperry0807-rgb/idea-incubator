@@ -29,6 +29,7 @@ export function ShareModal({ open, onClose, ideaId, ideaTitle }: ShareModalProps
       open={open}
       onClose={onClose}
       title={t('ideas.sharing.title')}
+      closeLabel={t('app.close')}
       footer={
         <Button variant="ghost" onClick={onClose}>
           {t('ideas.sharing.cancel')}

@@ -180,7 +180,7 @@ export function WireframesSection({ ideaId }: { ideaId: string }) {
 
       {filesQuery.isLoading ? (
         <div className="flex justify-center py-4">
-          <Spinner />
+          <Spinner label={t('app.loading')} />
         </div>
       ) : files.length === 0 ? (
         <p className="text-sm text-[var(--color-muted)]">{t('ideas.wireframes.empty')}</p>
@@ -199,7 +199,12 @@ export function WireframesSection({ ideaId }: { ideaId: string }) {
         </div>
       )}
 
-      <Modal title={viewing ?? ''} open={Boolean(viewing)} onClose={() => setViewing(null)}>
+      <Modal
+        title={viewing ?? ''}
+        open={Boolean(viewing)}
+        onClose={() => setViewing(null)}
+        closeLabel={t('app.close')}
+      >
         <div className="flex flex-col gap-3">
           <iframe
             title={viewing ?? ''}

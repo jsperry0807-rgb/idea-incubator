@@ -29,7 +29,7 @@ export function IdeaTagEditor({ idea }: { idea: Idea }) {
   if (tagsQuery.isLoading) {
     return (
       <div className="flex justify-center py-4">
-        <Spinner />
+        <Spinner label={t('app.loading')} />
       </div>
     );
   }
