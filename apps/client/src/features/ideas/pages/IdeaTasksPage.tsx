@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ideaDetailPath } from '@config/routes';
 import { useIdea } from '../hooks/useIdea';
 import { TaskBoard } from '../components/TaskBoard';
-import { IdeaDetailSkeleton } from '../components/skeletons';
+import { IdeaDetailSkeleton } from '../components/IdeaSkeletons';
 
 export default function IdeaTasksPage() {
   const { id = '' } = useParams<{ id: string }>();

@@ -4,7 +4,7 @@ import { Card } from '@repo/ui';
 import { IDEA_STATUS_VALUES } from '@repo/shared';
 
 import { useDashboardStats } from '../hooks/useDashboardStats';
-import { StatsChartSkeleton } from './skeletons';
+import { StatsChartSkeleton } from './DashboardSkeletons';
 
 export function StatsChart() {
   const { t } = useTranslation();

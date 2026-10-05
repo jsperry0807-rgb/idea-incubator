@@ -11,7 +11,7 @@ import { IdeaGrid } from '../components/IdeaGrid';
 import { IdeaList } from '../components/IdeaListRow';
 import { IdeaFilters } from '../components/IdeaFilters';
 import { IdeaSearch } from '../components/IdeaSearch';
-import { IdeaGridSkeleton, IdeaListSkeleton } from '../components/skeletons';
+import { IdeaGridSkeleton, IdeaListSkeleton } from '../components/IdeaSkeletons';
 import type { IdeaFilters as IdeaFiltersState } from '../types';
 
 const DEFAULT_FILTERS: IdeaFiltersState = {

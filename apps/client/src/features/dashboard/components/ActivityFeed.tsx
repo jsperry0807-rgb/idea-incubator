@@ -6,7 +6,7 @@ import type { ActivityItem } from '@repo/shared';
 
 import { ideaDetailPath } from '@config/routes';
 import { useActivity } from '../hooks/useActivity';
-import { ActivityFeedSkeleton } from './skeletons';
+import { ActivityFeedSkeleton } from './DashboardSkeletons';
 
 const DOT_CLASSES: Record<ActivityItem['type'], string> = {
   IDEA_CREATED: 'bg-[var(--color-success)]',

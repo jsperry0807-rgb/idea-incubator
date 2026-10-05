@@ -3,7 +3,7 @@ import { EmptyState } from '@repo/ui';
 
 import { useSharedWithMe } from '../hooks/useSharedWithMe';
 import { SharedIdeaCard } from '../components/sharing/SharedIdeaCard';
-import { IdeaGridSkeleton } from '../components/skeletons';
+import { IdeaGridSkeleton } from '../components/IdeaSkeletons';
 
 export default function SharedIdeasPage() {
   const { t } = useTranslation();

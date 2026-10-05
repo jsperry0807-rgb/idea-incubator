@@ -6,7 +6,7 @@ import type { IdeaStatus, PipelineIdea } from '@repo/shared';
 
 import { ideaDetailPath } from '@config/routes';
 import { usePipeline } from '@/features/ideas/hooks/usePipeline';
-import { NeedsAttentionSkeleton } from './skeletons';
+import { NeedsAttentionSkeleton } from './DashboardSkeletons';
 
 const STALE_DAYS = 7;
 

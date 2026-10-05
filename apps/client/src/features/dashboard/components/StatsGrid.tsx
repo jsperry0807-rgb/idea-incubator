@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Card } from '@repo/ui';
 
 import { useDashboardStats } from '../hooks/useDashboardStats';
-import { StatsGridSkeleton } from './skeletons';
+import { StatsGridSkeleton } from './DashboardSkeletons';
 
 interface StatCardProps {
   label: string;

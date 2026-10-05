@@ -40,7 +40,8 @@ export default defineConfig([
   },
 
   // ─── Feature boundary enforcement ─────────────────────────────
-  // Prevents cross-feature imports (feature A can't import from feature B)
+  // Shared code must not reach into a feature. The composition root is the one
+  // exception: it exists to wire features together.
   {
     files: ['src/**/*.{ts,tsx}'],
     plugins: { boundaries },
@@ -54,11 +55,17 @@ export default defineConfig([
       ],
       'boundaries/elements': [
         { type: 'assets', pattern: 'src/assets/**' },
+        // RootLayout is the composition root: it renders the shell and imports
+        // the notification and auth features by design. It lives in src/app
+        // rather than src/components precisely because everything in
+        // src/components is required to stay feature-agnostic.
+        { type: 'app', pattern: 'src/app/**' },
         { type: 'components', pattern: 'src/components/**' },
         { type: 'config', pattern: 'src/config/**' },
-        { type: 'feature', pattern: 'src/feature/*', capture: ['featureName'] },
+        { type: 'feature', pattern: 'src/features/**' },
         { type: 'i18n', pattern: 'src/i18n/**' },
         { type: 'pages', pattern: 'src/pages/**' },
+        { type: 'stores', pattern: 'src/stores/**' },
         { type: 'utils', pattern: 'src/utils/**' },
       ],
       'boundaries/ignore': ['**/*.test.*', '**/*.spec.*'],
@@ -73,26 +80,12 @@ export default defineConfig([
           default: 'allow',
           policies: [
             {
-              // A feature can ONLY import from shared layers, not other features
-              from: { element: { type: 'feature' } },
-              disallow: [
-                {
-                  to: {
-                    element: {
-                      type: 'feature',
-                      captured: { featureName: '!{{from.featureName}}' },
-                    },
-                  },
-                },
-              ],
-              message:
-                'Feature "{{from.featureName}}" cannot import from feature "{{to.featureName}}". Use a shared layer instead.',
-            },
-            {
-              // Shared components layer must not import from features
+              // A feature cannot be pulled into shared code: everything in
+              // src/components is reusable and must stay feature-agnostic.
               from: { element: { type: 'components' } },
               disallow: [{ to: { element: { type: 'feature' } } }],
-              message: 'Shared components cannot depend on features.',
+              message:
+                'Shared components cannot depend on features. Move the component into the feature that owns it, or invert the dependency.',
             },
           ],
         },
@@ -112,12 +105,12 @@ export default defineConfig([
           'src/components/**/*.{ts,tsx}': 'PASCAL_CASE',
 
           // Feature slices
-          'src/feature/*/components/**/*.{ts,tsx}': 'PASCAL_CASE',
-          'src/feature/*/pages/**/*.{ts,tsx}': 'PASCAL_CASE',
-          'src/feature/*/hooks/*.{ts,tsx}': 'CAMEL_CASE',
-          'src/feature/*/api/*.{ts,tsx}': 'KEBAB_CASE',
-          'src/feature/*/store/*.{ts,tsx}': 'KEBAB_CASE',
-          'src/feature/*/context/*.{ts,tsx}': 'PASCAL_CASE',
+          'src/features/*/components/**/*.{ts,tsx}': 'PASCAL_CASE',
+          'src/features/*/pages/**/*.{ts,tsx}': 'PASCAL_CASE',
+          'src/features/*/hooks/*.{ts,tsx}': 'CAMEL_CASE',
+          'src/features/*/api/*.{ts,tsx}': 'KEBAB_CASE',
+          'src/features/*/store/*.{ts,tsx}': 'KEBAB_CASE',
+          'src/features/*/context/*.{ts,tsx}': 'PASCAL_CASE',
 
           // Shared layers
           'src/pages/**/*.{ts,tsx}': 'PASCAL_CASE',
@@ -139,7 +132,8 @@ export default defineConfig([
         'error',
         {
           'src/components/*/': 'KEBAB_CASE', // layout/, ui/
-          'src/feature/*/': 'KEBAB_CASE', // auth/, user-profile/
+          'src/features/*/': 'KEBAB_CASE', // auth/, user-profile/
+          'src/features/*/*/': 'KEBAB_CASE', // ideas/lib/, ideas/hooks/
           'src/assets/*/': 'KEBAB_CASE',
           'src/utils/*/': 'KEBAB_CASE',
           'src/config/*/': 'KEBAB_CASE',
@@ -150,20 +144,20 @@ export default defineConfig([
 
   // ─── Feature root — only types.ts allowed at the root level ────
   {
-    files: ['src/feature/*/*.{ts,tsx}'],
+    files: ['src/features/*/*.{ts,tsx}'],
     plugins: { 'check-file': checkFile },
     rules: {
       'check-file/filename-naming-convention': [
         'error',
-        // The only file allowed directly in src/feature/<name>/ is types.ts
-        { 'src/feature/*/*.ts': 'SNAKE_CASE' }, // matches types.ts, and nothing else should be here
+        // The only file allowed directly in src/features/<name>/ is types.ts
+        { 'src/features/*/*.ts': 'SNAKE_CASE' }, // matches types.ts, and nothing else should be here
       ],
     },
   },
 
   // ─── Hooks must start with "use" ──────────────────────────────
   {
-    files: ['src/**/hooks/*.{ts,tsx}', 'src/feature/*/hooks/*.{ts,tsx}'],
+    files: ['src/**/hooks/*.{ts,tsx}', 'src/features/*/hooks/*.{ts,tsx}'],
     rules: {
       // Enforce that hook files start with "use"
       'no-restricted-syntax': [

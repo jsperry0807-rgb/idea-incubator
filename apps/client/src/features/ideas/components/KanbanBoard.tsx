@@ -25,7 +25,7 @@ import { boardCollisionDetection } from '../lib/boardCollision';
 import { DragOverlay } from './DragOverlay';
 import { KanbanColumn } from './KanbanColumn';
 import { PipelineFilterBar } from './PipelineFilterBar';
-import { KanbanBoardSkeleton } from './skeletons';
+import { KanbanBoardSkeleton } from './IdeaSkeletons';
 
 export function KanbanBoard() {
   const { t } = useTranslation();

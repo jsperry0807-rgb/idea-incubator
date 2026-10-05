@@ -7,7 +7,7 @@ import { ActivityFeed } from '../components/ActivityFeed';
 import { IdeaProgressCard } from '../components/IdeaProgressCard';
 import { NeedsAttention } from '../components/NeedsAttention';
 import { StatsGrid } from '../components/StatsGrid';
-import { IdeaProgressCardSkeleton, StatsChartSkeleton } from '../components/skeletons';
+import { IdeaProgressCardSkeleton, StatsChartSkeleton } from '../components/DashboardSkeletons';
 
 const StatsChart = lazy(() =>
   import('../components/StatsChart').then((m) => ({ default: m.StatsChart }))

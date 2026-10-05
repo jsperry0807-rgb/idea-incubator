@@ -19,7 +19,7 @@ import { IdeaTagEditor } from '../components/IdeaTagEditor';
 import { IdeaStatusSelect } from '../components/IdeaStatusSelect';
 import { ProjectTypeSelect } from '../components/ProjectTypeSelect';
 import { WireframesSection } from '../components/wireframes/WireframesSection';
-import { IdeaDetailSkeleton } from '../components/skeletons';
+import { IdeaDetailSkeleton } from '../components/IdeaSkeletons';
 
 export default function IdeaDetailPage() {
   const { id = '' } = useParams<{ id: string }>();

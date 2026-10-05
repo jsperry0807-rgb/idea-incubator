@@ -2,7 +2,7 @@ import { lazy } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { ROUTES } from '@config/routes';
-import RootLayout from '@components/layout/RootLayout';
+import RootLayout from '@app/RootLayout';
 import { AuthProvider } from '@features/auth/context/AuthProvider';
 import { ProtectedRoute } from '@features/auth/components/ProtectedRoute';
 
