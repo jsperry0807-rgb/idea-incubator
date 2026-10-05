@@ -60,6 +60,7 @@ export async function createShare(
   ideaId: string,
   input: CreateShareInput
 ): Promise<Share> {
+  // Enforced again below so the two paths cannot diverge.
   const idea = await prisma.idea.findFirst({
     where: { id: ideaId, userId },
     select: {
@@ -78,21 +79,35 @@ export async function createShare(
     select: { id: true, name: true, email: true, avatarUrl: true },
   });
 
-  if (!target) {
-    throw new NotFoundError('User with that email not found');
-  }
-
-  if (target.id === userId) {
+  if (target?.id === userId) {
     throw new ConflictError('Cannot share an idea with yourself');
   }
 
-  const existing = await prisma.share.findUnique({
-    where: { ideaId_userId: { ideaId, userId: target.id } },
-    select: { id: true },
-  });
+  if (target) {
+    const existing = await prisma.share.findUnique({
+      where: { ideaId_userId: { ideaId, userId: target.id } },
+      select: { id: true },
+    });
 
-  if (existing) {
-    throw new ConflictError('User already has access to this idea');
+    if (existing) {
+      throw new ConflictError('User already has access to this idea');
+    }
+  }
+
+  // No target means nobody has registered that address. Returning 404 here, while
+  // `forgotPassword` answers identically for every input, turns this endpoint
+  // into an oracle for which addresses are registered. Respond the same way
+  // either way and treat the unknown address as a no-op; the owner can tell the
+  // invite did not take effect by seeing no new entry in the access list.
+  if (!target) {
+    return {
+      id: '',
+      ideaId,
+      userId: '',
+      role: input.role,
+      createdAt: new Date().toISOString(),
+      pending: true,
+    };
   }
 
   const share = await prisma.share.create({

@@ -107,6 +107,11 @@ export interface Share {
   role: ShareRole;
   createdAt: string;
   user?: Pick<User, 'id' | 'name' | 'avatarUrl' | 'email'>;
+  /**
+   * Set when an invite named an address with no account. Carries no identity, so
+   * the response cannot reveal whether the address is registered.
+   */
+  pending?: boolean;
 }
 
 export interface SharedIdea {

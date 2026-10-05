@@ -34,8 +34,6 @@ export function InviteForm({ ideaId }: InviteFormProps) {
       const status = getStatus(error);
       if (status === 409) {
         toast.error(t('ideas.sharing.inviteConflict'));
-      } else if (status === 404) {
-        toast.error(t('ideas.sharing.inviteNotFound'));
       } else {
         toast.error(t('ideas.sharing.inviteError'));
       }
