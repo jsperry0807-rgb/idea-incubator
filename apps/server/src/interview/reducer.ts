@@ -198,6 +198,19 @@ function onSkipped(
   const attempts = state.stuck?.pointId === event.pointId ? state.stuck.attempts + 1 : 1;
 
   const asked = state.asked.includes(event.pointId) ? state.asked : [...state.asked, event.pointId];
+  // A skip is a turn. Without this, a user who only ever skips never advances
+  // `turn`, so the MAX_TURNS cap can never fire.
+  const turn = state.turn + 1;
+
+  // onSkipped returns without going through afterResolution, so the cap has to be
+  // checked here too — otherwise a skip-only interview runs past MAX_TURNS and
+  // the only remaining bound is the hourly model-call budget.
+  if (turn >= MAX_TURNS) {
+    return {
+      state: { ...state, asked, turn, phase: 'DONE', current: null },
+      directives: [{ type: 'complete', reason: 'turn-cap' }],
+    };
+  }
 
   if (attempts >= STUCK_ATTEMPTS) {
     return {
@@ -206,6 +219,7 @@ function onSkipped(
         asked,
         stuck: { pointId: event.pointId, attempts },
         phase: 'SYNTHESIZE',
+        turn,
       },
       directives: [{ type: 'synthesize', pointId: event.pointId }],
     };
@@ -217,7 +231,7 @@ function onSkipped(
   // selectPoint's never-re-ask rule.
   if (state.open.some((p) => p.id === event.pointId)) {
     return {
-      state: { ...state, asked, stuck: { pointId: event.pointId, attempts } },
+      state: { ...state, asked, turn, stuck: { pointId: event.pointId, attempts } },
       directives: [{ type: 'ask', pointId: event.pointId }],
     };
   }
@@ -228,6 +242,7 @@ function onSkipped(
     return {
       state: {
         ...state,
+        turn,
         stuck: { pointId: event.pointId, attempts },
         phase: 'SYNTHESIZE',
       },
@@ -236,7 +251,7 @@ function onSkipped(
   }
 
   return {
-    state: { ...state, asked, stuck: { pointId: event.pointId, attempts } },
+    state: { ...state, asked, turn, stuck: { pointId: event.pointId, attempts } },
     directives: [{ type: 'ask', pointId: selected.id }],
   };
 }
@@ -271,6 +286,10 @@ function onDeferred(
     open: kept,
     current: null,
     stuck: resolvesStuck ? null : state.stuck,
+    // A deferral is a turn. Without this, `MAX_TURNS` never fires on a
+    // defer-only interview and the model-call budget is the only thing
+    // bounding it.
+    turn: state.turn + 1,
     coverage: computeCoverage(kept),
   };
 
@@ -287,8 +306,20 @@ function onSynthesized(
   // Park the interview in SYNTHESIZE so the verdict is the current view. The
   // user resolves the stuck point by answering or deferring it, which flips
   // the phase back to ASK.
+  //
+  // Both of those exits gate on `stuck?.pointId`, so the marker must exist here.
+  // Skip-driven synthesis already sets it, but a manual "I'm stuck" request
+  // synthesizes a point that was never skipped: without this the interview sits
+  // in SYNTHESIZE with a null marker, and answering or deferring it can never
+  // resolve (defer 409s, answer leaves the phase mislabelled as SYNTHESIZE).
+  // Preserve an existing marker for the same point so the skip path is unchanged.
+  const stuck =
+    state.stuck?.pointId === event.forPointId
+      ? state.stuck
+      : { pointId: event.forPointId, attempts: STUCK_ATTEMPTS };
+
   return {
-    state: { ...state, phase: 'SYNTHESIZE', synthesis: event.synthesis },
+    state: { ...state, phase: 'SYNTHESIZE', synthesis: event.synthesis, stuck },
     directives: [],
   };
 }

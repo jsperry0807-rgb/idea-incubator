@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { DecisionPoint, Question } from '@repo/shared';
+import type { DecisionPoint, Question, Synthesis } from '@repo/shared';
 
 import { advance, computeCoverage, selectPoint, type InterviewEvent } from './reducer';
 import { emptyCoverage, MAX_TURNS, STUCK_ATTEMPTS, type InterviewState } from './state';
@@ -340,6 +340,159 @@ describe('stuck handling', () => {
     const result = advance(state, { type: 'SKIPPED', pointId: 'core-loop' });
     expect(result.state.phase).toBe('SYNTHESIZE');
     expect(result.directives).toEqual([{ type: 'synthesize', pointId: 'core-loop' }]);
+  });
+});
+
+describe('manual synthesis', () => {
+  const VERDICT: Synthesis = {
+    recommendation: 'Ship the hybrid loop.',
+    keyTradeoffs: ['More systems to balance'],
+    strongestDisagreement: 'Incremental is cheaper to validate.',
+    forPointId: 'core-loop',
+  };
+
+  // Regression: manual "I'm stuck" synthesizes a point that was never skipped, so
+  // nothing had set `stuck`. Both exits from SYNTHESIZE (answer, defer) gate on
+  // `stuck?.pointId`, so the interview used to be unable to resolve at all.
+  it('marks the synthesized point as stuck so the verdict can be resolved', () => {
+    const state = makeState({
+      phase: 'ASK',
+      open: [CORE_LOOP, ART_STYLE],
+      asked: ['core-loop'],
+      current: makeQuestion(CORE_LOOP),
+    });
+
+    const result = advance(state, {
+      type: 'SYNTHESIZED',
+      forPointId: 'core-loop',
+      synthesis: VERDICT,
+    });
+
+    expect(result.state.phase).toBe('SYNTHESIZE');
+    expect(result.state.synthesis).toEqual(VERDICT);
+    expect(result.state.stuck).not.toBeNull();
+    expect(result.state.stuck?.pointId).toBe('core-loop');
+  });
+
+  it('returns to dialog when the manually synthesized point is answered', () => {
+    const synthesized = advance(
+      makeState({
+        phase: 'ASK',
+        open: [CORE_LOOP, ART_STYLE],
+        asked: ['core-loop'],
+        current: makeQuestion(CORE_LOOP),
+      }),
+      { type: 'SYNTHESIZED', forPointId: 'core-loop', synthesis: VERDICT }
+    );
+
+    const answered = advance(synthesized.state, {
+      type: 'ANSWERED',
+      answer: {
+        pointId: 'core-loop',
+        optionId: 'opt-a',
+        value: 'Hybrid loop',
+        freeText: null,
+      },
+    });
+
+    // ANSWERED only stages the decision; the stuck point is released by REEVALUATED.
+    expect(answered.state.phase).toBe('SYNTHESIZE');
+
+    const resolved = advance(answered.state, {
+      type: 'REEVALUATED',
+      answer: answerFor(answered),
+      opened: [],
+      closed: [],
+      invalidated: [],
+    });
+
+    expect(resolved.state.phase).not.toBe('SYNTHESIZE');
+    expect(resolved.state.stuck).toBeNull();
+    expect(resolved.state.decisions['core-loop']?.deferred).toBe(false);
+  });
+
+  it('lets the manually synthesized point be deferred', () => {
+    const synthesized = advance(
+      makeState({
+        phase: 'ASK',
+        open: [CORE_LOOP, ART_STYLE],
+        asked: ['core-loop'],
+        current: makeQuestion(CORE_LOOP),
+      }),
+      { type: 'SYNTHESIZED', forPointId: 'core-loop', synthesis: VERDICT }
+    );
+
+    const deferred = advance(synthesized.state, {
+      type: 'DEFERRED',
+      pointId: 'core-loop',
+      reason: 'Park it',
+    });
+
+    expect(deferred.state.stuck).toBeNull();
+    expect(deferred.state.phase).not.toBe('SYNTHESIZE');
+    expect(deferred.state.decisions['core-loop']?.deferred).toBe(true);
+  });
+
+  it('preserves an existing skip marker for the same point', () => {
+    const state = makeState({
+      phase: 'SYNTHESIZE',
+      open: [CORE_LOOP],
+      stuck: { pointId: 'core-loop', attempts: 2 },
+    });
+
+    const result = advance(state, {
+      type: 'SYNTHESIZED',
+      forPointId: 'core-loop',
+      synthesis: VERDICT,
+    });
+
+    expect(result.state.stuck).toEqual({ pointId: 'core-loop', attempts: 2 });
+  });
+});
+
+describe('skip and defer consume turns', () => {
+  // Regression: neither incremented `turn`, so `MAX_TURNS` could never fire on an
+  // interview where the user only skipped or deferred — the hourly model-call
+  // budget was the only thing bounding them.
+  it('counts a skip as a turn', () => {
+    const state = makeState({
+      phase: 'ASK',
+      open: [CORE_LOOP, ART_STYLE],
+      asked: ['core-loop'],
+      current: makeQuestion(CORE_LOOP),
+    });
+
+    expect(advance(state, { type: 'SKIPPED', pointId: 'core-loop' }).state.turn).toBe(1);
+  });
+
+  it('counts a defer as a turn', () => {
+    const state = makeState({
+      phase: 'ASK',
+      open: [ART_STYLE, MONETIZATION],
+      asked: ['art-style'],
+      current: makeQuestion(ART_STYLE),
+    });
+
+    expect(advance(state, { type: 'DEFERRED', pointId: 'art-style' }).state.turn).toBe(1);
+  });
+
+  it('terminates a skip-only interview at the turn cap', () => {
+    const state = makeState({
+      phase: 'ASK',
+      turn: MAX_TURNS - 1,
+      open: [CORE_LOOP],
+      asked: ['core-loop'],
+      current: makeQuestion(CORE_LOOP),
+      stuck: { pointId: 'art-style', attempts: 1 },
+    });
+
+    // Skip a different point than the one currently stuck so the trip does not
+    // fire synthesis; this isolates the turn-cap exit.
+    const result = advance(state, { type: 'SKIPPED', pointId: 'core-loop' });
+
+    expect(result.state.turn).toBe(MAX_TURNS);
+    expect(result.state.phase).toBe('DONE');
+    expect(result.directives).toEqual([{ type: 'complete', reason: 'turn-cap' }]);
   });
 });
 

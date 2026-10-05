@@ -1,6 +1,7 @@
 import { advance, type Answer, type InterviewDirective, type InterviewEvent } from './reducer';
 import type { InterviewAgent } from './graph';
 import type { InterviewState } from './state';
+import { chargeSynthesis } from '../middleware/rateLimit';
 
 /** Guard against a resolver that keeps emitting events. */
 export const MAX_PUMP_STEPS = 100;
@@ -18,6 +19,12 @@ export interface LoopOptions {
   maxSteps?: number;
   /** Called after each event is applied, before its directives are resolved. */
   onEvent?: (event: InterviewEvent, state: InterviewState) => void;
+  /**
+   * Identity the synthesis budget is charged to. Supplied by the HTTP service.
+   * Omitted by the trace driver, which replays fixtures and must not spend a
+   * real budget.
+   */
+  budgetOwner?: string;
 }
 
 /**
@@ -54,6 +61,10 @@ export async function runLoop(
       }
       if (directive.type === 'synthesize') {
         terminal = 'needs-synthesis';
+        // Charge here, not in route middleware: this is the only path that
+        // actually spends a synthesis call, and it is reached by skip-driven
+        // synthesis as well as the manual endpoint.
+        if (options.budgetOwner) chargeSynthesis(options.budgetOwner);
       }
 
       const resolved = await agent.resolve(s, directive);

@@ -11,7 +11,7 @@ import {
 
 import { validate } from '../middleware/validate';
 import { authenticate } from '../middleware/auth';
-import { interviewRateLimit, synthesisRateLimit } from '../middleware/rateLimit';
+import { interviewRateLimit } from '../middleware/rateLimit';
 import {
   deferQuestion,
   getInterviewState,
@@ -103,10 +103,11 @@ router.post(
   }
 );
 
+// No `synthesisRateLimit` middleware: the budget is charged inside the service,
+// where synthesis is actually invoked, so skip-driven synthesis is charged too.
 router.post(
   '/synthesis',
   validate({ params: idParamSchema, body: synthesisRequestSchema }),
-  synthesisRateLimit,
   async (req, res, next) => {
     try {
       const data = await synthesizeInterview(

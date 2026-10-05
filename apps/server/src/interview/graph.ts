@@ -6,6 +6,7 @@ import type { DecisionPoint, Question } from '@repo/shared';
 import type { LlmClient } from '../services/llm.service';
 import type { Answer, InterviewDirective, InterviewEvent } from './reducer';
 import type { InterviewState } from './state';
+import { ConflictError, NotFoundError } from '../lib/errors';
 import {
   buildClassifyMessages,
   classifyOutputSchema,
@@ -140,6 +141,15 @@ export class InterviewAgent {
     state: InterviewState,
     directive: Extract<InterviewDirective, { type: 'synthesize' }>
   ): Promise<InterviewEvent> {
+    // A verdict is only meaningful once points exist, and re-synthesizing a
+    // finished interview would burn the strongest model on a stale prompt.
+    if (state.phase === 'READY' || state.phase === 'DONE') {
+      throw new ConflictError(`Cannot synthesize in phase ${state.phase}.`);
+    }
+    if (!state.open.some((p) => p.id === directive.pointId)) {
+      throw new NotFoundError('Decision point is not open.');
+    }
+
     const out = await this.llm.completeStructured(
       synthesisOutputSchema,
       buildSynthesisMessages(state, directive.pointId, this.locale),

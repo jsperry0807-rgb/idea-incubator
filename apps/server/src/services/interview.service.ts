@@ -8,6 +8,7 @@ import { env } from '../config/env';
 import { InterviewAgent } from '../interview/graph';
 import { appendAssumption } from '../interview/assumptions';
 import { runLoop, type LoopTerminal } from '../interview/loop';
+import { chargeSynthesis } from '../middleware/rateLimit';
 import type { Answer, InterviewEvent } from '../interview/reducer';
 import { emptyCoverage, type InterviewState } from '../interview/state';
 import type { AnswerInterviewInput, SynthesisRequestInput } from '@repo/shared';
@@ -73,9 +74,10 @@ function createAgent(locale: string): InterviewAgent {
 async function pump(
   agent: InterviewAgent,
   state: InterviewState,
-  initialEvents: InterviewEvent[]
+  initialEvents: InterviewEvent[],
+  budgetOwner: string
 ): Promise<{ state: InterviewState; terminal: LoopTerminal }> {
-  const { state: next, terminal } = await runLoop(agent, state, initialEvents);
+  const { state: next, terminal } = await runLoop(agent, state, initialEvents, { budgetOwner });
   return { state: next, terminal };
 }
 
@@ -107,7 +109,7 @@ export async function startOrResumeInterview(
     // Crash-safe resume: finish a START that never classified.
     if (state.phase === 'CLASSIFY' && state.turn === 0 && state.open.length === 0) {
       const agent = createAgent(locale);
-      const result = await pump(agent, state, [{ type: 'START' }]);
+      const result = await pump(agent, state, [{ type: 'START' }], userId);
       const interview = await persist(ideaId, userId, result.state);
       return {
         interviewId: interview.id,
@@ -127,7 +129,7 @@ export async function startOrResumeInterview(
   const initialState = createInitialState(idea.id, idea.title, idea.description, projectType);
 
   const agent = createAgent(locale);
-  const result = await pump(agent, initialState, [{ type: 'START' }]);
+  const result = await pump(agent, initialState, [{ type: 'START' }], userId);
 
   const interview = await prisma.interview.create({
     data: {
@@ -199,7 +201,7 @@ export async function submitAnswer(
   };
 
   const agent = createAgent(locale);
-  const result = await pump(agent, state, [{ type: 'ANSWERED', answer }]);
+  const result = await pump(agent, state, [{ type: 'ANSWERED', answer }], userId);
   const interview = await persist(ideaId, userId, result.state);
 
   return {
@@ -223,7 +225,12 @@ export async function skipQuestion(
   }
 
   const agent = createAgent(locale);
-  const result = await pump(agent, state, [{ type: 'SKIPPED', pointId: state.current.point.id }]);
+  const result = await pump(
+    agent,
+    state,
+    [{ type: 'SKIPPED', pointId: state.current.point.id }],
+    userId
+  );
   const interview = await persist(ideaId, userId, result.state);
 
   return {
@@ -252,7 +259,7 @@ export async function deferQuestion(
   }
 
   const agent = createAgent(locale);
-  const result = await pump(agent, state, [{ type: 'DEFERRED', pointId, reason }]);
+  const result = await pump(agent, state, [{ type: 'DEFERRED', pointId, reason }], userId);
   const interview = await persist(ideaId, userId, result.state);
 
   const point = result.state.decisions[pointId];
@@ -307,12 +314,18 @@ export async function synthesizeInterview(
   }
 
   const agent = createAgent(locale);
+  // Charged here because this path bypasses the loop's directive handling; the
+  // loop charges its own `synthesize` directives so skip-driven synthesis is
+  // not free.
+  chargeSynthesis(userId);
   const event = await agent.resolve(state, {
     type: 'synthesize',
     pointId: input.pointId,
   });
   if (!event) throw new Error('Synthesis could not be produced.');
 
+  // No `budgetOwner`: the charge above already covers this call, and the
+  // loop is only replaying the resulting event.
   const { state: next, terminal } = await runLoop(agent, state, [event]);
   const interview = await persist(ideaId, userId, next);
 

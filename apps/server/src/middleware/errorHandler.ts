@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 
-import { AppError } from '../lib/errors';
+import { AppError, TooManyRequestsError } from '../lib/errors';
 import { env } from '../config/env';
 
 interface ErrorEnvelope {
@@ -18,6 +18,11 @@ export function errorHandler(
   _next: NextFunction
 ) {
   if (err instanceof AppError) {
+    // Tell the client when it may retry; the synthesis budget is charged in the
+    // service, so this is the only place a 429 can carry a Retry-After.
+    if (err instanceof TooManyRequestsError) {
+      res.setHeader('Retry-After', String(err.retryAfterSec));
+    }
     res.status(err.statusCode).json({
       error: {
         code: err.code,

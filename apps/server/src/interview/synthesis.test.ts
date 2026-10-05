@@ -1,9 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 
 import type { Synthesis } from '@repo/shared';
 
+import { ConflictError, NotFoundError, TooManyRequestsError } from '../lib/errors';
 import { InterviewAgent } from './graph';
 import { runLoop } from './loop';
+import type { InterviewState } from './state';
+import { chargeSynthesis, resetSynthesisBudget } from '../middleware/rateLimit';
 import { CLICKER_GAME, traceClassify, tracePoint, traceQuestion } from './fixtures';
 import { initialState, runTrace, type UserTurn } from './fixtures/trace-runner';
 import type { TraceScript } from './fixtures/scripted-client';
@@ -118,7 +121,16 @@ describe('synthesis via the agent', () => {
       { synthesisModel: 'strong-model' }
     );
 
-    const event = await agent.resolve(initialState(CLICKER_GAME), {
+    // The resolver guards on phase and on the point being open, so this needs a
+    // state that has actually classified — a bare CLASSIFY state has no frontier.
+    const state: InterviewState = {
+      ...initialState(CLICKER_GAME),
+      phase: 'SYNTHESIZE',
+      domain: { primary: 'incremental-game', confidence: 0.9, signals: ['cookie'] },
+      open: [{ ...CORE_LOOP, id: 'core-loop' }],
+    };
+
+    const event = await agent.resolve(state, {
       type: 'synthesize',
       pointId: 'core-loop',
     });
@@ -129,6 +141,54 @@ describe('synthesis via the agent', () => {
       // normalizeSynthesisOutput overrode the model's own point id.
       synthesis: VERDICT,
     });
+  });
+
+  it('refuses to synthesize a point that is not open', async () => {
+    const agent = new InterviewAgent(
+      {
+        async complete() {
+          throw new Error('no http in tests');
+        },
+        async completeStructured() {
+          throw new Error('should not reach the model');
+        },
+      },
+      'en'
+    );
+
+    const state: InterviewState = {
+      ...initialState(CLICKER_GAME),
+      phase: 'SYNTHESIZE',
+      open: [],
+    };
+
+    await expect(
+      agent.resolve(state, { type: 'synthesize', pointId: 'core-loop' })
+    ).rejects.toThrow(NotFoundError);
+  });
+
+  it('refuses to synthesize a finished interview', async () => {
+    const agent = new InterviewAgent(
+      {
+        async complete() {
+          throw new Error('no http in tests');
+        },
+        async completeStructured() {
+          throw new Error('should not reach the model');
+        },
+      },
+      'en'
+    );
+
+    const state: InterviewState = {
+      ...initialState(CLICKER_GAME),
+      phase: 'DONE',
+      open: [{ ...CORE_LOOP, id: 'core-loop' }],
+    };
+
+    await expect(
+      agent.resolve(state, { type: 'synthesize', pointId: 'core-loop' })
+    ).rejects.toThrow(ConflictError);
   });
 
   it('routes the stronger model to synthesis and nowhere else', async () => {
@@ -175,6 +235,86 @@ describe('synthesis via the agent', () => {
     // The verdict stays on file after the point is resolved.
     expect(trace.final.synthesis).not.toBeNull();
     expect(trace.askedLabels.at(-1)).toBe('monetization');
+  });
+});
+
+describe('synthesis budget is charged where synthesis happens', () => {
+  afterEach(() => {
+    resetSynthesisBudget();
+  });
+
+  /**
+   * Regression for the overspend: skip-driven synthesis is reached through the
+   * ordinary skip route and resolved by the loop, so a limiter mounted only on
+   * the manual synthesis endpoint never saw those calls and they ran under the
+   * 60/hr interview budget.
+   */
+  it('charges the budget when the loop resolves a skip-driven synthesis', async () => {
+    for (let i = 0; i < 10; i++) chargeSynthesis('owner-1');
+
+    const agent = new InterviewAgent(
+      {
+        async complete() {
+          throw new Error('no http in tests');
+        },
+        async completeStructured() {
+          return VERDICT as never;
+        },
+      },
+      'en'
+    );
+
+    const state: InterviewState = {
+      ...initialState(CLICKER_GAME),
+      phase: 'ASK',
+      open: [{ ...CORE_LOOP, id: 'core-loop' }],
+      asked: ['core-loop'],
+      current: {
+        point: { ...CORE_LOOP, id: 'core-loop' },
+        prompt: 'How?',
+        why: CORE_LOOP.why,
+        options: [{ id: 'hybrid', label: 'Hybrid', consequence: 'Mixed' }],
+        canSkip: true,
+      },
+      stuck: { pointId: 'core-loop', attempts: 1 },
+    };
+
+    await expect(
+      runLoop(agent, state, [{ type: 'SKIPPED', pointId: 'core-loop' }], {
+        budgetOwner: 'owner-1',
+      })
+    ).rejects.toThrow(TooManyRequestsError);
+  });
+
+  it('does not spend a budget when no owner is supplied', async () => {
+    for (let i = 0; i < 10; i++) chargeSynthesis('owner-1');
+
+    const agent = new InterviewAgent(
+      {
+        async complete() {
+          throw new Error('no http in tests');
+        },
+        async completeStructured() {
+          return VERDICT as never;
+        },
+      },
+      'en'
+    );
+
+    const state: InterviewState = {
+      ...initialState(CLICKER_GAME),
+      phase: 'SYNTHESIZE',
+      open: [{ ...CORE_LOOP, id: 'core-loop' }],
+      stuck: { pointId: 'core-loop', attempts: 2 },
+    };
+
+    // The trace driver replays fixtures and must not spend a real budget.
+    const result = await runLoop(agent, state, [
+      { type: 'SYNTHESIZED', forPointId: 'core-loop', synthesis: VERDICT },
+    ]);
+
+    expect(result.state.synthesis).toEqual(VERDICT);
+    expect(() => chargeSynthesis('owner-1')).toThrow(TooManyRequestsError);
   });
 });
 
