@@ -7,6 +7,8 @@ export const es: LocaleMessages = {
     skipToContent: 'Saltar al contenido',
     loading: 'Cargando…',
     language: 'Idioma',
+    close: 'Cerrar',
+    dismiss: 'Descartar',
     nav: {
       home: 'Inicio',
       ideas: 'Ideas',
@@ -495,6 +497,11 @@ export const es: LocaleMessages = {
       description: 'Ocurrió un error inesperado al renderizar esta vista.',
       retry: 'Reintentar',
       reload: 'Recargar página',
+    },
+    notFound: {
+      title: '404',
+      description: 'La página que buscas no existe.',
+      backToHome: 'Volver al inicio',
     },
   },
 };

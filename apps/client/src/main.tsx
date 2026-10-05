@@ -2,6 +2,7 @@ import { StrictMode, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import i18n from 'i18next';
 
 import { Toaster } from '@repo/ui';
 
@@ -39,7 +40,7 @@ createRoot(rootEl).render(
             <App />
           </Suspense>
         </BrowserRouter>
-        <Toaster />
+        <Toaster dismissLabel={i18n.t('app.dismiss')} />
       </QueryClientProvider>
     </ErrorBoundary>
   </StrictMode>

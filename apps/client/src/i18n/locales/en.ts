@@ -5,6 +5,8 @@ export const en = {
     skipToContent: 'Skip to content',
     loading: 'Loading…',
     language: 'Language',
+    close: 'Close',
+    dismiss: 'Dismiss',
     nav: {
       home: 'Home',
       ideas: 'Ideas',
@@ -492,6 +494,11 @@ export const en = {
       description: 'An unexpected error occurred while rendering this view.',
       retry: 'Try again',
       reload: 'Reload page',
+    },
+    notFound: {
+      title: '404',
+      description: "The page you're looking for doesn't exist.",
+      backToHome: 'Back to Home',
     },
   },
 } as const;
