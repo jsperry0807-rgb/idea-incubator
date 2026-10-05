@@ -4,7 +4,6 @@ import {
   DndContext,
   KeyboardSensor,
   PointerSensor,
-  pointerWithin,
   useSensor,
   useSensors,
   type DragEndEvent,
@@ -22,6 +21,7 @@ import { toast } from '@repo/ui';
 import { useTags } from '@features/tags/hooks/useTags';
 import { usePipeline } from '../hooks/usePipeline';
 import { useUpdateIdeaStatus } from '../hooks/useUpdateIdeaStatus';
+import { boardCollisionDetection } from '../lib/boardCollision';
 import { DragOverlay } from './DragOverlay';
 import { KanbanColumn } from './KanbanColumn';
 import { PipelineFilterBar } from './PipelineFilterBar';
@@ -112,7 +112,7 @@ export function KanbanBoard() {
 
       <DndContext
         sensors={sensors}
-        collisionDetection={pointerWithin}
+        collisionDetection={boardCollisionDetection}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         onDragCancel={handleDragCancel}

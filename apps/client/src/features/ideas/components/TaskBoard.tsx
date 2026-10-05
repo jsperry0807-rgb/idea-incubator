@@ -3,14 +3,17 @@ import {
   DragOverlay,
   KeyboardSensor,
   PointerSensor,
-  pointerWithin,
   useDroppable,
   useSensor,
   useSensors,
   type DragEndEvent,
   type DragStartEvent,
 } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +22,7 @@ import { EmptyState, Skeleton, toast } from '@repo/ui';
 
 import { updateTask } from '../api/tasks';
 import { useTasks } from '../hooks/useTasks';
+import { boardCollisionDetection } from '../lib/boardCollision';
 import { AddTaskForm } from './AddTaskForm';
 import { TaskCard } from './TaskCard';
 import {
@@ -90,7 +94,7 @@ export function TaskBoard({ ideaId }: TaskBoardProps) {
   const queryKey = ['ideas', ideaId, 'tasks'] as const;
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 3 } }),
-    useSensor(KeyboardSensor)
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
   if (query.isLoading) {
@@ -203,7 +207,7 @@ export function TaskBoard({ ideaId }: TaskBoardProps) {
 
       <DndContext
         sensors={sensors}
-        collisionDetection={pointerWithin}
+        collisionDetection={boardCollisionDetection}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         onDragCancel={() => setActiveTask(null)}
