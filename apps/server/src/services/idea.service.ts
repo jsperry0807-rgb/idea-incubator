@@ -1,7 +1,7 @@
 import type { Prisma } from '../generated/prisma/client';
-import { Prisma as PrismaNS } from '../generated/prisma/client';
 import prisma from '../lib/prisma';
 import { ConflictError, NotFoundError } from '../lib/errors';
+import { isUniqueViolation, withPrismaErrors } from '../lib/prismaErrors';
 import { ensureUniqueSlug, slugify } from '../lib/slug';
 import { sectionsForType } from '../lib/planningTemplates';
 import { storage } from './storage.service';
@@ -32,19 +32,46 @@ const IDEA_INCLUDE = {
   user: { select: { id: true, name: true, avatarUrl: true } },
 } satisfies Prisma.IdeaInclude;
 
-export async function assertIdeaOwnership(
+const OWNED_IDEA_FIELDS = {
+  id: true,
+  title: true,
+  description: true,
+  projectType: true,
+} as const;
+
+/**
+ * Loads an idea the caller owns, or throws.
+ *
+ * Interview request handling needed both the ownership check and the idea text,
+ * and issued two identical queries for it. Callers that need the row should take
+ * it from here instead of re-querying after an ownership assertion.
+ */
+export async function loadOwnedIdea(
   userId: string,
   ideaId: string
-): Promise<IdeaProjectType> {
+): Promise<{
+  id: string;
+  title: string;
+  description: string | null;
+  projectType: IdeaProjectType;
+}> {
   const idea = await prisma.idea.findFirst({
     where: { id: ideaId, userId },
-    select: { id: true, projectType: true },
+    select: OWNED_IDEA_FIELDS,
   });
 
   if (!idea) {
     throw new NotFoundError('Idea not found');
   }
 
+  return idea;
+}
+
+export async function assertIdeaOwnership(
+  userId: string,
+  ideaId: string
+): Promise<IdeaProjectType> {
+  const idea = await loadOwnedIdea(userId, ideaId);
   return idea.projectType;
 }
 
@@ -258,7 +285,9 @@ export async function deleteIdea(userId: string, id: string) {
     throw new NotFoundError('Idea not found');
   }
 
-  await prisma.idea.delete({ where: { id } });
+  // The ownership check above and this delete are not atomic; a concurrent delete
+  // arrives as P2025, translated to a 404 rather than a 500.
+  await withPrismaErrors(() => prisma.idea.delete({ where: { id } }));
   await storage.deleteIdeaFolder(userId, id).catch(() => {});
 }
 
@@ -297,11 +326,6 @@ async function generateUniqueSlug(
     base,
     collisions.map((c) => c.slug)
   );
-}
-
-/** Prisma's unique-constraint violation. */
-function isUniqueViolation(err: unknown): boolean {
-  return err instanceof PrismaNS.PrismaClientKnownRequestError && err.code === 'P2002';
 }
 
 /**

@@ -1,5 +1,6 @@
 import prisma from '../lib/prisma';
 import { NotFoundError } from '../lib/errors';
+import { withPrismaErrors } from '../lib/prismaErrors';
 import type { CreateTaskInput, Task, TaskStatus, UpdateTaskInput } from '@repo/shared';
 import { assertIdeaOwnership } from './idea.service';
 
@@ -21,26 +22,28 @@ export async function createTask(
 ): Promise<Task> {
   await assertIdeaOwnership(userId, ideaId);
 
-  let sortOrder = input.sortOrder;
-  if (sortOrder === undefined) {
-    const last = await prisma.task.findFirst({
-      where: { ideaId },
-      orderBy: { sortOrder: 'desc' },
-      select: { sortOrder: true },
-    });
-    sortOrder = (last?.sortOrder ?? -1) + 1;
-  }
+  const data = {
+    ideaId,
+    title: input.title,
+    milestone: input.milestone ?? null,
+    status: input.status ?? 'TODO',
+    completed: input.status === 'DONE',
+  };
 
-  const task = await prisma.task.create({
-    data: {
-      ideaId,
-      title: input.title,
-      milestone: input.milestone ?? null,
-      status: input.status ?? 'TODO',
-      completed: input.status === 'DONE',
-      sortOrder,
-    },
-  });
+  // Reading max(sortOrder) and inserting is one atomic statement inside the
+  // transaction. Done separately, two concurrent creates read the same maximum
+  // and both insert, producing duplicate sort orders that scramble the board.
+  const task =
+    input.sortOrder !== undefined
+      ? await prisma.task.create({ data: { ...data, sortOrder: input.sortOrder } })
+      : await prisma.$transaction(async (tx) => {
+          const last = await tx.task.findFirst({
+            where: { ideaId },
+            orderBy: { sortOrder: 'desc' },
+            select: { sortOrder: true },
+          });
+          return tx.task.create({ data: { ...data, sortOrder: (last?.sortOrder ?? -1) + 1 } });
+        });
 
   return toTaskDto(task);
 }
@@ -62,24 +65,28 @@ export async function updateTask(
     throw new NotFoundError('Task not found');
   }
 
-  const task = await prisma.task.update({
-    where: { id: taskId },
-    data: {
-      ...(input.title !== undefined ? { title: input.title } : {}),
-      ...(input.milestone !== undefined ? { milestone: input.milestone } : {}),
-      ...(input.sortOrder !== undefined ? { sortOrder: input.sortOrder } : {}),
-      // `status` is the source of truth; `completed` is kept in sync because
-      // dashboard stats and idea summaries still read it directly.
-      ...(input.status !== undefined
-        ? { status: input.status, completed: input.status === 'DONE' }
-        : input.completed !== undefined
-          ? {
-              status: input.completed ? ('DONE' as const) : ('TODO' as const),
-              completed: input.completed,
-            }
-          : {}),
-    },
-  });
+  // The ownership check above and this update are not atomic, so a task deleted
+  // in between arrives here as P2025, translated to a 404 rather than a 500.
+  const task = await withPrismaErrors(() =>
+    prisma.task.update({
+      where: { id: taskId },
+      data: {
+        ...(input.title !== undefined ? { title: input.title } : {}),
+        ...(input.milestone !== undefined ? { milestone: input.milestone } : {}),
+        ...(input.sortOrder !== undefined ? { sortOrder: input.sortOrder } : {}),
+        // `status` is the source of truth; `completed` is kept in sync because
+        // dashboard stats and idea summaries still read it directly.
+        ...(input.status !== undefined
+          ? { status: input.status, completed: input.status === 'DONE' }
+          : input.completed !== undefined
+            ? {
+                status: input.completed ? ('DONE' as const) : ('TODO' as const),
+                completed: input.completed,
+              }
+            : {}),
+      },
+    })
+  );
 
   return toTaskDto(task);
 }
@@ -96,7 +103,7 @@ export async function deleteTask(userId: string, ideaId: string, taskId: string)
     throw new NotFoundError('Task not found');
   }
 
-  await prisma.task.delete({ where: { id: taskId } });
+  await withPrismaErrors(() => prisma.task.delete({ where: { id: taskId } }));
 }
 
 function toTaskDto(task: {
