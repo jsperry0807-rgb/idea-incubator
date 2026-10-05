@@ -42,6 +42,18 @@ export class ValidationError extends AppError {
   }
 }
 
+/**
+ * The model provider did not answer in time.
+ *
+ * Distinct from a generic 500: the request made no progress, so the client can
+ * safely retry the same input.
+ */
+export class LlmTimeoutError extends AppError {
+  constructor(message = 'The AI provider did not respond in time') {
+    super(message, 503, 'LLM_TIMEOUT');
+  }
+}
+
 export class TooManyRequestsError extends AppError {
   retryAfterSec: number;
 

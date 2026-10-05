@@ -1,7 +1,13 @@
 import type { Prisma } from '../generated/prisma/client';
 import prisma from '../lib/prisma';
-import { ConflictError, NotFoundError } from '../lib/errors';
-import { assertIdeaOwnership } from './idea.service';
+import {
+  AppError,
+  ConflictError,
+  LlmTimeoutError,
+  NotFoundError,
+  ValidationError,
+} from '../lib/errors';
+import { assertIdeaOwnership, loadOwnedIdea } from './idea.service';
 import { llm } from './llm.service';
 import { storage } from './storage.service';
 import { env } from '../config/env';
@@ -48,16 +54,27 @@ function createInitialState(
   };
 }
 
-async function loadInterview(userId: string, ideaId: string) {
+interface LoadedInterview {
+  id: string;
+  version: number;
+  state: InterviewState;
+}
+
+async function loadInterview(userId: string, ideaId: string): Promise<LoadedInterview> {
   const interview = await prisma.interview.findFirst({
     where: { ideaId, userId },
+    select: { id: true, version: true, state: true },
   });
 
   if (!interview) {
     throw new NotFoundError('Interview not found. Start it with POST /interview.');
   }
 
-  return interview.state as unknown as InterviewState;
+  return {
+    id: interview.id,
+    version: interview.version,
+    state: interview.state as unknown as InterviewState,
+  };
 }
 
 /**
@@ -92,16 +109,13 @@ export async function startOrResumeInterview(
   ideaId: string,
   locale: string
 ): Promise<InterviewResult> {
-  const projectType = await assertIdeaOwnership(userId, ideaId);
+  const idea = await loadOwnedIdea(userId, ideaId);
 
-  const idea = await prisma.idea.findFirst({
-    where: { id: ideaId, userId },
-    select: { id: true, title: true, description: true, projectType: true },
-  });
-  if (!idea) throw new NotFoundError('Idea not found');
-
+  // Selects what `loadInterview` returns, but tolerates absence: starting is not
+  // an error when no interview exists yet, so this must not throw.
   const existing = await prisma.interview.findFirst({
     where: { ideaId, userId },
+    select: { id: true, version: true, state: true },
   });
 
   if (existing) {
@@ -110,7 +124,7 @@ export async function startOrResumeInterview(
     if (state.phase === 'CLASSIFY' && state.turn === 0 && state.open.length === 0) {
       const agent = createAgent(locale);
       const result = await pump(agent, state, [{ type: 'START' }], userId);
-      const interview = await persist(ideaId, userId, result.state);
+      const interview = await persist(existing.id, userId, result.state, existing.version);
       return {
         interviewId: interview.id,
         created: false,
@@ -126,7 +140,7 @@ export async function startOrResumeInterview(
     };
   }
 
-  const initialState = createInitialState(idea.id, idea.title, idea.description, projectType);
+  const initialState = createInitialState(idea.id, idea.title, idea.description, idea.projectType);
 
   const agent = createAgent(locale);
   const result = await pump(agent, initialState, [{ type: 'START' }], userId);
@@ -177,7 +191,7 @@ export async function submitAnswer(
   locale: string
 ): Promise<InterviewResult> {
   await assertIdeaOwnership(userId, ideaId);
-  const state = await loadInterview(userId, ideaId);
+  const { id: interviewId, version, state } = await loadInterview(userId, ideaId);
 
   if (state.phase !== 'ASK' && state.phase !== 'SYNTHESIZE') {
     throw new ConflictError(
@@ -193,6 +207,19 @@ export async function submitAnswer(
     throw new ConflictError('Answer does not match the current question.');
   }
 
+  // `pointId` is checked above, but `optionId` was not: a client could replay an
+  // option that was never offered and have it persisted as if the model had
+  // proposed it.
+  if (input.optionId !== undefined) {
+    const offered = state.current.options.some((o) => o.id === input.optionId);
+    if (!offered) {
+      throw new ValidationError(
+        { optionId: ['Not one of the options offered for this question.'] },
+        'Answer does not match the current question.'
+      );
+    }
+  }
+
   const answer: Answer = {
     pointId: input.pointId,
     optionId: input.optionId,
@@ -201,8 +228,18 @@ export async function submitAnswer(
   };
 
   const agent = createAgent(locale);
-  const result = await pump(agent, state, [{ type: 'ANSWERED', answer }], userId);
-  const interview = await persist(ideaId, userId, result.state);
+  let result: Awaited<ReturnType<typeof pump>>;
+  try {
+    result = await pump(agent, state, [{ type: 'ANSWERED', answer }], userId);
+  } catch (err) {
+    // The model call failed, but the user's answer is valid and they should not
+    // have to retype it. Record it before surfacing the transport failure so a
+    // retry resumes rather than restarts.
+    await persistAnswerOnly(interviewId, userId, state, answer).catch(() => {});
+    throw toRetryableModelError(err);
+  }
+
+  const interview = await persist(interviewId, userId, result.state, version);
 
   return {
     interviewId: interview.id,
@@ -218,7 +255,7 @@ export async function skipQuestion(
   locale: string
 ): Promise<InterviewResult> {
   await assertIdeaOwnership(userId, ideaId);
-  const state = await loadInterview(userId, ideaId);
+  const { id: interviewId, version, state } = await loadInterview(userId, ideaId);
 
   if ((state.phase !== 'ASK' && state.phase !== 'SYNTHESIZE') || !state.current) {
     throw new ConflictError('No question to skip.');
@@ -231,7 +268,7 @@ export async function skipQuestion(
     [{ type: 'SKIPPED', pointId: state.current.point.id }],
     userId
   );
-  const interview = await persist(ideaId, userId, result.state);
+  const interview = await persist(interviewId, userId, result.state, version);
 
   return {
     interviewId: interview.id,
@@ -249,7 +286,7 @@ export async function deferQuestion(
   locale: string
 ): Promise<InterviewResult> {
   await assertIdeaOwnership(userId, ideaId);
-  const state = await loadInterview(userId, ideaId);
+  const { id: interviewId, version, state } = await loadInterview(userId, ideaId);
 
   if (state.phase !== 'ASK' || !state.current) {
     throw new ConflictError('No question to defer.');
@@ -260,7 +297,7 @@ export async function deferQuestion(
 
   const agent = createAgent(locale);
   const result = await pump(agent, state, [{ type: 'DEFERRED', pointId, reason }], userId);
-  const interview = await persist(ideaId, userId, result.state);
+  const interview = await persist(interviewId, userId, result.state, version);
 
   const point = result.state.decisions[pointId];
   if (point?.deferred) {
@@ -294,6 +331,67 @@ async function recordDeferral(
 }
 
 /**
+ * Records an answer that the model failed to process.
+ *
+ * The point stays open and the phase stays `ASK`, so the user can retry. The
+ * decision entry is what makes the answer recoverable; without it a provider
+ * timeout silently discarded everything the user typed.
+ */
+async function persistAnswerOnly(
+  interviewId: string,
+  userId: string,
+  state: InterviewState,
+  answer: Answer
+): Promise<void> {
+  const point = state.open.find((p) => p.id === answer.pointId);
+  if (!point) return;
+
+  const pending = {
+    pointId: answer.pointId,
+    optionId: answer.optionId ?? '',
+    value: answer.value,
+    openedPointIds: [],
+    closedPointIds: [],
+    deferred: false,
+    blocks: point.blocks,
+    at: new Date().toISOString(),
+  };
+
+  await prisma.interview.updateMany({
+    where: { id: interviewId, userId },
+    data: {
+      state: {
+        ...state,
+        decisions: { ...state.decisions, [answer.pointId]: pending },
+      } as unknown as JsonState,
+      version: { increment: 1 },
+    },
+  });
+}
+
+/**
+ * Turns a provider failure into a status the client can act on.
+ *
+ * A timeout or a dropped connection leaves the interview exactly as it was, so
+ * the request is safe to repeat; `AppError`s from validation and the budget are
+ * already meaningful and pass through untouched.
+ */
+function toRetryableModelError(err: unknown): unknown {
+  if (err instanceof AppError) return err;
+
+  const message = err instanceof Error ? err.message : String(err);
+  const retryable =
+    err instanceof LlmTimeoutError ||
+    /abort|timeout|timed out|ECONNRESET|ETIMEDOUT|EAI_AGAIN|ENOTFOUND|fetch failed|network/i.test(
+      message
+    );
+
+  return retryable
+    ? new AppError('The AI provider is unavailable. Please try again.', 503, 'LLM_UNAVAILABLE')
+    : err;
+}
+
+/**
  * Manual "I'm stuck" override: asks the model for a verdict on one open point
  * without waiting for the skip counter to trip.
  */
@@ -304,7 +402,7 @@ export async function synthesizeInterview(
   locale: string
 ): Promise<InterviewResult> {
   await assertIdeaOwnership(userId, ideaId);
-  const state = await loadInterview(userId, ideaId);
+  const { id: interviewId, version, state } = await loadInterview(userId, ideaId);
 
   if (state.phase === 'READY' || state.phase === 'DONE') {
     throw new ConflictError('Interview already complete.');
@@ -327,25 +425,35 @@ export async function synthesizeInterview(
   // No `budgetOwner`: the charge above already covers this call, and the
   // loop is only replaying the resulting event.
   const { state: next, terminal } = await runLoop(agent, state, [event]);
-  const interview = await persist(ideaId, userId, next);
+  const interview = await persist(interviewId, userId, next, version);
 
   return { interviewId: interview.id, created: false, state: next, terminal };
 }
 
 async function persist(
-  ideaId: string,
+  interviewId: string,
   userId: string,
-  state: InterviewState
+  state: InterviewState,
+  expectedVersion: number
 ): Promise<{ id: string }> {
-  const interview = await prisma.interview.findFirst({
-    where: { ideaId, userId },
+  // Conditional on the version the caller read. Two concurrent answers both pay
+  // for a model call; without this the second would silently overwrite the
+  // first, losing its answer and leaving the client showing a state that never
+  // happened.
+  const result = await prisma.interview.updateMany({
+    where: { id: interviewId, userId, version: expectedVersion },
+    data: {
+      phase: state.phase,
+      state: state as unknown as JsonState,
+      version: { increment: 1 },
+    },
   });
-  if (!interview) throw new NotFoundError('Interview not found.');
 
-  await prisma.interview.update({
-    where: { id: interview.id },
-    data: { phase: state.phase, state: state as unknown as JsonState },
-  });
+  if (result.count === 0) {
+    throw new ConflictError(
+      'This interview changed while your answer was being processed. Reload and try again.'
+    );
+  }
 
-  return { id: interview.id };
+  return { id: interviewId };
 }

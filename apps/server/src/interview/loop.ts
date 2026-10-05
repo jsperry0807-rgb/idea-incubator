@@ -2,9 +2,17 @@ import { advance, type Answer, type InterviewDirective, type InterviewEvent } fr
 import type { InterviewAgent } from './graph';
 import type { InterviewState } from './state';
 import { chargeSynthesis } from '../middleware/rateLimit';
+import { LlmTimeoutError } from '../lib/errors';
 
 /** Guard against a resolver that keeps emitting events. */
 export const MAX_PUMP_STEPS = 100;
+
+/**
+ * Wall-clock ceiling for one pump. Each directive may make a model call, so
+ * bounding steps alone still allows a run to take `steps * timeout`. This
+ * bounds the request as a whole.
+ */
+export const MAX_LOOP_DURATION_MS = 120_000;
 
 export type LoopTerminal = 'none' | 'ready' | 'turn-cap' | 'needs-synthesis';
 
@@ -25,6 +33,8 @@ export interface LoopOptions {
    * real budget.
    */
   budgetOwner?: string;
+  /** Wall-clock ceiling; defaults to {@link MAX_LOOP_DURATION_MS}. */
+  maxDurationMs?: number;
 }
 
 /**
@@ -41,6 +51,7 @@ export async function runLoop(
   options: LoopOptions = {}
 ): Promise<LoopResult> {
   const maxSteps = options.maxSteps ?? MAX_PUMP_STEPS;
+  const deadline = Date.now() + (options.maxDurationMs ?? MAX_LOOP_DURATION_MS);
   let s = state;
   const queue: InterviewEvent[] = [...initialEvents];
   const events: InterviewEvent[] = [];
@@ -65,6 +76,12 @@ export async function runLoop(
         // actually spends a synthesis call, and it is reached by skip-driven
         // synthesis as well as the manual endpoint.
         if (options.budgetOwner) chargeSynthesis(options.budgetOwner);
+      }
+
+      if (Date.now() > deadline) {
+        throw new LlmTimeoutError(
+          `Interview exceeded its ${Math.round((options.maxDurationMs ?? MAX_LOOP_DURATION_MS) / 1000)}s budget`
+        );
       }
 
       const resolved = await agent.resolve(s, directive);

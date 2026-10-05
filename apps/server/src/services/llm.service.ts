@@ -13,7 +13,12 @@ export interface LlmCompleteOptions {
   maxTokens?: number;
   /** Per-call model override (e.g. route synthesis to a stronger model). */
   model?: string;
+  /** Per-call override of {@link LLM_REQUEST_TIMEOUT_MS}. */
+  timeoutMs?: number;
 }
+
+/** Wall-clock ceiling for a single provider request. */
+export const LLM_REQUEST_TIMEOUT_MS = 30_000;
 
 export interface LlmClient {
   complete(messages: LlmMessage[], options?: LlmCompleteOptions): Promise<string>;
@@ -48,6 +53,10 @@ export class OpenAICompatibleClient implements LlmClient {
         'content-type': 'application/json',
         authorization: `Bearer ${this.config.apiKey}`,
       },
+      // Without a signal a provider that accepts the connection and then stalls
+      // pins this request forever, holding a handler and a connection-pool slot
+      // until the client gives up.
+      signal: AbortSignal.timeout(options.timeoutMs ?? LLM_REQUEST_TIMEOUT_MS),
       body: JSON.stringify({
         model: options.model ?? this.config.model,
         messages,
