@@ -4,7 +4,9 @@ import bcrypt from 'bcryptjs';
 import prisma from '../lib/prisma';
 import { env } from '../config/env';
 import { ConflictError, NotFoundError, UnauthorizedError } from '../lib/errors';
+import { withPrismaErrors } from '../lib/prismaErrors';
 import { sendPasswordResetEmail } from './mailer.service';
+import { storage } from './storage.service';
 import {
   signAccessToken,
   signRefreshToken,
@@ -63,27 +65,28 @@ async function ensureDefaultTags(userId: string, tagService = prisma.tag) {
 }
 
 export async function register(input: RegisterInput) {
-  const existing = await prisma.user.findUnique({
-    where: { email: input.email.toLowerCase() },
-  });
-
-  if (existing) {
-    throw new ConflictError('An account with this email already exists');
-  }
-
+  // No email pre-check: two simultaneous registrations for the same address both
+  // pass one, and only the unique index decides. P2002 becomes a 409 here.
   const passwordHash = await bcrypt.hash(input.password, 12);
 
-  const user = await prisma.user.create({
-    data: {
-      name: input.name,
-      email: input.email.toLowerCase(),
-      passwordHash,
-      authProvider: 'LOCAL',
-      tags: {
-        create: DEFAULT_TAGS,
+  const user = await withPrismaErrors(() =>
+    prisma.user.create({
+      data: {
+        name: input.name,
+        email: input.email.toLowerCase(),
+        passwordHash,
+        authProvider: 'LOCAL',
+        tags: {
+          create: DEFAULT_TAGS,
+        },
       },
-    },
-    include: { tags: true },
+      include: { tags: true },
+    })
+  ).catch((err: unknown) => {
+    if (err instanceof ConflictError) {
+      throw new ConflictError('An account with this email already exists');
+    }
+    throw err;
   });
 
   const tokens = await createSession(user.id, user.email);
@@ -194,7 +197,23 @@ export async function deleteAccount(userId: string, password: string) {
     throw new UnauthorizedError('Incorrect password');
   }
 
+  const ideas = await prisma.idea.findMany({
+    where: { userId },
+    select: { id: true, projectType: true },
+  });
+
   await prisma.user.delete({ where: { id: userId } });
+
+  // Cascade removes the rows; the per-idea folders on disk are not part of that
+  // cascade. Collected first, since the userId is gone afterwards.
+  await Promise.all(
+    ideas.map((idea) =>
+      storage.deleteIdeaFolder(userId, idea.id).catch(() => {
+        // A leftover folder is not worth failing the deletion over; the account
+        // is already gone.
+      })
+    )
+  );
 }
 
 export async function logout(refreshToken: string | undefined) {
