@@ -59,30 +59,66 @@ Phases are ordered so that each one leaves the repo green and independently ship
 
 ### Server robustness
 
-- [ ] **2.1 No LLM request timeout.** `fetch` has no `AbortSignal`, so a hung provider pins the handler and a pool slot forever. `apps/server/src/services/llm.service.ts:44-57` — add `AbortSignal.timeout(30_000)` plus a `runLoop` deadline.
-- [ ] **2.2 Interview state read-modify-write with no version guard.** Concurrent answers overwrite each other after both pay for a model call. `apps/server/src/services/interview.service.ts:178-203,322-338` — add `version`, predicate `updateMany` on it, 409 on `count === 0`.
-- [ ] **2.3 Body-parser errors surface as 500.** Malformed JSON and >1MB bodies should be 400/413; no `res.headersSent` guard. `apps/server/src/index.ts:20`, `apps/server/src/middleware/errorHandler.ts:20-33`.
-- [ ] **2.4 Redundant queries on hot paths.** The idea row is fetched twice per interview request; `persist` re-reads the full row including `state` JSON just for an id; `ensureDefaultTags` runs two queries on every `/me` and login despite `register` already creating them. `apps/server/src/services/interview.service.ts:93-99,327-329`, `apps/server/src/services/auth.service.ts:51-63,108,158`.
-- [ ] **2.5 Unbounded `findMany`.** `getActivity` loads three whole tables then returns 10; five `findMany` calls lack `take`. `apps/server/src/services/dashboard.service.ts:47-74,121` and four other services — add `take`/`skip` and cursor pagination for notifications and comments.
-- [ ] **2.6 Answer discarded if the pump throws.** `persist` never runs, and resume only handles `CLASSIFY` at turn 0. `apps/server/src/services/interview.service.ts:202-203` — persist the answer first, map transport errors to a retryable 503.
-- [ ] **2.7 `optionId` is not validated.** `pointId` is checked against the current question but `optionId` is not, so clients can replay options that were never offered as fact. `apps/server/src/services/interview.service.ts:190-199`.
-- [ ] **2.8 Prompt injection via interpolated user text.** Raw `freeText`/`value`/idea text goes in undelimited with no untrusted-data instruction and persists in `state.decisions`. `apps/server/src/interview/prompts/reevaluate.ts:64-72`, `question.ts:44-60`, `classify.ts:36-42` — fence segments, add the system rule, strip control chars.
-- [ ] **2.9 Unbounded `answer.value`.** No `.max()`, and `question.ts` doesn't truncate (unlike `reevaluate.ts:57`), so prompts grow across 40 turns. `packages/shared/src/schemas/interview.ts:43` — cap it and share one decision-log formatter across all three prompt builders.
+- [x] **2.1 No LLM request timeout.** `fetch` had no `AbortSignal`, so a hung provider pinned the handler and a pool slot forever.
+  - `apps/server/src/services/llm.service.ts`, `apps/server/src/interview/loop.ts`
+  - Done: `AbortSignal.timeout(LLM_REQUEST_TIMEOUT_MS)` (30s, overridable per call) on every provider request. Step-bounding alone was not enough — 100 steps × a 30s timeout is still an hour — so `runLoop` also carries a `MAX_LOOP_DURATION_MS` (120s) wall-clock deadline checked before each model call, raising a new retryable `LlmTimeoutError` (503).
+- [x] **2.2 Interview state read-modify-write with no version guard.** Concurrent answers overwrote each other after both paid for a model call.
+  - `apps/server/prisma/schema.prisma`, `apps/server/src/services/interview.service.ts`
+  - Done: added `Interview.version` (migration `20261003120000_interview_version`, defaulting to 0 so existing rows need no backfill). `persist` now takes the version the caller read and does a predicate `updateMany` with `version: { increment: 1 }`; `count === 0` becomes a 409 telling the client to reload. Wired through all four mutating paths (answer, skip, defer, synthesize). `loadInterview` returns `{id, version, state}` so the version travels with the state it belongs to instead of being re-read.
+- [x] **2.3 Body-parser errors surfaced as 500.** Malformed JSON and >1MB bodies returned 500; no `res.headersSent` guard.
+  - `apps/server/src/middleware/errorHandler.ts`
+  - Done: `asClientError` maps `entity.parse.failed` → 400 `BAD_REQUEST` and `entity.too.large`/413 → `PAYLOAD_TOO_LARGE`. The `headersSent` guard comes first, handing back to express to tear down the connection rather than throwing `ERR_HTTP_HEADERS_SENT` on top of the original failure.
+- [x] **2.4 Redundant queries on hot paths.** The idea row was fetched twice per interview request; `persist` re-read the full row including the `state` JSON just for an id.
+  - `apps/server/src/services/interview.service.ts`, `apps/server/src/services/idea.service.ts`
+  - Done: added `loadOwnedIdea`, which returns the ownership check and the row in one query; `assertIdeaOwnership` now wraps it, so the two cannot diverge. `persist` no longer re-reads — it takes the interview id it already has. Also drops a query on the resume path. Left `ensureDefaultTags` alone: it is load-bearing for OAuth users, who have no `register` call to have created their tags.
+- [x] **2.5 Unbounded `findMany`.** `getActivity` loaded three whole tables to return 10 rows; notifications and comments had no bound at all.
+  - `apps/server/src/services/dashboard.service.ts`, `notification.service.ts`, `comment.service.ts`
+  - Done: `getActivity` caps each source at the same `ACTIVITY_LIMIT` as the final result — any row that can reach the top 10 is necessarily among its own source's newest — and orders ideas explicitly, which they previously were not. Notifications gained `page`/`pageSize` (default 20, max 100) via the shared query schema. Comments capped at 100. Noted rather than deferred: `listTasks` and `listShares` are unbounded too, but both are scoped to a single idea, so their size is bounded by that idea.
+- [x] **2.6 Answer discarded if the pump throws.** `persist` never ran, so a provider timeout silently lost everything the user typed.
+  - `apps/server/src/services/interview.service.ts`
+  - Done: `persistAnswerOnly` records the answer as a decision (point stays open, phase stays `ASK`) before the failure propagates, so a retry resumes. `toRetryableModelError` maps timeouts, aborts, and connection failures to a 503 `LLM_UNAVAILABLE` and passes `AppError`s (budget, validation) through untouched.
+- [x] **2.7 `optionId` was not validated.** A client could replay an option that was never offered and have it persisted as fact.
+  - `apps/server/src/services/interview.service.ts`
+  - Done: when `optionId` is present it must match one of the current question's options, else a 422. `pointId` was already checked; both now run before anything is written.
+- [x] **2.8 Prompt injection via interpolated user text.** Raw `freeText`/`value`/idea text went in undelimited with no untrusted-data instruction.
+  - `apps/server/src/interview/prompts/untrusted.ts` (new), all four prompt builders
+  - Done: every user-authored value is passed through `fence()`, which strips control characters (zero-width, bidi overrides, line separators — text a reviewer cannot see but the model can), truncates, and wraps in `<<<UNTRUSTED_* >>>`. Angled brackets are stripped from the value so a user cannot close the fence and escape into the instruction region. Every builder's system prompt now carries `UNTRUSTED_DATA_RULE`. `synthesis.ts` was affected too and is included. 13 tests in `untrusted.test.ts` cover the fence-escape and hidden-character cases.
+- [x] **2.9 Unbounded `answer.value`.** No `.max()`, and only one of the three builders truncated, so prompts grew across 40 turns.
+  - `packages/shared/src/schemas/interview.ts`, `apps/server/src/interview/prompts/untrusted.ts`
+  - Done: `value` capped at 500. One `formatDecisionLog` now serves all four builders, so the log cannot grow without bound regardless of which one renders it.
 
 ### Server security
 
-- [ ] **2.10 Share is a user-enumeration oracle.** Share 404s for unknown emails while `forgotPassword` returns `{sent:true}`. `apps/server/src/services/share.service.ts:76-83` vs `auth.service.ts:233` — uniform success shape, or an opaque invite token instead of an email.
-- [ ] **2.11 `trust proxy` never set.** Behind a proxy all users share one 100/15min bucket and v8 raises `ERR_ERL_UNEXPECTED_X_FORWARDED_FOR`. `apps/server/src/index.ts:15-22`, `middleware/rateLimit.ts:7-12` — set it in production, move to a shared store, re-tune the ceiling.
-- [ ] **2.12 Password resets never send and leak the token.** Production returns success while logging the live 60-minute reset URL and recipient. `apps/server/src/services/mailer.service.ts:21-27`, `auth.service.ts:230-233` — fail startup without SMTP in production, never log the URL.
-- [ ] **2.13 Weak secret validation.** Secrets are only `min(1)` and may be equal, in which case a refresh token works as a bearer credential. `apps/server/src/config/env.ts:8-9` — `min(32)` plus a `superRefine` rejecting identical secrets.
-- [ ] **2.14 Account deletion leaves files on disk.** Cascades DB rows but never calls `storage.deleteIdeaFolder`. `apps/server/src/services/auth.service.ts:197`.
-- [ ] **2.15 Four check-then-act races.** Email unique, tag name unique, `max(sortOrder)`, ownership-then-update — all bypass their own `ConflictError` and return raw 500s. `apps/server/src/services/auth.service.ts:66-72`, `tag.service.ts:15-21`, `task.service.ts:26-32`, `idea.service.ts:206` — drop the pre-checks, centralise P2002/P2025 mapping, transact the `sortOrder` read+insert.
-- [ ] **2.16 Duplicated access check.** `createComment` hand-rolls a copy of `assertIdeaAccess` that already differs from the helper its siblings use. `apps/server/src/services/comment.service.ts:26-44` vs `idea.service.ts:50-72`.
+- [x] **2.10 Share was a user-enumeration oracle.** Share 404'd for unknown emails while `forgotPassword` returned `{sent:true}`.
+  - `apps/server/src/services/share.service.ts`, `packages/shared/src/entities.ts`, `apps/client/.../InviteForm.tsx`
+  - Done, choosing the uniform-response option over opaque invite tokens: an unknown address now returns the same 200 with `pending: true` and no identity, instead of a distinguishable 404. The response carries no user id, name, or email, so it cannot reveal whether the address is registered; the owner sees no new entry in the access list. Removed the client's now-dead 404 branch. An opaque invite token remains the stronger fix (it also works for unregistered addresses) and is left as future work.
+- [x] **2.11 `trust proxy` was never set.** Behind a proxy all users shared one 100/15min bucket and v8 raised `ERR_ERL_UNEXPECTED_X_FORWARDED_FOR`.
+  - `apps/server/src/index.ts`
+  - Done: `app.set('trust proxy', 1)` in production only. Exactly one hop, not `true` — trusting the whole chain would let a client spoof `X-Forwarded-For` into a fresh bucket. The 100/15min global ceiling is unchanged; it was correct, just applied to the wrong key. Still in-memory, so the deferred "shared store" item applies when there is more than one replica.
+- [x] **2.12 Password resets never sent and leaked the token.** Production returned success while logging the live reset URL and recipient.
+  - `apps/server/src/services/mailer.service.ts`, `apps/server/src/index.ts`, `apps/server/src/config/env.ts`
+  - Done: `assertMailerConfigured()` runs at startup and throws in production without `SMTP_HOST`, so the misconfiguration surfaces at deploy time rather than when a user needs their password back. The production branch that logged the live 60-minute URL is gone. Added the `SMTP_*` keys. Note: no transport is implemented yet, so a production deploy with `SMTP_HOST` set now fails loudly on first use instead of silently not sending — the alternative was silently dropping mail.
+- [x] **2.13 Weak secret validation.** Secrets were `min(1)` and could be equal, in which case a refresh token worked as a bearer credential.
+  - `apps/server/src/config/env.ts`
+  - Done: `min(32)` on both, plus a `.refine` rejecting identical secrets with the reason stated. A `.refine` rather than `superRefine` because the check is between two top-level fields and needs no per-field path beyond the one given.
+- [x] **2.14 Account deletion left files on disk.** Cascades removed DB rows but never called `storage.deleteIdeaFolder`.
+  - `apps/server/src/services/auth.service.ts`
+  - Done: idea ids and project types are collected before the delete (the userId is needed afterwards), then each folder is removed. Failures are swallowed — the account is already gone, and failing the request afterwards would tell the user deletion failed when it succeeded.
+- [x] **2.15 Four check-then-act races.** Email unique, tag name unique, `max(sortOrder)`, ownership-then-update — all bypassed their own `ConflictError` and returned raw 500s.
+  - `apps/server/src/lib/prismaErrors.ts` (new), `auth.service.ts`, `tag.service.ts`, `task.service.ts`, `idea.service.ts`
+  - Done: added `withPrismaErrors`/`translatePrismaError`, centralising P2002 → 409 and P2025 → 404, and rethrowing anything unrecognised unchanged. Dropped the email and tag-name pre-checks so the unique index decides; kept the better message by catching the translated `ConflictError` and re-wrapping with the domain text. `max(sortOrder)` + insert now run in one interactive transaction, so concurrent creates cannot both read the same maximum. Ownership-then-update/delete paths are wrapped so the loser's P2025 is a 404, not a 500.
+- [x] **2.16 Duplicated access check.** `createComment` hand-rolled a copy of `assertIdeaAccess` that already differed from the helper its siblings used.
+  - `apps/server/src/services/comment.service.ts`
+  - Done: calls the shared `assertIdeaAccess`, then loads the owner row separately for the notification. The two access paths can no longer disagree.
 
 ### Client correctness
 
-- [ ] **2.17 Four queries drop the abort signal.** `useIdea.ts:8`, `useWireframes.ts:10,18`, `useTags.ts:8` don't forward `signal` while ten others do, so idea-to-idea navigation leaves the previous request in flight.
-- [ ] **2.18 Optimistic writes race `cancelQueries`.** An un-awaited `cancelQueries` lets a resolving `getPipeline` response resurrect a deleted or moved card. `useDeleteIdea.ts:27-41`, `useUpdateIdeaStatus.ts:37-62` — make `onMutate` async and await, as `useUpdateTask` already does.
+- [x] **2.17 Four queries dropped the abort signal.** `useIdea`, `useWireframes` ×2, and `useTags` did not forward `signal` while ten others did, so idea-to-idea navigation left the previous request in flight.
+  - `apps/client/src/features/ideas/hooks/`, `features/tags/hooks/`, and their `api/` modules
+  - Done: the four `queryFn`s take `{ signal }` and forward it; `getIdea`, `listWireframes`, `getWireframe`, and `getTags` accept and pass an optional `AbortSignal`, matching the existing `getIdeas` signature.
+- [x] **2.18 Optimistic writes raced `cancelQueries`.** An un-awaited `cancelQueries` let a resolving `getPipeline` response resurrect a deleted or moved card.
+  - `apps/client/src/features/ideas/hooks/useDeleteIdea.ts`, `useUpdateIdeaStatus.ts`
+  - Done: `onMutate` is `async` and awaits `cancelQueries` **before** the optimistic write. The original also had the ordering wrong independent of the await — it wrote first and cancelled after, so an already-in-flight response could overwrite the optimistic state even when awaited. Matches `useUpdateTask`.
 
 **Gate:** full CI green including the test step from 1.7.
 
