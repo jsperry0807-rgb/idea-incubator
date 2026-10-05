@@ -1,13 +1,17 @@
-import type { InputHTMLAttributes, ReactNode } from 'react';
+import { useId, type InputHTMLAttributes, type ReactNode, type Ref } from 'react';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   icon?: ReactNode;
+  /** Forwarded to the underlying <input>. See the note on `ButtonProps.ref`. */
+  ref?: Ref<HTMLInputElement>;
 }
 
-export function Input({ label, error, icon, id, className, ...props }: InputProps) {
-  const inputId = id ?? props.name;
+export function Input({ label, error, icon, id, className, ref, ...props }: InputProps) {
+  const generatedId = useId();
+  const inputId = id ?? props.name ?? generatedId;
+  const errorId = `${inputId}-error`;
 
   return (
     <div className="flex w-full flex-col gap-1.5">
@@ -25,7 +29,10 @@ export function Input({ label, error, icon, id, className, ...props }: InputProp
         ) : null}
 
         <input
+          ref={ref}
           id={inputId}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? errorId : props['aria-describedby']}
           className={[
             'w-full rounded-[var(--radius-sm)] border bg-[var(--color-bg)] text-[var(--color-fg)] text-base outline-none transition-[border-color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-out)]',
             'placeholder:text-[var(--color-muted-fg)]',
@@ -42,7 +49,11 @@ export function Input({ label, error, icon, id, className, ...props }: InputProp
         />
       </div>
 
-      {error ? <span className="text-[13px] text-[var(--color-danger)]">{error}</span> : null}
+      {error ? (
+        <span id={errorId} role="alert" className="text-[13px] text-[var(--color-danger)]">
+          {error}
+        </span>
+      ) : null}
     </div>
   );
 }

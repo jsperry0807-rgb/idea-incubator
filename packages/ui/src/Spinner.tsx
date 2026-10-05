@@ -4,6 +4,8 @@ type Size = 'sm' | 'md' | 'lg';
 
 export interface SpinnerProps extends HTMLAttributes<HTMLSpanElement> {
   size?: Size;
+  /** Accessible label. Override to localise. */
+  label?: string;
 }
 
 const sizeClasses: Record<Size, string> = {
@@ -12,11 +14,11 @@ const sizeClasses: Record<Size, string> = {
   lg: 'size-8 border-4',
 };
 
-export function Spinner({ size = 'md', className, ...props }: SpinnerProps) {
+export function Spinner({ size = 'md', label = 'Loading', className, ...props }: SpinnerProps) {
   return (
     <span
       role="status"
-      aria-label="Loading"
+      aria-label={label}
       className={[
         'shrink-0 inline-block animate-spin rounded-full border-current/25 border-t-current',
         sizeClasses[size],

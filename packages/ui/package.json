@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -15,11 +16,9 @@
     "lint:fix": "eslint . --fix",
     "clean": "node -e \"require('fs').rmSync('tsconfig.tsbuildinfo', { force: true })\""
   },
-  "dependencies": {
-    "@repo/config": "workspace:*"
-  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@repo/config": "workspace:*",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
     "eslint": "^10.9.0",

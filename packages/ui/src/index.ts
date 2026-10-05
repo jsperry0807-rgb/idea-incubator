@@ -17,7 +17,10 @@ export type { EmptyStateProps } from './EmptyState';
 export { Modal } from './Modal';
 export type { ModalProps } from './Modal';
 export { Toaster } from './Toaster';
-export { toast, dismissToast, useToasts } from './toast-store';
+export type { ToasterProps } from './Toaster';
+// `dismissToast` / `useToasts` are intentionally not exported: they are the
+// Toaster's private binding to the store, not part of the public surface.
+export { toast } from './toast-store';
 export type { Toast, ToastTone } from './toast-store';
 export { Skeleton } from './Skeleton';
 export type { SkeletonProps } from './Skeleton';

@@ -524,14 +524,13 @@ importers:
         version: 8.68.0(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
 
   packages/ui:
-    dependencies:
-      '@repo/config':
-        specifier: workspace:*
-        version: link:../config
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.9.1(jiti@2.7.0)(supports-color@7.2.0))
+      '@repo/config':
+        specifier: workspace:*
+        version: link:../config
       '@types/react':
         specifier: ^19.2.18
         version: 19.2.18

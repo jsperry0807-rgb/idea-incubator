@@ -1,10 +1,11 @@
+import type { HTMLAttributes } from 'react';
+
 type Tone = 'accent' | 'success' | 'warning' | 'danger' | 'info';
 
-export interface ProgressBarProps {
+export interface ProgressBarProps extends HTMLAttributes<HTMLDivElement> {
   value: number;
   ariaLabel?: string;
   tone?: Tone;
-  className?: string;
 }
 
 const fillClasses: Record<Tone, string> = {
@@ -15,7 +16,13 @@ const fillClasses: Record<Tone, string> = {
   info: 'bg-[var(--color-info)]',
 };
 
-export function ProgressBar({ value, ariaLabel, tone = 'accent', className }: ProgressBarProps) {
+export function ProgressBar({
+  value,
+  ariaLabel,
+  tone = 'accent',
+  className,
+  ...props
+}: ProgressBarProps) {
   const clamped = Math.max(0, Math.min(100, value));
 
   return (
@@ -28,6 +35,7 @@ export function ProgressBar({ value, ariaLabel, tone = 'accent', className }: Pr
       className={['h-1.5 w-full overflow-hidden rounded-full bg-[var(--color-muted)]/20', className]
         .filter(Boolean)
         .join(' ')}
+      {...props}
     >
       <div
         className={[
