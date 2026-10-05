@@ -4,6 +4,13 @@ import { decisionPointSchema } from '@repo/shared';
 import type { InterviewState } from '../state';
 import type { Answer } from '../reducer';
 import type { LlmMessage } from '../../services/llm.service';
+import {
+  fence,
+  fenceOrNone,
+  formatDecisionLog,
+  stripControlChars,
+  withUntrustedDataRule,
+} from './untrusted';
 
 export const reevaluateOutputSchema = z.object({
   opened: z.array(decisionPointSchema).max(10),
@@ -30,7 +37,7 @@ export function buildReevaluateMessages(
   return [
     {
       role: 'system',
-      content: [
+      content: withUntrustedDataRule([
         'You maintain a frontier of open decision points for a product planning interview after each answer.',
         'Return three lists as JSON:',
         '- opened: NEW points to explore next (only points not already in the open set). Each needs eliminatesPaths with at least one path.',
@@ -41,31 +48,38 @@ export function buildReevaluateMessages(
         '- Keep the frontier small. Prefer quality: a half-dozen well-chosen points beats a sprawling list.',
         '- If nothing changes, return empty arrays.',
         `Respond in ${locale}.`,
-      ].join('\n'),
+      ]),
     },
     {
       role: 'user',
       content: [
-        `Project type: ${state.idea.projectType}`,
-        `Idea: ${state.idea.title}`,
-        state.idea.description ? `Description: ${state.idea.description}` : 'Description: (none)',
+        `Project type: ${stripControlChars(state.idea.projectType)}`,
+        `Idea: ${fence('UNTRUSTED_IDEA_TITLE', state.idea.title, 200)}`,
+        `Description: ${fenceOrNone('UNTRUSTED_IDEA_DESCRIPTION', state.idea.description)}`,
         `Domain: ${state.domain?.primary ?? 'unknown'}`,
         `Decisions so far:`,
-        Object.values(state.decisions).length === 0
-          ? '  (none)'
-          : Object.values(state.decisions)
-              .map((d) => `  - ${d.pointId}: "${d.optionId}" ${d.value.slice(0, 120)}`)
-              .join('\n'),
+        formatDecisionLog(Object.values(state.decisions)),
         `Open frontier:`,
         state.open.length === 0
           ? '  (empty)'
-          : state.open.map((p) => `  - [${p.priority}] ${p.id}: ${p.title}`).join('\n'),
+          : state.open
+              .map(
+                (p) =>
+                  `  - [${stripControlChars(p.priority)}] ${stripControlChars(p.id)}: ${fence(
+                    'UNTRUSTED_POINT_TITLE',
+                    p.title,
+                    200
+                  )}`
+              )
+              .join('\n'),
         '',
         'The user just answered:',
-        `  pointId: ${answer.pointId}${answeredPoint ? ` (${answeredPoint.title})` : ''}`,
-        `  optionId: ${answer.optionId}`,
-        `  value: ${answer.value}`,
-        answer.freeText ? `  freeText: ${answer.freeText}` : '  freeText: (none)',
+        `  pointId: ${stripControlChars(answer.pointId)}${answeredPoint ? ` (${stripControlChars(answeredPoint.title)})` : ''}`,
+        `  optionId: ${stripControlChars(answer.optionId)}`,
+        `  value: ${fence('UNTRUSTED_ANSWER_VALUE', answer.value)}`,
+        answer.freeText
+          ? `  freeText: ${fence('UNTRUSTED_ANSWER_FREETEXT', answer.freeText)}`
+          : '  freeText: (none)',
         '',
         `Return opened as new points, with ids that do NOT collide with ${JSON.stringify(
           Array.from(knownPoints)

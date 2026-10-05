@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { decisionPointSchema } from '@repo/shared';
 import type { InterviewState } from '../state';
 import type { LlmMessage } from '../../services/llm.service';
+import { fence, fenceOrNone, stripControlChars, withUntrustedDataRule } from './untrusted';
 
 export const classifyOutputSchema = z.object({
   domain: z.object({
@@ -20,7 +21,7 @@ export function buildClassifyMessages(state: InterviewState, locale: string): Ll
   return [
     {
       role: 'system',
-      content: [
+      content: withUntrustedDataRule([
         'You classify new product ideas for a planning assistant.',
         'Identify the domain and the architectural decisions that genuinely block a plan for this idea.',
         'Rules:',
@@ -30,14 +31,14 @@ export function buildClassifyMessages(state: InterviewState, locale: string): Ll
         '- open: the initial P0/P1 frontier. Each point must eliminate at least one implementation path (eliminatesPaths non-empty).',
         '- Do NOT return template questions. Points must be specific to this idea.',
         `Respond in ${locale}.`,
-      ].join('\n'),
+      ]),
     },
     {
       role: 'user',
       content: [
-        `Project type: ${state.idea.projectType}`,
-        `Title: ${state.idea.title}`,
-        state.idea.description ? `Description: ${state.idea.description}` : 'Description: (none)',
+        `Project type: ${stripControlChars(state.idea.projectType)}`,
+        `Title: ${fence('UNTRUSTED_IDEA_TITLE', state.idea.title, 200)}`,
+        `Description: ${fenceOrNone('UNTRUSTED_IDEA_DESCRIPTION', state.idea.description)}`,
       ].join('\n'),
     },
   ];

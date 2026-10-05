@@ -40,7 +40,9 @@ export const synthesisSchema = z.object({
 export const answerInterviewSchema = z.object({
   pointId: z.string().min(1),
   optionId: z.string().min(1),
-  value: z.string().min(1),
+  // Capped: this value is interpolated into every later prompt and the decision
+  // log, so an unbounded one grows each prompt for the rest of the interview.
+  value: z.string().min(1).max(500),
   freeText: z.string().max(5000).nullable().optional(),
 });
 

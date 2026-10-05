@@ -5,6 +5,13 @@ import type { DecisionPoint } from '@repo/shared';
 import type { InterviewState } from '../state';
 import type { LlmMessage } from '../../services/llm.service';
 import { assertValidQuestion } from '../validate';
+import {
+  fence,
+  fenceOrNone,
+  formatDecisionLog,
+  stripControlChars,
+  withUntrustedDataRule,
+} from './untrusted';
 
 export const questionOutputSchema = questionSchema;
 export type QuestionOutput = z.infer<typeof questionOutputSchema>;
@@ -15,20 +22,12 @@ export function buildQuestionMessages(
   point: DecisionPoint,
   locale: string
 ): LlmMessage[] {
-  const decisions =
-    Object.values(state.decisions).length === 0
-      ? '(none yet)'
-      : Object.values(state.decisions)
-          .map(
-            (d) =>
-              `- ${d.pointId}: chose "${d.optionId}" (${d.value})${d.deferred ? ' [deferred]' : ''}`
-          )
-          .join('\n');
+  const decisions = formatDecisionLog(Object.values(state.decisions));
 
   return [
     {
       role: 'system',
-      content: [
+      content: withUntrustedDataRule([
         'You interview founders on a specific decision point for their product idea.',
         'Rules:',
         '- Ask ONE question about the current decision point only.',
@@ -38,26 +37,44 @@ export function buildQuestionMessages(
         '- Never re-ask resolved decisions; you are given the full decision log.',
         '- Prefer plain language a first-time founder can answer in 30 seconds.',
         `Respond in ${locale}.`,
-      ].join('\n'),
+      ]),
     },
     {
       role: 'user',
       content: [
-        `Project type: ${state.idea.projectType}`,
-        `Title: ${state.idea.title}`,
-        state.idea.description ? `Description: ${state.idea.description}` : 'Description: (none)',
+        `Project type: ${stripControlChars(state.idea.projectType)}`,
+        `Title: ${fence('UNTRUSTED_IDEA_TITLE', state.idea.title, 200)}`,
+        `Description: ${fenceOrNone('UNTRUSTED_IDEA_DESCRIPTION', state.idea.description)}`,
         `Domain: ${state.domain?.primary ?? 'unknown'} (confidence ${
           state.domain?.confidence?.toFixed(2) ?? 'n/a'
         })`,
         `Decision log:\n${decisions}`,
         `Decision point P0/P1 frontier (currently open):`,
-        state.open.map((p) => `  - [${p.priority}] ${p.id}: ${p.title}`).join('\n'),
+        state.open
+          .map(
+            (p) =>
+              `  - [${stripControlChars(p.priority)}] ${stripControlChars(p.id)}: ${fence(
+                'UNTRUSTED_POINT_TITLE',
+                p.title,
+                200
+              )}`
+          )
+          .join('\n'),
         `Ask about this point:`,
-        `  [${point.priority}] ${point.id}: ${point.title}${point.why ? ` — ${point.why}` : ''}`,
+        `  [${stripControlChars(point.priority)}] ${stripControlChars(point.id)}: ${fence(
+          'UNTRUSTED_POINT_TITLE',
+          point.title,
+          200
+        )}`,
+        point.why ? `  Why it matters: ${fence('UNTRUSTED_POINT_WHY', point.why, 300)}` : '',
         point.eliminatesPaths.length > 0
-          ? `  Eliminated paths on this point: ${point.eliminatesPaths.join(', ')}`
+          ? `  Eliminated paths on this point: ${point.eliminatesPaths
+              .map((path) => stripControlChars(path))
+              .join(', ')}`
           : '  Eliminates paths: (none provided)',
-      ].join('\n'),
+      ]
+        .filter(Boolean)
+        .join('\n'),
     },
   ];
 }

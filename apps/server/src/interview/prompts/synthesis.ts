@@ -3,6 +3,13 @@ import type { z } from 'zod';
 import { synthesisSchema } from '@repo/shared';
 import type { InterviewState } from '../state';
 import type { LlmMessage } from '../../services/llm.service';
+import {
+  fence,
+  fenceOrNone,
+  formatDecisionLog,
+  stripControlChars,
+  withUntrustedDataRule,
+} from './untrusted';
 
 export const synthesisOutputSchema = synthesisSchema;
 
@@ -24,7 +31,7 @@ export function buildSynthesisMessages(
   return [
     {
       role: 'system',
-      content: [
+      content: withUntrustedDataRule([
         'You give a decisive 3-part verdict on one stuck decision point of a product planning interview.',
         'Return JSON only:',
         '- recommendation: the single best choice to make now, with a brief why.',
@@ -34,30 +41,35 @@ export function buildSynthesisMessages(
         '- Be concrete and project-specific. Never hedge with "it depends".',
         "- All fields must be prose in the user's language.",
         `Respond in ${locale}.`,
-      ].join('\n'),
+      ]),
     },
     {
       role: 'user',
       content: [
-        `Project type: ${state.idea.projectType}`,
-        `Idea: ${state.idea.title}`,
-        state.idea.description ? `Description: ${state.idea.description}` : 'Description: (none)',
+        `Project type: ${stripControlChars(state.idea.projectType)}`,
+        `Idea: ${fence('UNTRUSTED_IDEA_TITLE', state.idea.title, 200)}`,
+        `Description: ${fenceOrNone('UNTRUSTED_IDEA_DESCRIPTION', state.idea.description)}`,
         `Domain: ${state.domain?.primary ?? 'unknown'}`,
         `This point has been asked twice without a confident answer:`,
         point
-          ? `  - [${point.priority}] ${point.id}: ${point.title}\n    Why: ${point.why}`
-          : `  - ${forPointId}`,
+          ? `  - [${stripControlChars(point.priority)}] ${stripControlChars(
+              point.id
+            )}: ${fence('UNTRUSTED_POINT_TITLE', point.title, 200)}\n    Why: ${fence(
+              'UNTRUSTED_POINT_WHY',
+              point.why,
+              300
+            )}`
+          : `  - ${stripControlChars(forPointId)}`,
         question
-          ? `Question asked: "${question.prompt}"\nOptions:\n${question.options
-              .map((o) => `  - ${o.id}: ${o.label}`)
+          ? `Question asked: ${fence('UNTRUSTED_QUESTION_PROMPT', question.prompt, 300)}\nOptions:\n${question.options
+              .map(
+                (o) =>
+                  `  - ${stripControlChars(o.id)}: ${fence('UNTRUSTED_OPTION_LABEL', o.label, 200)}`
+              )
               .join('\n')}`
           : 'No current question recorded.',
         `Decisions so far:`,
-        Object.values(state.decisions).length === 0
-          ? '  (none)'
-          : Object.values(state.decisions)
-              .map((d) => `  - ${d.pointId}: "${d.optionId}" ${d.value.slice(0, 120)}`)
-              .join('\n'),
+        formatDecisionLog(Object.values(state.decisions)),
         '',
         'Give the user a clear recommendation so the interview can move on.',
       ].join('\n'),
