@@ -2,8 +2,8 @@ import type { CreateTagInput, Tag, UpdateTagInput } from '@repo/shared';
 
 import { client } from '@/axios';
 
-export async function getTags(): Promise<Tag[]> {
-  const { data } = await client.get<{ data: Tag[] }>('/tags');
+export async function getTags(signal?: AbortSignal): Promise<Tag[]> {
+  const { data } = await client.get<{ data: Tag[] }>('/tags', { signal });
   return data.data;
 }
 

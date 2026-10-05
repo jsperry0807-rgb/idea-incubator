@@ -1,9 +1,10 @@
 import { client } from '@/axios';
 import type { Wireframe } from '@repo/shared';
 
-export async function listWireframes(ideaId: string): Promise<string[]> {
+export async function listWireframes(ideaId: string, signal?: AbortSignal): Promise<string[]> {
   const { data } = await client.get<{ data: { filename: string }[] }>(
-    `/ideas/${ideaId}/wireframes`
+    `/ideas/${ideaId}/wireframes`,
+    { signal }
   );
   return data.data.map((item) => item.filename);
 }
@@ -20,8 +21,14 @@ export async function uploadWireframe(
   return data.data;
 }
 
-export async function getWireframe(ideaId: string, name: string): Promise<Wireframe> {
-  const { data } = await client.get<{ data: Wireframe }>(`/ideas/${ideaId}/wireframes/${name}`);
+export async function getWireframe(
+  ideaId: string,
+  name: string,
+  signal?: AbortSignal
+): Promise<Wireframe> {
+  const { data } = await client.get<{ data: Wireframe }>(`/ideas/${ideaId}/wireframes/${name}`, {
+    signal,
+  });
   return data.data;
 }
 

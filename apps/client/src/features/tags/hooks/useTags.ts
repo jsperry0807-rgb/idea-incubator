@@ -5,6 +5,6 @@ import { getTags } from '../api/tags';
 export function useTags() {
   return useQuery({
     queryKey: ['tags'],
-    queryFn: getTags,
+    queryFn: ({ signal }) => getTags(signal),
   });
 }

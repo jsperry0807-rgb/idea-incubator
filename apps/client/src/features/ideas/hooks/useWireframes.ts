@@ -7,7 +7,9 @@ const WIREFRAMES_KEY = (ideaId: string) => ['ideas', ideaId, 'wireframes'] as co
 export function useWireframes(ideaId: string) {
   return useQuery({
     queryKey: WIREFRAMES_KEY(ideaId),
-    queryFn: () => listWireframes(ideaId),
+    // Signal forwarded so leaving the page aborts the request instead of letting
+    // it resolve into a cache nobody is reading.
+    queryFn: ({ signal }) => listWireframes(ideaId, signal),
     enabled: Boolean(ideaId),
   });
 }
@@ -15,7 +17,7 @@ export function useWireframes(ideaId: string) {
 export function useWireframe(ideaId: string, name: string | null) {
   return useQuery({
     queryKey: [...WIREFRAMES_KEY(ideaId), name],
-    queryFn: () => getWireframe(ideaId, name!),
+    queryFn: ({ signal }) => getWireframe(ideaId, name!, signal),
     enabled: Boolean(ideaId && name),
   });
 }

@@ -21,8 +21,13 @@ export function useDeleteIdea() {
 
   return useMutation({
     mutationFn: (ideaId: string) => deleteIdea(ideaId),
-    onMutate: (ideaId) => {
+    onMutate: async (ideaId) => {
       const previous = queryClient.getQueryData<IdeaPipeline>(PIPELINE_QUERY_KEY);
+
+      // Cancel first, and await it. Cancelling afterwards was both too late (the
+      // optimistic write could already have been overwritten) and un-awaited (an
+      // in-flight response could resolve and restore the deleted card).
+      await queryClient.cancelQueries({ queryKey: PIPELINE_QUERY_KEY });
 
       queryClient.setQueryData<IdeaPipeline>(PIPELINE_QUERY_KEY, (old) => {
         if (!old) {
@@ -37,8 +42,6 @@ export function useDeleteIdea() {
 
         return next;
       });
-
-      void queryClient.cancelQueries({ queryKey: PIPELINE_QUERY_KEY });
 
       return { previous };
     },

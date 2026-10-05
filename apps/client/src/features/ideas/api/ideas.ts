@@ -26,8 +26,8 @@ export async function getIdeas(filters: IdeaFilters, signal?: AbortSignal): Prom
   return { items: data.data, meta: data.meta };
 }
 
-export async function getIdea(id: string): Promise<Idea> {
-  const { data } = await client.get<{ data: Idea }>(`/ideas/${id}`);
+export async function getIdea(id: string, signal?: AbortSignal): Promise<Idea> {
+  const { data } = await client.get<{ data: Idea }>(`/ideas/${id}`, { signal });
   return data.data;
 }
 

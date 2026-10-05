@@ -31,8 +31,12 @@ export function useUpdateIdeaStatus() {
 
   return useMutation({
     mutationFn: ({ ideaId, status }: UpdateIdeaStatusInput) => updateIdeaStatus(ideaId, status),
-    onMutate: ({ ideaId, status }) => {
+    onMutate: async ({ ideaId, status }) => {
       const previous = queryClient.getQueryData<IdeaPipeline>(PIPELINE_QUERY_KEY);
+
+      // Cancel and await before writing, otherwise an in-flight pipeline response
+      // can resolve after the optimistic move and snap the card back.
+      await queryClient.cancelQueries({ queryKey: PIPELINE_QUERY_KEY });
 
       queryClient.setQueryData<IdeaPipeline>(PIPELINE_QUERY_KEY, (old) => {
         if (!old) {
@@ -58,8 +62,6 @@ export function useUpdateIdeaStatus() {
 
         return next;
       });
-
-      void queryClient.cancelQueries({ queryKey: PIPELINE_QUERY_KEY });
 
       return { previous };
     },
